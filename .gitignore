@@ -1,0 +1,10 @@
+# Ignore image files.
+
+**/*.png
+**/*.tif
+**/*.fig
+
+# Pickled files and text files outputted from program.
+
+**/*.pickle
+**/*.txt
