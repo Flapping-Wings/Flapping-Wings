@@ -1,4 +1,4 @@
-# from _ import g
+from test import g
 
 import numpy as np
 
@@ -70,7 +70,7 @@ def nd_data(
     g.t_ = T_[0] / 2.0
 
     # Reference velocity - use the right front wing flapping velocity
-    g.v_ = d_[0] / g.t_
+    g.v_ = g.d_[0] / g.t_
     # print here
 
     # Ambient velocity (nondimensional)
