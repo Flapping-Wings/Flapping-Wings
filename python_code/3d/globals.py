@@ -177,7 +177,6 @@ class g:
     
     v_ = None
     t_ = None
-    f_ = None
     d_ = None
     h_ = None
     rt = None
