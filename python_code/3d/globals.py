@@ -43,6 +43,8 @@ class g:
     """Time increment"""
     nstep: int = None
     """Number of time steps to iterate through"""
+    istep: int = 0
+    """Current iteration step"""
 
 
     # Body geometry
@@ -174,8 +176,6 @@ class g:
     d_ = None
     h_ = None
     rt = None
-
-    istep = None
 
     limpa_f = None
     aimpa_f = None
