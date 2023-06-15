@@ -1,3 +1,6 @@
+import numpy as np
+import numpy.typing as npt
+
 class g:
     # General configuration
 
@@ -106,21 +109,21 @@ class g:
 
     # Wing motion
 
-    phiT_: tuple[float] = (80.0, 80.0, 80.0, 80.0)
+    phiT_: npt.NDArray[np.floating] = np.array([80.0, 80.0, 80.0, 80.0])
     """Top stroke angle in degrees"""
-    phiB_: tuple[float] = (-45.0, -45.0, -45.0, -45.0)
+    phiB_: npt.NDArray[np.floating] = np.array([-45.0, -45.0, -45.0, -45.0])
     """Bottom stroke angle in degrees"""
-    a_: tuple[float] = (0.0, 0.0, 0.0, 0.0)
+    a_: npt.NDArray[np.floating] = np.array([0.0, 0.0, 0.0, 0.0])
     """Rotation axis offset in cm"""
-    beta_: tuple[float] = (90.0, 90.0, 90.0, 90.0)
+    beta_: npt.NDArray[np.floating] = np.array([90.0, 90.0, 90.0, 90.0])
     """Stroke plane angle in degrees wrt the body axis"""
-    f_: tuple[float] = (30.0, 30.0, 30.0, 30.0)
+    f_: npt.NDArray[np.floating] = np.array([30.0, 30.0, 30.0, 30.0])
     """Flapping frequency in Hz"""
-    gMax_: tuple[float] = (30.0, 30.0, 30.0, 30.0)
+    gMax_: npt.NDArray[np.floating] = np.array([30.0, 30.0, 30.0, 30.0])
     """Max rotation amplitude in degrees; actual rotation is `2*gMax`"""
-    p: tuple[float] = (5.0, 5.0, 5.0, 5.0)
+    p: npt.NDArray[np.floating] = np.array([5.0, 5.0, 5.0, 5.0])
     """Rotation speed parameter (nondimensional); `p >= 4`"""
-    rtOff: tuple[float] = (0.0, 0.0, 0.0, 0.0)
+    rtOff: npt.NDArray[np.floating] = np.array([0.0, 0.0, 0.0, 0.0])
     """
     Rotation timing offset (nondimensional):
     - `-0.5 < rtOff < 0.5`
@@ -128,7 +131,7 @@ class g:
     - `rtOff = 0` (symmetric),
     - `rtOff > 0` (delayed);
     """
-    tau: tuple[float] = (0.0, 0.0, 0.0, 0.0)
+    tau: npt.NDArray[np.floating] = np.array([0.0, 0.0, 0.0, 0.0])
     """
     Phase shift for the time (nondimensional):
     - `0 <= tau < 2`
@@ -137,7 +140,7 @@ class g:
     - `tau = 1` (start from bottom, start wtih up stroke)
     - `1 < tau < 2` (start in between, start with up stroke)
     """
-    mpath: tuple[int] = (0, 0, 0, 0)
+    mpath: npt.NDArray[np.integer] = np.array([0, 0, 0, 0])
     """
     Motion path parameter:
     - `0`: noTail Standard flapping(sinusoidal) & rotation (smoothed step func)
@@ -153,7 +156,7 @@ class g:
 
     rho_: float = 0.001225
     """Air density"""
-    U_: tuple[float] = (100.0, 0.0, 0.0)
+    U_: npt.NDArray[np.floating] = np.array([100.0, 0.0, 0.0])
     """
     Ambient velocity in (x, y, z); can be interpreted as the flight velocity
     when the wind is calm
