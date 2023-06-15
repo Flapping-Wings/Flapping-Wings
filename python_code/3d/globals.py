@@ -170,6 +170,8 @@ class g:
     within this distance from the vortex line and/or its extension is set to zero
     """
 
+    # TODO: Finish below
+    
     v_ = None
     t_ = None
     f_ = None
