@@ -16,7 +16,7 @@ def nd_data(
         delta_,
         gMax_,
         U_,
-        xb_f,
+        Xb_f,
         Xc_f,
         Xb_r,
         Xc_r,
