@@ -23,3 +23,19 @@ def lr_set_matrix(iwing, Xt, nXt, XC, NC):
     VN: ndarray[nXt, nXt]
         Matrix for the nonpenetration condition
     """
+    # The left wing geometry is obtained by reversing the sign of the 
+    # y-coordinate of the right wing
+    if iwing == 1:
+        Xt[1, :, :] = -Xt[1, :, :]
+        XC[1, :] = -XC[1, :]
+        NC[1, :] = -NC[1, :]
+
+    VN = np.zeros((nXt, nXt))
+    s = np.shape(XC)
+    
+    for i in range(nXt):
+        U = np.zeros((1, s[1]))
+        V = np.zeros((1, s[1]))
+        W = np.zeros((1, s[1]))
+
+        # Rest of code here
