@@ -175,9 +175,12 @@ class g:
 
     # TODO: Finish below
     
-    v_ = None
-    t_ = None
-    d_ = None
+    v_: float = None
+    """Reference velocity"""
+    t_: float = None
+    """Reference time"""
+    d_: npt.NDArray[np.floating] = None
+    """Total stroke length"""
     rt = None
 
     limpa_f = None
