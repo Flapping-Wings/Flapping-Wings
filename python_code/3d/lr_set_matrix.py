@@ -1,4 +1,5 @@
 import numpy as np
+from VORTEXm import VORTEXm
 
 def lr_set_matrix(iwing, Xt, nXt, XC, NC):
     """
@@ -38,4 +39,39 @@ def lr_set_matrix(iwing, Xt, nXt, XC, NC):
         V = np.zeros((1, s[1]))
         W = np.zeros((1, s[1]))
 
-        # Rest of code here
+        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
+                             Xt[0, 0, i], Xt[1, 0, i], Xt[2, 0, i], 
+                             Xt[0, 1, i], Xt[1, 1, i], Xt[2, 1, i], 
+                             1.0)
+        U = U + dU
+        V = V + dV
+        W = W + dW
+
+        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
+                             Xt[0, 1, i], Xt[1, 1, i], Xt[2, 1, i], 
+                             Xt[0, 2, i], Xt[1, 2, i], Xt[2, 2, i], 
+                             1.0)
+        U = U + dU
+        V = V + dV
+        W = W + dW
+
+        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
+                             Xt[0, 2, i], Xt[1, 2, i], Xt[2, 2, i], 
+                             Xt[0, 3, i], Xt[1, 3, i], Xt[2, 3, i], 
+                             1.0)
+        U = U + dU
+        V = V + dV
+        W = W + dW
+
+        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
+                             Xt[0, 3, i], Xt[1, 3, i], Xt[2, 3, i], 
+                             Xt[0, 0, i], Xt[1, 0, i], Xt[2, 0, i], 
+                             1.0)
+        U = U + dU
+        V = V + dV
+        W = W + dW
+
+        # Normal velocity
+        VN[:, i] = (U * NC[0, :] + V * NC[1, :] + W * NC[2, :])
+
+    return VN
