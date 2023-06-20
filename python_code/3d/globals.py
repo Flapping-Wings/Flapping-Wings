@@ -42,6 +42,8 @@ class g:
 
     # Time
 
+    t_: float = None
+    """Reference time"""
     dt: float = 0.1
     """Time increment"""
     nstep: int = None
@@ -177,8 +179,7 @@ class g:
     
     v_: float = None
     """Reference velocity"""
-    t_: float = None
-    """Reference time"""
+
     d_: npt.NDArray[np.floating] = None
     """Total stroke length"""
     rt = None
