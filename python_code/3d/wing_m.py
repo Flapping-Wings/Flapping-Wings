@@ -88,7 +88,19 @@ def table_g(t, rt, tau, p, rtOff):
 
 def d_table_g(t, rt, tau, p, rtOff):
     def d_table_b(t, rt, tau, p, rtOff):
-        pass
+        e0 = np.exp(-2.0 * p * (t * rt + tau - (0.0 + rtOff)))    
+        e1 = np.exp(-2.0 * p * (t * rt + tau - (1.0 + rtOff)))    
+        e2 = np.exp(-2.0 * p * (t * rt + tau - (2.0 + rtOff)))
+        e3 = np.exp(-2.0 * p * (t * rt + tau - (3.0 + rtOff)))   
+        e4 = np.exp(-2.0 * p * (t * rt + tau - (4.0 + rtOff))) 
+
+        f0 = 4.0 * p * rt * e0 / (1.0+e0)**2
+        f1 = 4.0 * p * rt * e1 / (1.0+e1)**2
+        f2 = 4.0 * p * rt * e2 / (1.0+e2)**2
+        f3 = 4.0 * p * rt * e3 / (1.0+e3)**2
+        f4 = 4.0 * p * rt * e4 / (1.0+e4)**2
+
+        return -f0 + f1 - f2 + f3 - f4
 
     tB = t % (2.0 / rt)
     return d_table_b(tB, rt, tau, p, rtOff)
