@@ -83,3 +83,6 @@ def table_g(t, rt, tau, p, rtOff):
 def d_table_g(t, rt, tau, p, rtOff):
     def d_table_b(t, rt, tau, p, rtOff):
         pass
+
+    tB = t % (2.0 / rt)
+    return d_table_b(tB, rt, tau, p, rtOff)
