@@ -60,3 +60,5 @@ def VORTEXm(X, Y, Z, x1, y1, z1, x2, y2, z2, GAMA):
     U[i] = R1R2X[i] * COEF[i]
     V[i] = R1R2Y[i] * COEF[i]
     W[i] = R1R2Z[i] * COEF[i]
+
+    return U, V, W
