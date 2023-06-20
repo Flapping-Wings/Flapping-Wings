@@ -104,3 +104,24 @@ def d_table_g(t, rt, tau, p, rtOff):
 
     tB = t % (2.0 / rt)
     return d_table_b(tB, rt, tau, p, rtOff)
+
+
+if __name__ == "__main__":
+    # Test 1
+    mpath = 0
+    t = 0
+    rt = 1
+    tau = 0
+    e = 0.2800
+    gMax = 0.523598775598299
+    p = 5
+    rtOff = 0
+    phiT = 1.396263401595464
+    phiB = -0.785398163397448
+
+    wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB)
+
+    # Test 2
+    t = 15      # Manually set in Matlab debugger
+
+    wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB)
