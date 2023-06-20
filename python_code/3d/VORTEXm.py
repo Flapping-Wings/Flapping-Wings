@@ -20,7 +20,7 @@ def VORTEXm(X, Y, Z, x1, y1, z1, x2, y2, z2, GAMA):
     
     Returns
     -------
-    U, V, W: 
+    U, V, W: ndarrays
         Velocity components at the observation points [X, Y, Z]
         due to one line
     """
