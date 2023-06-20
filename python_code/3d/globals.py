@@ -111,6 +111,10 @@ class g:
 
     # Wing motion
 
+    v_: float = None
+    """Reference velocity"""
+    d_: npt.NDArray[np.floating] = None
+    """Total stroke length"""
     phiT_: npt.NDArray[np.floating] = np.array([80.0, 80.0, 80.0, 80.0])
     """Top stroke angle in degrees"""
     phiB_: npt.NDArray[np.floating] = np.array([-45.0, -45.0, -45.0, -45.0])
@@ -177,11 +181,6 @@ class g:
 
     # TODO: Finish below
     
-    v_: float = None
-    """Reference velocity"""
-
-    d_: npt.NDArray[np.floating] = None
-    """Total stroke length"""
     rt = None
 
     limpa_f = None
