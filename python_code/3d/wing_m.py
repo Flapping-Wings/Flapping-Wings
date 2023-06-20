@@ -1,3 +1,5 @@
+import numpy as np
+
 def wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB):
     """
     Calculate airfoil translational and rotational parameters.
@@ -38,7 +40,16 @@ def wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB):
         Derivative of theta with respect to time (dtheta) / dt)
     """
     if mpath == 0:
-        pass
+        # Rolling motion
+        sump = phiT - phiB
+        phi = 0.5 * sump * (np.cos(np.pi * (t * rt + tau)) + e)
+        dph = -0.5 * sump * np.pi * rt * np.sin(np.pi * (t * rt + tau))   
+
+        # Rotational motion
+        gam = table_g(t, rt, tau, p, rtOff)
+        theta = gMax * gam
+        dgam = d_table_g(t, rt, tau, p, rtOff)
+        dth = gMax * dgam
 
     elif mpath == 1:
         pass
@@ -57,3 +68,5 @@ def wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB):
 
     else:
         raise ValueError("invalid mpath value")
+    
+    return phi, theta, dph, dth
