@@ -37,3 +37,23 @@ def wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB):
     dth: float
         Derivative of theta with respect to time (dtheta) / dt)
     """
+    if mpath == 0:
+        pass
+
+    elif mpath == 1:
+        pass
+
+    elif mpath == 2:
+        pass
+
+    elif mpath == 3:
+        pass
+
+    elif mpath == 4:
+        pass
+
+    elif mpath == 5:
+        pass
+
+    else:
+        raise ValueError("invalid mpath value")
