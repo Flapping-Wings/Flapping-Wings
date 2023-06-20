@@ -22,7 +22,7 @@ class g:
 
     folder: str = 'fig/'
     """Path to output folder"""
-    fid = open(f"{folder}/output.txt", 'w')
+    # fid = open(f"{folder}/output.txt", 'w')
     """Output file"""
 
 
