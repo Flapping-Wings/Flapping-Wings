@@ -70,3 +70,13 @@ def wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB):
         raise ValueError("invalid mpath value")
     
     return phi, theta, dph, dth
+
+
+# TODO: Helper functions
+def table_g(t, rt, tau, p, rtOff):
+    def table_b(t, rt, tau, p, rtOff):
+        pass
+
+def d_table_g(t, rt, tau, p, rtOff):
+    def d_table_b(t, rt, tau, p, rtOff):
+        pass
