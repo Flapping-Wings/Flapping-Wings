@@ -72,7 +72,7 @@ def wing_m(mpath, t, rt, tau, e, gMax, p, rtOff, phiT, phiB):
     return phi, theta, dph, dth
 
 
-# TODO: Helper functions
+# Helper functions
 def table_g(t, rt, tau, p, rtOff):
     def table_b(t, rt, tau, p, rtOff):
         f0 = 2.0 / (1.0 + np.exp(-2.0 * p * (t * rt + tau - (0.0 + rtOff))))
