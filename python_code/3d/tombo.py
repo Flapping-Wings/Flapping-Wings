@@ -153,6 +153,7 @@ def log_input(c, a, d, gMax):
         r = 0.5 * ((0.5*c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
         # TODO: Print r
 
+
 if __name__ == "__main__":
     check_input()
     tombo()
