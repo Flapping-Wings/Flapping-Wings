@@ -168,9 +168,9 @@ def lr_L2T_2(iwing, x, n, beta, delta, phi, theta):
     cph = np.cos(phi)
     sph = np.sin(phi)
 
-    xb[0,:] =        cth * (x[0,:] + a)                 + sth * x[2,:]
-    xb[1,:] =  sph * sth * (x[0,:] + a)+cph*x[1,:]- sph * cth * x[2,:]
-    xb[2,:] = -cph * sth * (x[0,:] + a)+sph*x[1,:]+ cph * cth * x[2,:]
+    xb[0,:] =        cth * (x[0,:] + a)                      + sth * x[2,:]
+    xb[1,:] =  sph * sth * (x[0,:] + a) + cph * x[1,:] - sph * cth * x[2,:]
+    xb[2,:] = -cph * sth * (x[0,:] + a) + sph * x[1,:] + cph * cth * x[2,:]
 
     if iwing == 1:          # Flip left wing coordinates
         xb[1, :] = -xb[2, :]
