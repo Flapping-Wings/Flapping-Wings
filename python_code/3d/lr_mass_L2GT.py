@@ -157,4 +157,30 @@ def lr_L2T_2(iwing, x, beta, delta, phi, theta):
     Coordinate transformation of the free vector from the wing-fixed to translationg system
     Examples of free vectors: velocity, unit normal to the element
     """
-    pass
+    # Rotation offset is zero
+    a = 0.0
+
+    # Local to flap plane inertia system xb[j]
+    cth = np.cos(theta)
+    sth = np.sin(theta)
+    cph = np.cos(phi)
+    sph = np.sin(phi)
+
+    # TODO: Initialize xb
+    xb[0,:] =        cth * (x[0,:] + a)                 + sth * x[2,:]
+    xb[1,:] =  sph * sth * (x[0,:] + a)+cph*x[1,:]- sph * cth * x[2,:]
+    xb[2,:] = -cph * sth * (x[0,:] + a)+sph*x[1,:]+ cph * cth * x[2,:]
+
+    if iwing == 1:          # Flip left wing coordinates
+        xb[1, :] = -xb[2, :]
+
+    # Flap plane inertia to translation inertia
+    beta = beta - delta     # Effective stroke angle
+    cb = np.cos(beta)
+    sb = np.sin(beta)
+
+    X[0, :] =  sb * xb[0, :] + cb * xb[2, :]
+    X[1, :] =       xb[2, :]
+    X[2, :] = -cb * xb[0, :] + sb * xb[2, :]
+
+    return X
