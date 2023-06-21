@@ -80,13 +80,6 @@ def lr_mass_L2GT(
 def lr_L2G_1(iwing, x, n, beta, delta, phi, theta, a, U, t, b):
     """
     Coordinate transformation from the wing-fixed to global system
-    
-    Returns
-    -------
-    X: ndarray[j, n, i]
-        Global coordinates
-    xt: ndarray[j, n, i]
-        Translating system coordinates
     """
     xb = np.zeros((3, 4, n))
     xt = np.zeros((3, 4, n))
@@ -124,13 +117,6 @@ def lr_L2G_1(iwing, x, n, beta, delta, phi, theta, a, U, t, b):
 def lr_L2G_2(iwing, x, n, beta, delta, phi, theta, a, U, t, b):
     """
     Coordinate transformation from the wing-fixed to global & translating systems
-    
-    Returns
-    -------
-    X: ndarray[j, n, i]
-        Global coordinates
-    xt: ndarray[j, n, i]
-        Translating system coordinates
     """
     pass
 
@@ -138,10 +124,5 @@ def lr_L2T_2(iwing, x, beta, delta, phi, theta):
     """
     Coordinate transformation of the free vector from the wing-fixed to translationg system
     Examples of free vectors: velocity, unit normal to the element
-
-    Returns
-    -------
-    X: ndarray[j, i]
-        Vector in translating system
     """
     pass
