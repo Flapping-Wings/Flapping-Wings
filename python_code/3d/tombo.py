@@ -2,6 +2,8 @@ import numpy as np
 from globals import g
 from nd_data import nd_data
 from wing_total import wing_total
+from lr_set_matrix import lr_set_matrix
+from wing_m import wing_m
 
 def tombo():
     # SETUP
@@ -84,6 +86,29 @@ def tombo():
 
     # TIME MARCH
     # ----------
+    for w in range(g.nwing):
+        MVNs_f[:, :, w] = lr_set_matrix(w, xt_f, nxt_f, xC_f, nC_f)
+        MVNs_r[:, :, w] = lr_set_matrix(w, xt_f, nxt_f, xC_f, nC_f)
+
+    for g.istep in range(g.nstep):
+        t = g.istep * g.dt
+
+        # Get wing motion parameters
+        phi = np.zeros(g.twing)
+        theta = np.zeros(g.twing)
+        dph = np.zeros(g.twing)
+        dth = np.zeros(g.twing)
+
+        for i in range(g.twing):
+            phi[i], theta[i], dph[i], dth[i] = \
+                wing_m(g.mpath[i], t, g.rt[i], g.tau[i], e[i], 
+                       gMax[i], g.p[i], g.rtOff[i], phiT[i], phiB[i])
+            
+    # Get global coordinates of the points on the wing
+    # for i in range(g.nwing):
+    #     Xc_f[:,:,:,i], Xb_f[:,:,:,i], Xt_f[:,:,:,i], XC_f[:,:,i], NC_f[:,:,i] = \
+    #         lr_mass_L2GT(i, beta[i], delta, phi[i], theta[i], a[i], U, t, b_f,
+    #                      xc_f, xb_f, xt_f, xC_f, nC_f)
 
 
 def check_input():
