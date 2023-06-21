@@ -22,7 +22,7 @@ class g:
 
     folder: str = 'fig/'
     """Path to output folder"""
-    fid = open(f"{folder}/output.txt", 'w')
+    # fid = open(f"{folder}/output.txt", 'w')
     """Output file"""
 
 
@@ -42,6 +42,8 @@ class g:
 
     # Time
 
+    t_: float = None
+    """Reference time"""
     dt: float = 0.1
     """Time increment"""
     nstep: int = None
@@ -109,6 +111,10 @@ class g:
 
     # Wing motion
 
+    v_: float = None
+    """Reference velocity"""
+    d_: npt.NDArray[np.floating] = None
+    """Total stroke length"""
     phiT_: npt.NDArray[np.floating] = np.array([80.0, 80.0, 80.0, 80.0])
     """Top stroke angle in degrees"""
     phiB_: npt.NDArray[np.floating] = np.array([-45.0, -45.0, -45.0, -45.0])
@@ -175,20 +181,24 @@ class g:
 
     # TODO: Finish below
     
-    v_ = None
-    t_ = None
-    d_ = None
-    h_ = None
     rt = None
 
     limpa_f = None
+    """Linear impulse from bound vortices (front)"""
     aimpa_f = None
+    """Angular impulse from bound vortices (front)"""
     limpw_f = None
+    """Linear impulse from wake vortices (front)"""
     aimpw_f = None
+    """Angular impulse from wake vortices (front)"""
     limpa_r = None
+    """Linear impulse from bound vortices (rear)"""
     aimpa_r = None
+    """Angular impulse from bound vortices (rear)"""
     limpw_r = None
+    """Linear impulse from wake vortices (rear)"""
     aimpw_r = None
+    """Angular impulse from wake vortices (rear)"""
 
     ielong = None
     hfactor = None
