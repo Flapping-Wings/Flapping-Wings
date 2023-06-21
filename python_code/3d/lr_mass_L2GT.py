@@ -64,3 +64,14 @@ def lr_mass_L2GT(
         nit normal at the total collocation points on the wing 
         (global & translating system)
     """
+    s  = np.shape(xt)
+    sb = np.shape(xb)
+    sc = np.shape(xc)
+
+    Xc   = tblrL2G_1(iwing, xc, sc[2], beta, delta, phi, theta, a, U, t, b )
+    Xb   = tblrL2G_1(iwing, xb, sb[2], beta, delta, phi, theta, a, U, t, b )
+    Xt   = tblrL2G_1(iwing, xt,  s[2], beta, delta, phi, theta, a, U, t, b )
+    XC   = tblrL2G_2(iwing, xC,  s[2], beta, delta, phi, theta, a, U, t, b )
+    NC_T = tblrL2T_2(iwing, nC,        beta, delta, phi, theta)
+
+    return Xc, Xb, Xt, XC, NC_T
