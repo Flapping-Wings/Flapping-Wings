@@ -88,7 +88,38 @@ def lr_L2G_1(iwing, x, n, beta, delta, phi, theta, a, U, t, b):
     xt: ndarray[j, n, i]
         Translating system coordinates
     """
-    pass
+    xb = np.zeros((3, 4, n))
+    xt = np.zeros((3, 4, n))
+    X  = np.zeros((3, 4, n))
+
+    # Local to flap plane inertia system Xb[j]
+    cth = np.cos(theta)
+    sth = np.sin(theta)
+    cph = np.cos(phi)
+    sph = np.sin(phi)
+
+    xb[0, :, :] =        cth * (x[0,:,:] + a)                        + sth * x[2,:,:]
+    xb[1, :, :] =  sph * sth * (x[0,:,:] + a) + cph * x[1,:,:] - sph * cth * x[2,:,:]
+    xb[2, :, :] = -cph * sth * (x[0,:,:] + a) + sph * x[1,:,:] + cph * cth * x[2,:,:]
+
+    if iwing == 1:      # Flip left wing coordinates
+        xb[1, :, :] = -xb[1, :, :]
+
+    # From flap plane inertia to translating inertia
+    beta = beta - delta         # Effective flap plane angle
+    cb = np.cos(beta)
+    sb = np.sin(beta)
+
+    xt[0, :, :] =  sb * xb[0, :, :] + cb * xb[2, :, :]
+    xt[1, :, :] =       xb[1, :, :]
+    xt[2, :, :] = -cb * xb[0, :, :] + sb * xb[2, :, :]
+
+    # From translating inertia to global
+    X[0, :, :] = -U[0] * t + b * np.cos(delta) + xt[0, :, :]
+    X[1, :, :] = -U[1] * t                     + xt[1, :, :]
+    X[2, :, :] = -U[2] * t - b * np.sin(delta) + xt[2, :, :]
+
+    return X
 
 def lr_L2G_2(iwing, x, n, beta, delta, phi, theta, a, U, t, b):
     """
