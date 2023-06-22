@@ -46,7 +46,7 @@ class g:
     """Reference time"""
     dt: float = 0.1
     """Time increment"""
-    nstep: int = None
+    nstep: int = 4
     """Number of time steps to iterate through"""
     istep: int = 0
     """Current iteration step"""
