@@ -54,7 +54,7 @@ def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U):
     vyb =  sph * dth * xb - cph * dph * ab - sph * dph * xC[1, :]
     vzb = -cph * dth * xb - sph * dph * ab + cph * dph * xC[1, :]
     
-    if iwing == 2:      # Flip left wing coordinates
+    if iwing == 1:      # Flip left wing coordinates
         vyb = -vyb
     
     vx = -U[0] + sbt * vxb + cbt * vzb
