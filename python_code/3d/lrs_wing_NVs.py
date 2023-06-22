@@ -51,8 +51,8 @@ def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U):
     ab = -sth * (xC[0, :] + a) + cth * xC[2, :]
     xb =  cth * (xC[0, :] + a) + sth * xC[2, :]
     vxb = dth * ab
-    vyb =  sph * dth * xb - cph * dph * ab - sph * dph * xC[2, :]
-    vzb = -cph * dth * xb - sph * dph * ab + cph * dph * xC[2, :]
+    vyb =  sph * dth * xb - cph * dph * ab - sph * dph * xC[1, :]
+    vzb = -cph * dth * xb - sph * dph * ab + cph * dph * xC[1, :]
     
     if iwing == 2:      # Flip left wing coordinates
         vyb = -vyb
