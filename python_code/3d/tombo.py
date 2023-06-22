@@ -21,6 +21,7 @@ def tombo():
     
     g.LCUT = 0.1 * h[0]  
     
+    check_input()
     log_input(c, a, d, gMax)
 
     # Front right wing
@@ -155,5 +156,4 @@ def log_input(c, a, d, gMax):
 
 
 if __name__ == "__main__":
-    check_input()
     tombo()
