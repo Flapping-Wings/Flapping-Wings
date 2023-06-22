@@ -40,4 +40,36 @@ def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U):
     Vnc: ndarray[1, nXC]
         Normal velocity (global)
     """
+    # Airfoil velocity components in global system
+    sbt = np.sin(beta)
+    cbt = np.cos(beta)
+    sth = np.sin(theta)
+    cth = np.cos(theta)
+    sph = np.sin(phi)
+    cph = np.cos(phi)  
+        
+    ab = -sth * (xC[0, :] + a) + cth * xC[2, :]
+    xb =  cth * (xC[0, :] + a) + sth * xC[2, :]
+    vxb = dth * ab
+    vyb =  sph * dth * xb - cph * dph * ab - sph * dph * xC[2, :]
+    vzb = -cph * dth * xb - sph * dph * ab + cph * dph * xC[2, :]
+    
+    if iwing == 2:      # Flip left wing coordinates
+        vyb = -vyb
+    
+    vx = -U[0] + sbt * vxb + cbt * vzb
+    vy = -U[1] + vyb
+    vz = -U[2] - cbt * vxb + sbt * vzb
+
+    # Normal velocity components of the airfoil
+    Vnc = vx * NC[0, :] + vy * NC[1, :] + vz * NC[2, :]
+
+    if g.vplot:
+        plot_normal_vel()
+
+    return Vnc
+
+
+# TODO
+def plot_normal_vel():
     pass
