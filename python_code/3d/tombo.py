@@ -4,6 +4,7 @@ from nd_data import nd_data
 from wing_total import wing_total
 from lr_set_matrix import lr_set_matrix
 from wing_m import wing_m
+from lr_mass_L2GT import lr_mass_L2GT
 
 def tombo():
     # SETUP
@@ -120,11 +121,11 @@ def tombo():
                 wing_m(g.mpath[i], t, g.rt[i], g.tau[i], e[i], 
                        gMax[i], g.p[i], g.rtOff[i], phiT[i], phiB[i])
             
-    # Get global coordinates of the points on the wing
-    # for i in range(g.nwing):
-    #     Xc_f[:,:,:,i], Xb_f[:,:,:,i], Xt_f[:,:,:,i], XC_f[:,:,i], NC_f[:,:,i] = \
-    #         lr_mass_L2GT(i, beta[i], delta, phi[i], theta[i], a[i], U, t, b_f,
-    #                      xc_f, xb_f, xt_f, xC_f, nC_f)
+        # Get global coordinates of the points on the wing
+        for i in range(g.nwing):
+            Xc_f[:,:,:,i], Xb_f[:,:,:,i], Xt_f[:,:,:,i], XC_f[:,:,i], NC_f[:,:,i] = \
+                lr_mass_L2GT(i, beta[i], delta, phi[i], theta[i], a[i], U, t, b_f,
+                            xc_f, xb_f, xt_f, xC_f, nC_f)
 
 
 def check_input():
