@@ -173,7 +173,7 @@ def lr_L2T_2(iwing, x, n, beta, delta, phi, theta):
     xb[2,:] = -cph * sth * (x[0,:] + a) + sph * x[1,:] + cph * cth * x[2,:]
 
     if iwing == 1:          # Flip left wing coordinates
-        xb[1, :] = -xb[2, :]
+        xb[1, :] = -xb[1, :]
 
     # Flap plane inertia to translation inertia
     beta = beta - delta     # Effective stroke angle
@@ -181,7 +181,7 @@ def lr_L2T_2(iwing, x, n, beta, delta, phi, theta):
     sb = np.sin(beta)
 
     X[0, :] =  sb * xb[0, :] + cb * xb[2, :]
-    X[1, :] =       xb[2, :]
+    X[1, :] =       xb[1, :]
     X[2, :] = -cb * xb[0, :] + sb * xb[2, :]
 
     return X
