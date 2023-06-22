@@ -8,3 +8,5 @@
 
 **/*.pickle
 **/*.txt
+
+__pycache__
