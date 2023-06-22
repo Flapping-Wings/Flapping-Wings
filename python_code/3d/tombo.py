@@ -5,6 +5,7 @@ from wing_total import wing_total
 from lr_set_matrix import lr_set_matrix
 from wing_m import wing_m
 from lr_mass_L2GT import lr_mass_L2GT
+from lrs_wing_NVs import lrs_wing_NVs
 
 def tombo():
     # SETUP
@@ -133,6 +134,14 @@ def tombo():
                 lr_mass_L2GT(i, beta[i+2], delta, phi[i+2], theta[i+2], a[i+2], U, t, b_r,
                              xc_r, xb_r, xt_r, xC_r, nC_r)
 
+        # Find velocity of the wing
+        for i in range(g.nwing):
+            # Front wing
+            Vnc_f[i,:] = lrs_wing_NVs(0, i, xC_f, XC_f[:,:,i], NC_f[:,:,i], t, theta[i],
+                                      phi[i], dph[i], dth[i], a[i], beta[i], U)
+            # Rear wing
+            Vnc_r[i,:] = lrs_wing_NVs(1, i, xC_r, XC_r[:,:,i], NC_r[:,:,i], t, theta[i+2],
+                                      phi[i+2], dph[i+2], dth[i+2], a[i+2], beta[i+2], U)
 
 def check_input():
     if g.b_r - g.b_f >= 0.5 * (g.c_r + g.c_f):
