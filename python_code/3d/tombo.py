@@ -13,6 +13,21 @@ def tombo():
     # g.xb_r, g.nxb_r, g.nb_r, g.xc_r, g.nxc_r, g.nc_r, g.l_r, g.c_r, g.h_r = \
     #     Wing()
 
+    # TEMPORARY WHILE WING() IS NOT IMPLEMENTED
+    import temp_arrays
+    # xb_f and xb_r from temp_arrays
+    g.nxb_f = 10;                   g.nxb_r = 10
+    g.nb_f = np.zeros((3, 10));     g.nb_r = np.zeros((3, 10))
+    g. nb_f[2, :] = 1;              g. nb_r[2, :] = 1
+    # xc_f and xc_r from temp_arrays
+    g.nxc_f = 7;                    g.nxc_r = 7
+    g.nc_f = np.zeros((3, 7));      g.nc_r = np.zeros((3, 7))
+    g.nc_f[2, :] = 1;               g.nc_r[2, :] = 1
+    g.l_f = 3.732050807568878;      g.l_r = 1.866025403784439
+    g.c_f = 2.0;                    g.c_r = 1.0
+    g.h_f = 0.2;                    g.h_r = 0.1
+    ###########################################
+    
     l, c, h, phiT, phiB, a, beta, delta, gMax, U, \
     xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d =      \
         nd_data(g.l_f, g.c_f, g.h_f, g.l_r, g.c_r, g.h_r, 
