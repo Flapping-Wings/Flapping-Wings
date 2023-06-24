@@ -6,6 +6,7 @@ from lr_set_matrix import lr_set_matrix
 from wing_m import wing_m
 from lr_mass_L2GT import lr_mass_L2GT
 from lrs_wing_NVs import lrs_wing_NVs
+from n_vel_T_by_W import n_vel_T_by_W
 
 def tombo():
     # SETUP
@@ -141,6 +142,17 @@ def tombo():
             # Rear wing
             Vnc_r[i,:] = lrs_wing_NVs(1, i, xC_r, XC_r[:,:,i], NC_r[:,:,i], t, theta[i+2],
                                       phi[i+2], dph[i+2], dth[i+2], a[i+2], beta[i+2], U)
+
+        # Normal vel on each airfoil by front & rear, right & left wake vortices
+        # For each wing, there are 4 wake vortex contributions
+        for i in range(g.nwing): 
+            # Front wing
+            Vncw_f[i,:] = n_vel_T_by_W(g.istep, nxt_f, XC_f[:,:,i], NC_f[:,:,i], 
+                                       Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)   
+            # Rear wing  
+            Vncw_r[i,:] = n_vel_T_by_W(g.istep, nxt_r, XC_r[:,:,i], NC_r[:,:,i], 
+                                       Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r) 
+
 
 def check_input():
     if g.b_r - g.b_f >= 0.5 * (g.c_r + g.c_f):
