@@ -12,6 +12,9 @@ def assemble_matrix(nxt_f,
     """
     Assemble 16 sub-matrices.
 
+    A sub-matrix `MVNs_ij` corresponds to 
+    `target_wing = i` and `source_wing = j`.
+
     The sub-matrices along the diagonal (coordinates [i, i])
     are constructed as below:
         `MVNs_11: ndarray[nxt_f, nxt_f] = MVNs_f[nxt_f, nxt_f, 0]`
