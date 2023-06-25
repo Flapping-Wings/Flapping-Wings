@@ -109,7 +109,7 @@ def tombo():
     # ----------
     for w in range(g.nwing):
         MVNs_f[:, :, w] = lr_set_matrix(w, xt_f, nxt_f, xC_f, nC_f)
-        MVNs_r[:, :, w] = lr_set_matrix(w, xt_f, nxt_f, xC_f, nC_f)
+        MVNs_r[:, :, w] = lr_set_matrix(w, xt_r, nxt_r, xC_r, nC_r)
 
     for g.istep in range(g.nstep):
         t = g.istep * g.dt
@@ -187,6 +187,8 @@ def tombo():
                              MVNs_21, MVNs_23, MVNs_24,
                              MVNs_31, MVNs_32, MVNs_34,
                              MVNs_41, MVNs_42, MVNs_43)
+        
+        dummy = 0
 
 
 def check_input():
