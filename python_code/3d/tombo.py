@@ -7,6 +7,8 @@ from wing_m import wing_m
 from lr_mass_L2GT import lr_mass_L2GT
 from lrs_wing_NVs import lrs_wing_NVs
 from n_vel_T_by_W import n_vel_T_by_W
+from cross_matrix import cross_matrix
+from assemble_matrix import assemble_matrix
 
 def tombo():
     # SETUP
@@ -152,6 +154,39 @@ def tombo():
             # Rear wing  
             Vncw_r[i,:] = n_vel_T_by_W(g.istep, nxt_r, XC_r[:,:,i], NC_r[:,:,i], 
                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r) 
+
+        # Calculation of the time-dependent sub-matrices MVNs_ij (i~=j)
+        # target wing=1, source wing=2
+        MVNs_12 = cross_matrix(XC_f[:,:,0], NC_f[:,:,0], nxt_f, Xt_f[:,:,:,1], nxt_f)
+        # target wing=1, source wing=3
+        MVNs_13 = cross_matrix(XC_f[:,:,0], NC_f[:,:,0], nxt_f, Xt_r[:,:,:,0], nxt_r) 
+        # target wing=1, source wing=4
+        MVNs_14 = cross_matrix(XC_f[:,:,0], NC_f[:,:,0], nxt_f, Xt_r[:,:,:,1], nxt_r) 
+        # target wing=1, source wing=2
+        MVNs_21 = cross_matrix(XC_f[:,:,1], NC_f[:,:,1], nxt_f, Xt_f[:,:,:,0], nxt_f)
+        # target wing=1, source wing=3
+        MVNs_23 = cross_matrix(XC_f[:,:,1], NC_f[:,:,1], nxt_f, Xt_r[:,:,:,0], nxt_r) 
+        # target wing=1, source wing=4
+        MVNs_24 = cross_matrix(XC_f[:,:,1], NC_f[:,:,1], nxt_f, Xt_r[:,:,:,1], nxt_r)     
+        # target wing=1, source wing=2
+        MVNs_31 = cross_matrix(XC_r[:,:,0], NC_r[:,:,0], nxt_r, Xt_f[:,:,:,0], nxt_f)
+        # target wing=1, source wing=3
+        MVNs_32 = cross_matrix(XC_r[:,:,0], NC_r[:,:,0], nxt_r, Xt_f[:,:,:,1], nxt_f) 
+        # target wing=1, source wing=4
+        MVNs_34 = cross_matrix(XC_r[:,:,0], NC_r[:,:,0], nxt_r, Xt_r[:,:,:,1], nxt_r) 
+        # target wing=1, source wing=2
+        MVNs_41 = cross_matrix(XC_r[:,:,1], NC_r[:,:,1], nxt_r, Xt_f[:,:,:,0], nxt_f)
+        # target wing=1, source wing=3
+        MVNs_42 = cross_matrix(XC_r[:,:,1], NC_r[:,:,1], nxt_r, Xt_f[:,:,:,1], nxt_f) 
+        # target wing=1, source wing=4
+        MVNs_43 = cross_matrix(XC_r[:,:,1], NC_r[:,:,1], nxt_r, Xt_r[:,:,:,0], nxt_r) 
+    
+        # Assemble the total matrix using MVNs_f[:,:,1], MVNs_r[:,:,1], MVNs_ij[:,:]
+        MVN= assemble_matrix(nxt_f, nxt_r, MVNs_f, MVNs_r,
+                             MVNs_12, MVNs_13, MVNs_14,
+                             MVNs_21, MVNs_23, MVNs_24,
+                             MVNs_31, MVNs_32, MVNs_34,
+                             MVNs_41, MVNs_42, MVNs_43)
 
 
 def check_input():
