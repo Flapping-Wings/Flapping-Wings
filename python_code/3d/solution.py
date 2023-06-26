@@ -43,6 +43,7 @@ def solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r):
     GAMA[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] = Vnc_r[1, 0:nxt_r] - Vncw_r[1, 0:nxt_r]
 
     if g.solver:
+        # TODO
         pass
     else:
         MVN_lu = lu_factor(MVN)
