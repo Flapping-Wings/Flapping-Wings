@@ -183,7 +183,7 @@ def tombo():
         MVNs_43 = cross_matrix(XC_r[:,:,1], NC_r[:,:,1], nxt_r, Xt_r[:,:,:,0], nxt_r) 
     
         # Assemble the total matrix using MVNs_f[:,:,1], MVNs_r[:,:,1], MVNs_ij[:,:]
-        MVN= assemble_matrix(nxt_f, nxt_r, MVNs_f, MVNs_r,
+        MVN = assemble_matrix(nxt_f, nxt_r, MVNs_f, MVNs_r,
                              MVNs_12, MVNs_13, MVNs_14,
                              MVNs_21, MVNs_23, MVNs_24,
                              MVNs_31, MVNs_32, MVNs_34,
