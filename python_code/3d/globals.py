@@ -34,6 +34,8 @@ class g:
     """Toggle airfoil mesh plot"""
     vplot: bool = True
     """Toggle airfoil normal velocity plot"""
+    gplot: bool = True
+    """Toggle gamma plot"""
     wplot: bool = True
     """Toggle wake vortex plot"""
     idebg: bool = True
