@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.linalg import lu_factor, lu_solve
+from globals import g
 
 def solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r):
     """
@@ -27,4 +28,24 @@ def solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r):
     GAMA: ndarray[2 * (nxt_f + nxt_r)]
     TODO
     """
-    pass
+    GAMA = np.zeros(2 * (nxt_f + nxt_r))
+
+    # Front wings
+    # Right
+    GAMA[0:nxt_f]         = Vnc_f[0, 0:nxt_f] - Vncw_f[0, 0:nxt_f]
+    # Left
+    GAMA[nxt_f:(2*nxt_f)] = Vnc_f[1, 0:nxt_f] - Vncw_f[1, 0:nxt_f]
+
+    # Rear wings
+    # Right
+    GAMA[(2*nxt_f):(2*nxt_f + nxt_r)]           = Vnc_r[0, 0:nxt_r] - Vncw_r[0, 0:nxt_r]
+    # Left
+    GAMA[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] = Vnc_r[1, 0:nxt_r] - Vncw_r[1, 0:nxt_r]
+
+    if g.solver:
+        pass
+    else:
+        MVN_lu = lu_factor(MVN)
+        GAMA = lu_solve(MVN_lu, GAMA)
+
+    return GAMA
