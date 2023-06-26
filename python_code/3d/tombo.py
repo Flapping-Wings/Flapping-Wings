@@ -10,6 +10,10 @@ from n_vel_T_by_W import n_vel_T_by_W
 from cross_matrix import cross_matrix
 from assemble_matrix import assemble_matrix
 from solution import solution
+# from plot_GAM import plot_GAM
+# from plot_WB import plot_WB
+# from s_impulse_WT import s_impulse_WT
+from divide_GAM import divide_GAM
 
 def tombo():
     # SETUP
@@ -191,6 +195,38 @@ def tombo():
         
         # Solve the system of equations
         GAMA = solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r)
+
+        # Split GAMA into 4 parts
+        GAM_f = np.zeros((2, nxt_f))
+        GAM_r = np.zeros((2, nxt_r))
+
+        GAM_f[0, 0:nxt_f] = GAMA[0:nxt_f]                               # Front right wing
+        GAM_f[1, 0:nxt_f] = GAMA[nxt_f:(2*nxt_f)]                       # Front left  wing
+        GAM_r[0, 0:nxt_r] = GAMA[(2*nxt_f):(2*nxt_f + nxt_r)]           # Rear right wing
+        GAM_r[1, 0:nxt_r] = GAMA[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] # Rear left  wing
+
+        # Plot GAMA at the collocation points of the elements
+        # using the unit normal direction: positive up and negative down
+        # if g.gplot:
+        #     for i in range(g.nwing):
+        #         # Front wing
+        #         plot_GAM(0, i, t, GAM_f[i,:], XC_f[:,:,i], NC_f[:,:,i])
+        #         # Rear wing
+        #         plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
+
+        # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
+        # plot_WB(0, g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f)     # Front wing
+        # plot_WB(1, g.istep, g.nxb_r, nxw_r, Xb_r, Xw_r)     # Rear wing
+
+        # if g.nstep > 3:     # At least 4 steps needed to calculate forces and moments
+            # Calculate impulses in the body-translating system
+            # Include all of the bound vortices and wake vortices
+            # For istep=1, there are no wake vortices
+            # TODO
+
+        # Extract GAMAb (border & shed ) from GAM
+        GAMAb_f = divide_GAM(GAM_f, g.nxb_f)
+        GAMAb_r = divide_GAM(GAM_r, g.nxb_r)
 
 
 def check_input():
