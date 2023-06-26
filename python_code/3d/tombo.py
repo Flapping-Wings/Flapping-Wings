@@ -187,8 +187,6 @@ def tombo():
                              MVNs_21, MVNs_23, MVNs_24,
                              MVNs_31, MVNs_32, MVNs_34,
                              MVNs_41, MVNs_42, MVNs_43)
-        
-        dummy = 0
 
 
 def check_input():
