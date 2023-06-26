@@ -6,32 +6,33 @@ def wing_total(Xb, nXb, Nb, Xc, nXc, Nc):
     
     Parameters
     ----------
-        Xb: ndarray[j, n, i]
-
-        nXb: int
-
-        Nb: ndarray[j, i]
-
-        Xc: ndarray[j, n, i]
-
-        nXc: int
-
-        Nc: ndarray[j, i]
+    Xb: ndarray[j, n, i]
+        Coordinates of border elements
+    nXb: int
+        Number of border elements
+    Nb: ndarray[j, i]
+        Unit normals to the border elements
+    Xc: ndarray[j, n, i]
+        Coordinates of center elements
+    nXc: int
+        Number of center elements
+    Nc: ndarray[j, i]
+        Unit normals to the center elements
 
     Returns
     -------
-        Xc: ndarray[j, n, i]
-            Reduced Xc (centroid removed, n = 1:4)
-        Xb: ndarray[j, n, i]
-            Reduced Xb (centroid removed, n = 1:4)
-        Xt: ndarray[j, n, i]
-            Coordinates of total elements on the wing
-        nXt: int
-            Number of total elements on the wing
-        XC: ndarray[j, i]
-            Coordinates of the total collocation points on the wing
-        NC: ndarray[j, i]
-            Unit normal at the total collocation points on the wing
+    Xc: ndarray[j, n, i]
+        Reduced Xc (centroid removed, n = 1:4)
+    Xb: ndarray[j, n, i]
+        Reduced Xb (centroid removed, n = 1:4)
+    Xt: ndarray[j, n, i]
+        Coordinates of total elements on the wing
+    nXt: int
+        Number of total elements on the wing
+    XC: ndarray[j, i]
+        Coordinates of the total collocation points on the wing
+    NC: ndarray[j, i]
+        Unit normal at the total collocation points on the wing
     """
     # Initialization
     nXt = nXb + nXc
