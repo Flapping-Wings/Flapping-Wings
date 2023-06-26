@@ -16,4 +16,11 @@ def divide_GAM(GAM, nxb):
     GAMAb: ndarray[w, nxb]
         Border elements (to be shed)
     """
-    pass
+    # TODO: Feels like it should be possible to optimize
+    # this entire function away with just NumPy
+    GAMAb = np.zeros((g.nwing, nxb))
+
+    for i in range(g.nwing):
+        GAMAb[i, 0:nxb] = GAM[i, 0:nxb]
+
+    return GAMAb
