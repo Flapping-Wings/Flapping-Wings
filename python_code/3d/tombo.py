@@ -9,6 +9,7 @@ from lrs_wing_NVs import lrs_wing_NVs
 from n_vel_T_by_W import n_vel_T_by_W
 from cross_matrix import cross_matrix
 from assemble_matrix import assemble_matrix
+from solution import solution
 
 def tombo():
     # SETUP
@@ -187,6 +188,9 @@ def tombo():
                              MVNs_21, MVNs_23, MVNs_24,
                              MVNs_31, MVNs_32, MVNs_34,
                              MVNs_41, MVNs_42, MVNs_43)
+        
+        # Solve the system of equations
+        GAMA = solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r)
 
 
 def check_input():
