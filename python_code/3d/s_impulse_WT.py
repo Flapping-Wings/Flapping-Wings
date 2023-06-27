@@ -107,3 +107,20 @@ def aimpulse(Xa, n1, n2, gama, beta, phi, theta, a):
         Angular impulse vector
     """
     pass
+
+def slimpulse_tr(X, gama, beta, phi, theta, a):
+    """
+    Calculate linear impulses due to the triangular bound or wake 
+    vortex elements in the wing-translating system
+    """
+    pass
+
+def saimpulse_tr(X, n, gama, beta, phi, theta, a):
+    """
+    Calculate moment of inertia for the triangular elements in 
+    the wing-translating system
+    """
+
+def triangle(X):
+    """Geometry of a triangle element"""
+    pass
