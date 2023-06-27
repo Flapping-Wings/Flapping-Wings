@@ -121,7 +121,7 @@ def limpulse(Xa, gama, beta, phi, theta, a):
     # Add linear impulses from the two triangles
     limp = limp1 + limp2
 
-    return limp
+    return n1, n2, limp
 
 def aimpulse(Xa, n1, n2, gama, beta, phi, theta, a):
     """
