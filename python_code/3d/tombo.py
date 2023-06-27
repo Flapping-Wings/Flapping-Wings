@@ -12,7 +12,7 @@ from assemble_matrix import assemble_matrix
 from solution import solution
 # from plot_GAM import plot_GAM
 # from plot_WB import plot_WB
-# from s_impulse_WT import s_impulse_WT
+from s_impulse_WT import s_impulse_WT
 from divide_GAM import divide_GAM
 
 def tombo():
@@ -218,11 +218,30 @@ def tombo():
         # plot_WB(0, g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f)     # Front wing
         # plot_WB(1, g.istep, g.nxb_r, nxw_r, Xb_r, Xw_r)     # Rear wing
 
-        # if g.nstep > 3:     # At least 4 steps needed to calculate forces and moments
+        if g.nstep > 3:     # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
             # Include all of the bound vortices and wake vortices
             # For istep=1, there are no wake vortices
-            # TODO
+            # Front wing
+            limpa, aimpa, limpw, aimpw = \
+                s_impulse_WT(g.istep, U, t, Xt_f, Xw_f, GAM_f, GAMw_f, 
+                             beta[0:2], phi[0:2], theta[0:2], a[0:2])
+            for j in range(3):
+                for w in range(g.nwing):
+                    limpa_f[j, g.istep, w] = limpa[j, w]
+                    aimpa_f[j, g.istep, w] = aimpa[j, w]
+                    limpw_f[j, g.istep, w] = limpw[j, w]
+                    aimpw_f[j, g.istep, w] = aimpw[j, w]
+            # Rear wing
+            limpa, aimpa, limpw, aimpw = \
+                s_impulse_WT(g.istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
+                             beta[2:4], phi[2:4], theta[2:4], a[2:4]) 
+            for j in range(3):
+                for w in range(3):
+                    limpa_r[j, g.istep, w] = limpa[j, w]
+                    aimpa_r[j, g.istep, w] = aimpa[j, w]
+                    limpw_r[j, g.istep, w] = limpw[j, w]
+                    aimpw_r[j, g.istep, w] = aimpw[j, w]  
 
         # Extract GAMAb (border & shed ) from GAM
         GAMAb_f = divide_GAM(GAM_f, g.nxb_f)
