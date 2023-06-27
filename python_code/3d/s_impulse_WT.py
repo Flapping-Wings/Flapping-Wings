@@ -113,7 +113,7 @@ def limpulse(Xa, gama, beta, phi, theta, a):
     n1, limp1 = slimpulse_tr(X, gama, beta, phi, theta, a)
 
     # For triangle 0 2 3
-    X = np.zeros(3, 3, s[2])
+    X = np.zeros((3, 3, s[2]))
     tindex = [0, 2, 3]
     X = Xa[:, tindex, :]
     n2, limp2 = slimpulse_tr(X, gama, beta, phi, theta, a)
@@ -144,12 +144,12 @@ def aimpulse(Xa, n1, n2, gama, beta, phi, theta, a):
     s = np.shape(Xa)
 
     # For Triangle 0 1 2
-    X = np.zeros(3, 3, s[2])
+    X = np.zeros((3, 3, s[2]))
     X = Xa[:, 0:3, :]
     aimp1 = saimpulse_tr(X, n1, gama, beta, phi, theta, a)
 
     # For triangle 0 2 3
-    X = np.zeros(3, 3, s[2])
+    X = np.zeros((3, 3, s[2]))
     tindex = [0, 2, 3]
     X = Xa[:, tindex,:]
     aimp2 = saimpulse_tr(X, n2, gama, beta, phi, theta, a)
