@@ -226,4 +226,44 @@ def saimpulse_tr(X, n, gama, beta, phi, theta, a):
 
 def triangle(X):
     """Geometry of a triangle element"""
-    pass
+    s = np.shape(X)
+    x21 = np.zeros((3, s[2]))
+    x23 = np.zeros((3, s[2]))
+
+    for j in range(3):
+        x21[j,:] = X[j,0,:] - X[j,1,:]
+        x23[j,:] = X[j,2,:] - X[j,1,:]
+
+    nx21 = np.sqrt(x21[0,:]**2 + x21[1,:]**2 + x21[2,:]**2)
+    nx23 = np.sqrt(x23[0,:]**2 + x23[1,:]**2 + x23[2,:]**2)     # Unused
+
+    l = nx21
+    xi = np.zeros((3, s[2]))
+    for j in range(3):
+        xi[j,:] = x21[j,:] / l
+    
+    lL = x23[0,:] * xi[0,:] + x23[1,:] * xi[1,:] + x23[2,:] * xi[2,:]
+    lR = l - lL
+
+    xj2 = np.zeros((3, s[2]))
+    xj3 = np.zeros((3, s[2]))
+    x2H = np.zeros((3, s[2]))
+    xH  = np.zeros((3, s[2]))
+    xH3 = np.zeros((3, s[2]))
+
+    for j in range(3):
+        xj2[j,:] = X[j,1,:]
+        xj3[j,:] = X[j,2,:]
+        x2H[j,:] = x21[j,:] * lL / l
+        xH [j,:] = xj2[j,:] + x2H[j,:]
+        xH3[j,:] = xj3[j,:] - xH[j,:]
+    
+    h = np.sqrt(xH3[0,:]**2 + xH3[1,:]**2 + xH3[2,:]**2)
+
+    eta = np.zeros((3, s[2]))
+    for j in range(3):
+        eta[j,:] = xH3[j,:] / h
+    
+    S = 0.5 * l * h
+
+    return h, lR, lL, S, xi, eta, xH
