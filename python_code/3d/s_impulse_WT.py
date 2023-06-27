@@ -197,6 +197,32 @@ def saimpulse_tr(X, n, gama, beta, phi, theta, a):
     Calculate moment of inertia for the triangular elements in 
     the wing-translating system
     """
+    h, lR, lL, S, xi, eta, xH = triangle(X)
+
+    A = [a, 0, 0]
+
+    s = np.shape(X)
+    Int      = np.zeros((3, s[2]))
+    IN       = np.zeros((3, s[2]))
+    impulseA = np.zeros((3, s[2]))
+    aimp = np.zeros(3)
+
+    for j in range(3):
+        Int[j,:] = (S * (A[j] + xH[j,:]) 
+                    + (1/6) * h * (lR+lL) * (xi[j,:] * (lR-lL) + eta[j,:] *h))
+
+    # Cross product of Int and n
+    IN[0,:]= Int[1,:] * n[2,:] - Int[2,:] * n[1,:]
+    IN[1,:]= Int[2,:] * n[0,:] - Int[0,:] * n[2,:]
+    IN[2,:]= Int[0,:] * n[1,:] - Int[1,:] * n[0,:]
+
+    for j in range(3):
+        impulseA[j,:] = -gama * IN[j,:]
+    
+    for j in range(3):
+        aimp[j] = np.sum(impulseA[j,:])
+    
+    return aimp
 
 def triangle(X):
     """Geometry of a triangle element"""
