@@ -42,4 +42,50 @@ def s_impulse_WT(istep, U, t, Xt, Xw, GAM, GAMAw, beta, phi, theta, a):
     aimpw: ndarray[j, w]
         Angular impulse from wake vortices
     """
+    limpa = np.zeros((3, g.nwing))
+    aimpa = np.zeros((3, g.nwing))
+    limpw = np.zeros((3, g.nwing))
+    aimpw = np.zeros((3, g.nwing))
+
+    # From global to translating inertia
+    Xt_T = np.zeros_like(Xt)
+    Xw_T = np.zeros_like(Xw)
+
+    for i in range(g.nwing):
+        Xt_T[0,:,:,i] = U[0] * t + Xt[0,:,:,i]
+        Xt_T[1,:,:,i] = U[1] * t + Xt[1,:,:,i]
+        Xt_T[2,:,:,i] = U[2] * t + Xt[2,:,:,i]
+
+        if istep > 0:
+            Xw_T[0,:,:,i] = U[0] * t + Xw[0,:,:,i]
+            Xw_T[1,:,:,i] = U[1] * t + Xw[1,:,:,i]
+            Xw_T[2,:,:,i] = U[2] * t + Xw[2,:,:,i]
+
+    for i in range(g.nwing):
+        # Bound vortices
+        # Linear impulse
+        n1, n2, limp = limpulse(Xt_T[:,:,:,i], GAM[i,:], beta[i], phi[i], theta[i], a[i])
+        # n1[j,nXt], n2[j,nXt] = unit normal for 2 triangular iXt_th element
+        limpa[:,i] = limp
+        # Angular impulse
+        aimp = aimpulse(Xt_T[:,:,:,i], n1, n2, GAM[i,:], beta[i], phi[i], theta[i], a[i])
+        aimpa[:,i] = aimp
+
+        if istep > 0:
+            # Wake vortices
+            # Linear impulse
+            n1, n2, limp = limpulse(Xw_T[:,:,:,i], GAMAw[i,:], beta[i], phi[i], theta[i], a[i])
+            limpw[:,i] = limp       # limpw(:,istep) + limp
+
+            # Angular impulse
+            aimp = aimpulse(Xw_T[:,:,:,i], n1, n2, GAMAw[i,:], beta[i], phi[i], theta[i], a[i])
+            aimpw[:,i] = aimp       # aimpw(:,istep) + aimp
+    
+    return limpa, aimpa, limpw, aimpw
+
+
+def limpulse():
+    pass
+
+def aimpulse():
     pass
