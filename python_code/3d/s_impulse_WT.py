@@ -84,8 +84,26 @@ def s_impulse_WT(istep, U, t, Xt, Xw, GAM, GAMAw, beta, phi, theta, a):
     return limpa, aimpa, limpw, aimpw
 
 
-def limpulse():
+def limpulse(Xa, gama, beta, phi, theta, a):
+    """
+    Calculate linear impulses in the wing-translating system
+
+    Returns
+    -------
+    n1, n2: ndarray[j, i]
+        Two unit normal vectors for two triangles
+    limp: ndarray
+        Linear impulse vector
+    """
     pass
 
-def aimpulse():
+def aimpulse(Xa, n1, n2, gama, beta, phi, theta, a):
+    """
+    Calculate moment of inertia in the wing-translating system
+
+    Returns
+    -------
+    aimp: ndarray
+        Angular impulse vector
+    """
     pass
