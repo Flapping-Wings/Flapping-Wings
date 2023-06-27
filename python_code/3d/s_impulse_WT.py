@@ -1,6 +1,7 @@
 import numpy as np
 from globals import g
 
+# TODO: Remove unused parameters beta, phi, theta
 def s_impulse_WT(istep, U, t, Xt, Xw, GAM, GAMAw, beta, phi, theta, a):
     """
     Calculate linear and angular impulses due to bound and wake 
