@@ -95,25 +95,25 @@ def limpulse(Xa, gama, beta, phi, theta, a):
     limp: ndarray
         Linear impulse vector
     """
-    # Divide Xa into 2 triangulr elements
-    # Rectangular element node numbering (%x-horizontal; y-vertical)
-    #  2   3
+    # Divide Xa into 2 triangular elements
+    # Rectangular element node numbering (x-horizontal; y-vertical)
+    #  1   2
     # 
-    #  1   4
-    # Divide into 2 triangle elements: 123 & 134
-    #  2   3        3
+    #  0   3
+    # Divide into 2 triangle elements: 012 & 023
+    #  1   2        2
     #         &
-    #  1        1   4
+    #  0        0   3
     s = np.shape(Xa)
 
-    # For Triangle 1 2 3
+    # For Triangle 0 1 2
     X = np.zeros((3, 3, s[2]))
     X = Xa[:, 0:3, :]
     n1, limp1 = slimpulse_tr(X, gama, beta, phi, theta, a)
 
-    # For triangle 1 3 4
+    # For triangle 0 2 3
     X = np.zeros(3, 3, s[2])
-    tindex = [1, 3, 4]
+    tindex = [0, 2, 3]
     X = Xa[:, tindex, :]
     n2, limp2 = slimpulse_tr(X, gama, beta, phi, theta, a)
 
@@ -131,25 +131,25 @@ def aimpulse(Xa, n1, n2, gama, beta, phi, theta, a):
     aimp: ndarray
         Angular impulse vector
     """
-    # Divide Xa into 2 triangulr elements
-    # Rectangular element node numbering (%x-horizontal; y-vertical)
-    #  2   3
+    # Divide Xa into 2 triangular elements
+    # Rectangular element node numbering (x-horizontal; y-vertical)
+    #  1   2
     # 
-    #  1   4
-    # Divide into 2 triangle elements: 123 & 134
-    #  2   3        3
+    #  0   3
+    # Divide into 2 triangle elements: 012 & 023
+    #  1   2        2
     #         &
-    #  1        1   4
+    #  0        0   3
     s = np.shape(Xa)
 
-    # For Triangle 1 2 3
+    # For Triangle 0 1 2
     X = np.zeros(3, 3, s[2])
     X = Xa[:, 0:3, :]
     aimp1 = saimpulse_tr(X, n1, gama, beta, phi, theta, a)
 
-    # For triangle 1 3 4
+    # For triangle 0 2 3
     X = np.zeros(3, 3, s[2])
-    tindex = [1, 3, 4]
+    tindex = [0, 2, 3]
     X = Xa[:, tindex,:]
     aimp2 = saimpulse_tr(X, n2, gama, beta, phi, theta, a)
 
