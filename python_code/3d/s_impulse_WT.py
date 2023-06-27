@@ -105,6 +105,7 @@ def limpulse(Xa, gama, beta, phi, theta, a):
     #         &
     #  1        1   4
     s = np.shape(Xa)
+
     # For Triangle 1 2 3
     X = np.zeros((3, 3, s[2]))
     X = Xa[:, 0:3, :]
@@ -130,7 +131,32 @@ def aimpulse(Xa, n1, n2, gama, beta, phi, theta, a):
     aimp: ndarray
         Angular impulse vector
     """
-    pass
+    # Divide Xa into 2 triangulr elements
+    # Rectangular element node numbering (%x-horizontal; y-vertical)
+    #  2   3
+    # 
+    #  1   4
+    # Divide into 2 triangle elements: 123 & 134
+    #  2   3        3
+    #         &
+    #  1        1   4
+    s = np.shape(Xa)
+
+    # For Triangle 1 2 3
+    X = np.zeros(3, 3, s[2])
+    X = Xa[:, 0:3, :]
+    aimp1 = saimpulse_tr(X, n1, gama, beta, phi, theta, a)
+
+    # For triangle 1 3 4
+    X = np.zeros(3, 3, s[2])
+    tindex = [1, 3, 4]
+    X = Xa[:, tindex,:]
+    aimp2 = saimpulse_tr(X, n2, gama, beta, phi, theta, a)
+
+    # Add angular impulses from the two triangles
+    aimp = aimp1 + aimp2
+    
+    return aimp
 
 def slimpulse_tr(X, gama, beta, phi, theta, a):
     """
