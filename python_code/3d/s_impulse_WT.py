@@ -163,7 +163,34 @@ def slimpulse_tr(X, gama, beta, phi, theta, a):
     Calculate linear impulses due to the triangular bound or wake 
     vortex elements in the wing-translating system
     """
-    pass
+    # Initialization
+    s = np.shape(X)
+    x1   = np.zeros((3,s[2]))
+    x2   = np.zeros((3,s[2]))
+    x1x2 = np.zeros((3, s[2]))
+    n    = np.zeros((3,s[2]))
+    limp = np.zeros(3)
+
+    # Linear impulse
+    for j in range(3):
+        x1[j,:] = X[j,2,:] - X[j,0,:]
+        x2[j,:] = X[j,1,:] - X[j,0,:]
+    # Cross product of x1 and x2
+    x1x2[0,:] = x1[1,:] * x2[2,:] - x1[2,:] * x2[1,:]
+    x1x2[1,:] = x1[2,:] * x2[0,:] - x1[0,:] * x2[2,:]
+    x1x2[2,:] = x1[0,:] * x2[1,:] - x1[1,:] * x2[0,:]
+    # Add contributions from all elements
+    limp[0] = -0.5 * np.dot(x1x2[0,:], gama)
+    limp[1] = -0.5 * np.dot(x1x2[1,:], gama)
+    limp[2] = -0.5 * np.dot(x1x2[2,:], gama)
+
+    # Unit normal
+    nx1x2 = np.sqrt(x1x2[0,:]**2 + x1x2[1,:]**2 + x1x2[2,:]**2)
+    
+    for j in range(3):
+        n[j,:] = x1x2[j,:] / nx1x2
+
+    return n, limp
 
 def saimpulse_tr(X, n, gama, beta, phi, theta, a):
     """
