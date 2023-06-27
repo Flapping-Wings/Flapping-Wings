@@ -235,7 +235,7 @@ def triangle(X):
         x23[j,:] = X[j,2,:] - X[j,1,:]
 
     nx21 = np.sqrt(x21[0,:]**2 + x21[1,:]**2 + x21[2,:]**2)
-    nx23 = np.sqrt(x23[0,:]**2 + x23[1,:]**2 + x23[2,:]**2)     # Unused
+    # nx23 = np.sqrt(x23[0,:]**2 + x23[1,:]**2 + x23[2,:]**2)   # Unused, TODO: Ask why
 
     l = nx21
     xi = np.zeros((3, s[2]))
