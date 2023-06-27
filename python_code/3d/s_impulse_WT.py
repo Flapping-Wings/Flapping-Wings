@@ -95,7 +95,31 @@ def limpulse(Xa, gama, beta, phi, theta, a):
     limp: ndarray
         Linear impulse vector
     """
-    pass
+    # Divide Xa into 2 triangulr elements
+    # Rectangular element node numbering (%x-horizontal; y-vertical)
+    #  2   3
+    # 
+    #  1   4
+    # Divide into 2 triangle elements: 123 & 134
+    #  2   3        3
+    #         &
+    #  1        1   4
+    s = np.shape(Xa)
+    # For Triangle 1 2 3
+    X = np.zeros((3, 3, s[2]))
+    X = Xa[:, 0:3, :]
+    n1, limp1 = slimpulse_tr(X, gama, beta, phi, theta, a)
+
+    # For triangle 1 3 4
+    X = np.zeros(3, 3, s[2])
+    tindex = [1, 3, 4]
+    X = Xa[:, tindex, :]
+    n2, limp2 = slimpulse_tr(X, gama, beta, phi, theta, a)
+
+    # Add linear impulses from the two triangles
+    limp = limp1 + limp2
+
+    return limp
 
 def aimpulse(Xa, n1, n2, gama, beta, phi, theta, a):
     """
