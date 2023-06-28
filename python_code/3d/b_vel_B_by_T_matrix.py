@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.io import loadmat
 
 from globals import g
 from VORTEXm import VORTEXm
@@ -25,26 +26,22 @@ def b_vel_B_by_T_matrix(nXb, nXt, Xb, Xt):
             V = np.zeros(r)
             W = np.zeros(r)
 
-            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 0, i, w],
-                                 Xt[1, 0, i, w], Xt[2, 0, i, w], Xt[0, 1, i, w], Xt[1, 1, i, w], Xt[2, 1, i, w])
+            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 0, i, w], Xt[1, 0, i, w], Xt[2, 0, i, w], Xt[0, 1, i, w], Xt[1, 1, i, w], Xt[2, 1, i, w], 1.0)
             U += dU
             V += dV
             W += dW
 
-            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 1, i, w],
-                                 Xt[1, 1, i, w], Xt[2, 1, i, w], Xt[0, 2, i, w], Xt[1, 2, i, w], Xt[2, 2, i, w])
+            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 1, i, w], Xt[1, 1, i, w], Xt[2, 1, i, w], Xt[0, 2, i, w], Xt[1, 2, i, w], Xt[2, 2, i, w], 1.0)
             U += dU
             V += dV
             W += dW
 
-            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 2, i, w],
-                                 Xt[1, 2, i, w], Xt[2, 2, i, w], Xt[0, 3, i, w], Xt[1, 3, i, w], Xt[2, 3, i, w])
+            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 2, i, w], Xt[1, 2, i, w], Xt[2, 2, i, w], Xt[0, 3, i, w], Xt[1, 3, i, w], Xt[2, 3, i, w], 1.0)
             U += dU
             V += dV
             W += dW
 
-            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 3, i, w],
-                                 Xt[1, 3, i, w], Xt[2, 3, i, w], Xt[0, 0, i, w], Xt[1, 0, i, w], Xt[2, 0, i, w])
+            dU, dV, dW = VORTEXm(Xb[0, :, :, w], Xb[1, :, :, w], Xb[2, :, :, w], Xt[0, 3, i, w], Xt[1, 3, i, w], Xt[2, 3, i, w], Xt[0, 0, i, w], Xt[1, 0, i, w], Xt[2, 0, i, w], 1.0)
             U += dU
             V += dV
             W += dW
@@ -57,7 +54,12 @@ def b_vel_B_by_T_matrix(nXb, nXt, Xb, Xt):
 
 
 if __name__ == "__main__":
-    nXb = 1
-    nXt = 1
-    Xb = None
-    Xt = None
+    nXb = 10
+    nXt = 17
+    Xb = loadmat("Xb.mat")['Xb']
+    Xt = loadmat("Xt.mat")['Xt']
+    cVBT_original = loadmat("cVBT.mat")['cVBT']
+
+    cVBT = b_vel_B_by_T_matrix(nXb, nXt, Xb, Xt)
+
+    print(np.alltrue(np.isclose(cVBT_original, cVBT)))
