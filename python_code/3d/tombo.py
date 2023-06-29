@@ -1,5 +1,6 @@
 import numpy as np
 from globals import g
+from Wing import Wing
 from nd_data import nd_data
 from wing_total import wing_total
 from lr_set_matrix import lr_set_matrix
@@ -14,6 +15,8 @@ from solution import solution
 # from plot_WB import plot_WB
 from s_impulse_WT import s_impulse_WT
 from divide_GAM import divide_GAM
+from b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
+from vel_B_by_T import vel_B_by_T
 
 def tombo():
     # SETUP
@@ -246,6 +249,17 @@ def tombo():
         # Extract GAMAb (border & shed ) from GAM
         GAMAb_f = divide_GAM(GAM_f, g.nxb_f)
         GAMAb_r = divide_GAM(GAM_r, g.nxb_r)
+
+        # Calculate velocity of border and wake vortices to be shed or convected
+        # Influence coeff for the border elem vel due to the total wing elem
+        # Self-influence coeff for each wing; calculated at each time step
+        cVBT_f = b_vel_B_by_T_matrix(g.nxb_f, nxt_f, Xb_f, Xt_f)
+        cVBT_r = b_vel_B_by_T_matrix(g.nxb_r, nxt_r, Xb_r, Xt_r)
+
+        # Border element veocity due to the total wing elements: self-influence
+        # VBTs_m(j,n,ixb,w);  vel on wing w due to total elem on wing w
+        VBTs_f = vel_B_by_T(cVBT_f, GAM_f, nxt_f)
+        VBTs_r = vel_B_by_T(cVBT_r, GAM_r, nxt_r)
 
 
 def check_input():
