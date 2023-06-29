@@ -240,7 +240,7 @@ def tombo():
                 s_impulse_WT(g.istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
                              beta[2:4], phi[2:4], theta[2:4], a[2:4]) 
             for j in range(3):
-                for w in range(3):
+                for w in range(g.nwing):
                     limpa_r[j, g.istep, w] = limpa[j, w]
                     aimpa_r[j, g.istep, w] = aimpa[j, w]
                     limpw_r[j, g.istep, w] = limpw[j, w]
