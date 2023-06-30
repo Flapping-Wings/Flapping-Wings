@@ -294,7 +294,7 @@ def tombo():
         #     Xw_r = Xw_r + g.dt * (VWT_f + VWW_f)
 
         # Add shed vortices to wake vortex
-        if g.istep == 1:
+        if g.istep == 0:
             # Front wings
             GAMw_f = GAMAb_f
             nxw_f = g.nxb_f
