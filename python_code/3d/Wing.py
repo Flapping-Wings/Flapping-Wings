@@ -1,5 +1,6 @@
 import numpy as np
 from globals import g
+import matplotlib.pyplot as plt
 
 """ Initialize all Wing dimensions for the forward and rear wings to use later in the code. """
 
@@ -8,28 +9,28 @@ def Wing():
     Output (ALL DIMENSIONAL):
 
     -------FORWARD WING--------
-    Xb_f[j, n, i]    - Border element coordinates
-    nXb_f            - # of border elements
-    Nb_f[j, i]       - Unit normal to the border elements
-    Xc_f[j, n, i]    - Center element coordinates
-    nXc_f            - # of center elements
-    Nc_f[j, i]       - Unit normal to the center elements
-    l_f              - Span
-    c_f              - Chord
-    h_f              - Border Height
+    Xb_f[j, n, i]    : Border element coordinates
+    nXb_f            : # of border elements
+    Nb_f[j, i]       : Unit normal to the border elements
+    Xc_f[j, n, i]    : Center element coordinates
+    nXc_f            : # of center elements
+    Nc_f[j, i]       : Unit normal to the center elements
+    l_f              : Span
+    c_f              : Chord
+    h_f              : Border Height
 
     
     
     ---------REAR WING---------
-    Xb_r[j, n, i]    - Border element coordinates
-    nXb_r            - # of border elements
-    Nb_r[j, i]       - Unit normal to the border elements
-    Xc_r[j, n, i]    - Center element coordinates
-    nXc_r            - # of center elements
-    Nc_r[j, i]       - Unit normal to the center elements
-    l_r              - Span
-    c_r              - Chord
-    h_r              - Border Height 
+    Xb_r[j, n, i]    : Border element coordinates
+    nXb_r            : # of border elements
+    Nb_r[j, i]       : Unit normal to the border elements
+    Xc_r[j, n, i]    : Center element coordinates
+    nXc_r            : # of center elements
+    Nc_r[j, i]       : Unit normal to the center elements
+    l_r              : Span
+    c_r              : Chord
+    h_r              : Border Height 
     """
 
     # Forward Wing Dimensions
@@ -52,11 +53,11 @@ def Wing():
 def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     """
     Input:
-    - W   = 1 (forward), 2(rear) wing
+    - W   : 1 (forward), 2(rear) wing
 
     Output:
-    - lo_ = span
-    - co_ = chord length
+    - lo_ : span
+    - co_ : chord length
 
     """
 
@@ -65,14 +66,14 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     """
     Rectangular Elements Count:
-    - nXb = # of shed edge elements
-    - nXc = # of center elements
+    - nXb   : # of shed edge elements
+    - nXc   : # of center elements
 
     Wing Geometry:
-    - lt_ = tapered section wing span (cm)
-    - lr_ = square section wing span (cm)
-    - bang_ = base angle (deg)
-    - c_ = chord length of the rectangular section
+    - lt_   : tapered section wing span (cm)
+    - lr_   : square section wing span (cm)
+    - bang_ : base angle (deg)
+    - c_    : chord length of the rectangular section
 
     """
 
@@ -114,17 +115,17 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     """
     Elements in the border strips:
-    - Xb[j, n, i] = Border elements
-    - nXb         = # of border elements
-    - Nb[j, i]    = Unit Normal
+    - Xb[j, n, i] : Border elements
+    - nXb         : # of border elements
+    - Nb[j, i]    : Unit Normal
     """
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang)
 
     """
     Elements in the center region:
-    - Xc[j, n, i] = Center elements
-    - nXc         = # of center elements
-    - Nc[j, i]    = Unit Normal
+    - Xc[j, n, i] : Center elements
+    - nXc         : # of center elements
+    - Nc[j, i]    : Unit Normal
     """
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, n, wi_1)
 
@@ -133,8 +134,21 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     # Plot Mesh
     if g.mplot == 1:
-        print("hello")
+        fig2, ax2 = plt.subplots()
+        plot2Elem(fig2, ax2, Xb, nXb, 4, 'r', 2)
+        plot2Elem(fig2, ax2, Xc, nXc, 4, 'b', 2)
+        fig2.savefig(f"{g.folder}mesh/2dmesh_{W}.tif")
+        plt.close()
 
+        fig3 = plt.figure()
+        ax3 = fig3.add_subplot(projection='3d')
+        plot3Elem(fig3, ax3, Xb, nXb, Nb)
+        plot3Elem(fig3, ax3, Xc, nXc, Nc)
+        fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.tif")
+        plt.close()
+
+    # print(g.fid, f"W = {W}, lt_ = {lt_}, lr_ = {lr_}, l_ = {l_}, bang_ = {bang_}, c_ = {c_}, hfactor = {hfactor}, wfactor = {wfactor}")
+        
     return Xb, nXb, Nb, Xc, nXc, Nc, lo_, co_
 
 #------------------------------------------------------------#
@@ -145,18 +159,18 @@ def WingBorder(lt, lr, delta):
     Mesh for Tapered/Nontapered Rectangular Wings
     
     INPUT:
-    - lt           = Length of the tapered Section
-    - lr           = Length of the Rectangular Section
-    - delta        = half taper angle (radian) 
+    - lt           : Length of the tapered Section
+    - lr           : Length of the Rectangular Section
+    - delta        : half taper angle (radian) 
     
     OUTPUT:
-    - Xb[j, n, i]  = entire shed rectangular edge elements
-    - nXb          = # of border rectangular shed elements
-    - Nb[j, i]     = Unit normal vector for the rectangular element
+    - Xb[j, n, i]  : entire shed rectangular edge elements
+    - nXb          : # of border rectangular shed elements
+    - Nb[j, i]     : Unit normal vector for the rectangular element
     - Lt
     - Lr
     - C
-    - n[i]         = # of rectangles in the border strip
+    - n[i]         : # of rectangles in the border strip
     - wi_0
     """
     
@@ -216,17 +230,17 @@ def BStrip(lt, lr, c, delta, h):
     Width of the rectangular elements in the border strips with # of rectangular elements on them
     
     INPUT:
-    - lt     = Length of the tapered section
-    - lr     = Length of the Rectangular Section
-    - c      = Chord length of the rectangular section
-    - delta  = Half taper angle (radian)
-    - h      = height of the border strip
+    - lt     : Length of the tapered section
+    - lr     : Length of the Rectangular Section
+    - c      : Chord length of the rectangular section
+    - delta  : Half taper angle (radian)
+    - h      : height of the border strip
     
     OUTPUT:
-    - n[i]   = # of rectangles in the strip
-    - w[i]   = width of the multiple middle rectangular elements
-    - wi[i]  = width of the first rec element
-    - wf[i]  = width of the last rec element, where i = [0:5)
+    - n[i]   : # of rectangles in the strip
+    - w[i]   : width of the multiple middle rectangular elements
+    - wi[i]  : width of the first rec element
+    - wf[i]  : width of the last rec element, where i = [0:5)
     - Lt
     - Lr
     - C
@@ -299,6 +313,7 @@ def BStrip(lt, lr, c, delta, h):
 
     return n, w, wi, wf, Lt, Lr, C
 
+# TODO: Test this function
 def BStripElongated(lt, lr, c, delta, h):
     
     """
@@ -306,17 +321,17 @@ def BStripElongated(lt, lr, c, delta, h):
     # of rectangular elements on them is fixed, determined by the # for the tip border
 
     INPUT:
-    - lt     = Length of the tapered section
-    - lr     = Length of the Rectangular Section
-    - c      = Chord length of the rectangular section
-    - delta  = Half taper angle (radian)
-    - h      = height of the border strip
+    - lt     : Length of the tapered section
+    - lr     : Length of the Rectangular Section
+    - c      : Chord length of the rectangular section
+    - delta  : Half taper angle (radian)
+    - h      : height of the border strip
     
     OUTPUT:
-    - n[i]   = # of rectangles in the strip
-    - w[i]   = width of the multiple middle rectangular elements
-    - wi[i]  = width of the first rec element
-    - wf[i]  = width of the last rec element, where i = [0:5)
+    - n[i]   : # of rectangles in the strip
+    - w[i]   : width of the multiple middle rectangular elements
+    - wi[i]  : width of the first rec element
+    - wf[i]  : width of the last rec element, where i = [0:5)
     - Lt
     - Lr
     - C
@@ -379,12 +394,12 @@ def BRelemLoc(m, wi, w, wf, h):
     x = horizontal, y = vertical directions
     
     INPUT:
-    - m            = # of middle elements
-    - wi, w, wf    = size of initial, middle, and final elements (in y-direction)
-    - h            = height of all the elements (in x-direction)
+    - m            : # of middle elements
+    - wi, w, wf    : size of initial, middle, and final elements (in y-direction)
+    - h            : height of all the elements (in x-direction)
     
     OUTPUT:
-    - xeE[j, n, i] = j coordinates of the n-th node of the i-th edge square elements
+    - xeE[j, n, i] : j coordinates of the n-th node of the i-th edge square elements
                     -> j = 0,1 ; n = 0-4 (4 - center point) ; i = 0-(m+1)  
     """
     
@@ -421,10 +436,12 @@ def BRelem(xeE, Xo, Ang):
     Transform coordinates from local to global border rectangular elements
     
     INPUT:
-    - xeE[j, n, i]
-    -
+    - xeE[j, n, i]  : local j coordinates of the n-th node of the i-th edge square elements
+    - Xo[j]         : global coordinates of the origin of the local system 
+    - Ang           : rotation of the local wrt of the global system
     
     OUTPUT:
+    - xeE[j, n, i]  : global j coordinates of the n-th node of the i-th node square elements
     
     """
     
@@ -440,7 +457,21 @@ def BRelem(xeE, Xo, Ang):
 
     return new_xeE
 
-def Camber(x, y): # TODO: Test if this actually works, this implementation might need some NumPy fandangling
+def Camber(x, y):
+
+    """
+    Calculate z values of the wing, given (x,y)
+
+    INPUT: (all lengths dimensional)
+    - x[j], y[j] : (x,y) coordinates of node j
+    - g.l_, g.c_ : span, chord lengths
+    - g.icamber  : camber option
+    - g.acamber  : camber amplitude
+
+    OUTPUT:
+    - z[j]       : z coordinates of node j
+
+    """
     
     if g.icamber == 0:
         z = np.zeros(x.shape)
@@ -455,14 +486,31 @@ def Camber(x, y): # TODO: Test if this actually works, this implementation might
     return z
 
 def uNormal(x, y, z):
+
+    """
+    Calculate the unit normal to the rectangular element 
+    1    2
+
+    0    3
+    x - horizontal, y vertical direction
+
+    INPUT:
+    - x[n], y[n], z[n] : coordinates of the n nodes of the element
+
+    OUTPUT:
+    - uN               : unit normal to the rectangular plane
+
+    """
     
     node = np.zeros([4,3])
+
     for i in range(4):
-        node[i, :] = np.array([x[i], y[i], z[i]])
+        node[i, :] = np.array([x[i], y[i], z[i]]) # [:] = 0:3
+
     N = np.cross(np.subtract(node[2, :], node[0, :]), np.subtract(node[1, :], node[3, :]))
     magN = np.linalg.norm(N)
     uN = N / magN
-    uN = uN[..., np.newaxis]
+    uN = uN[..., np.newaxis] # Make into column vector
 
     return uN
 
@@ -470,7 +518,33 @@ def uNormal(x, y, z):
 
 def WingCenter(Lt, Lr, C, delta, n, wi_1):
 
-    Xct, Xcr = CRnodes(Lt, Lr, C, delta, n)
+    """
+    Meshing for the center region
+
+    INPUT:
+    - Lt     : Length of the tapered edge for the center region
+    - Lr     : Length of the horizontal edge for the center region
+    - C      : Length of vertical tip edge of the center region
+    - delta  : Base opening angle / 2
+    - n[i]   : Number of border strip elements: i = 0:5 
+    - wi_1
+
+    OUTPUT:
+    - Xc     : Total center rectangular elements
+    - nXc    : # of total center rectangular elements
+    - Nc     : Unit normal to the elements
+    """
+
+    Xct, Xcr = CRnodes(Lt, Lr, C, delta, n) # Coordinates of the nodes for the center region
+
+    """
+    RECTANGULAR MESH POINTS BY ROWS (x-direction) & COLUMNS (y-direction)
+    For each element, the node starts at the bottom-left and rotates clock-wise
+    1     2       ir,ic+1   ir+1,ic+1
+       4      =
+    0     3       ir,ic     ir+1,ic
+    x - horizontal, y - vertical direction
+    """
 
     XctS = np.empty([2, 4, n[2], n[0]])
     XcrS = np.empty([2, 4, n[2], n[0]])
@@ -485,7 +559,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
                     XctS[j, 1, ir, ic] = Xct[j, ir    , ic + 1]
                     XctS[j, 2, ir, ic] = Xct[j, ir + 1, ic + 1]
                     XctS[j, 3, ir, ic] = Xct[j, ir + 1, ic    ]
-
+    # Rectangular Region
     for ic in range(n[1]):
         for ir in range(n[2]):
             for j in range(2):
@@ -499,7 +573,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         # Tapered Region - Triangular Apex Mesh w/ 4 Nodes
         i = 0
         ic = 0
-        XctR = np.empty([2, 4, n[0] + 1]) # TODO: This one is a bit iffy, might need a check on this one
+        XctR = np.empty([2, 4, n[0] + 1]) 
 
         for j in range(2):
             XctR[j, 0, i] = XctS[j, 0, 0, ic]
@@ -511,7 +585,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         i += 1
 
 
-        for ic in range(1, n[0]): # TODO: Test out of bounds error
+        for ic in range(1, n[0]):
             for ir in range(n[2]):
                 for j in range(2):
                     XctR[j, 0, i] = XctS[j, 0, ir, ic]
@@ -540,41 +614,66 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         Xc = np.zeros([2, 5, nXc])
         Nc = np.array([[],[],[]])
 
-        Xc[:, 0:4, 0:nXctR] = XctR # TODO: Test if the indices are correct when outputting
+        Xc[:, 0:4, 0:nXctR] = XctR 
         Xc[:, 0:4, nXctR:nXc] = XcrR
 
+        # Introduce the camber 
         temp = np.zeros((1, 5, nXc))
         temp[:, 0:4, 0:] = Camber(Xc[0, 0:4, :], Xc[1, 0:4, :])
         Xc = np.vstack((Xc, temp))
         
+        # Unit Normal to the element
         for i in range(nXc):
             Nc = np.hstack((Nc, uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])))
 
+        # Centroid
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
 
+        # Add the eta-coordinate (vertical) of the corder
         yshift = wi_1 / np.cos(delta)
         Xc[1, :, :] = Xc[1, :, :] + yshift
     else:
+        # Total center rectangular element
         nXc = nXcrR
         Xc = np.zeros([2, 4, nXc])
         Nc = np.zeros([3, nXc])
 
         Xc[:, :, 0:nXc] = XcrR
-
+        
+        # Introduce the Camber
         Xc[2, :, :] = Camber(Xc[0, :, :], Xc[1, :, :])
-
+        
+        # Unit normal to the element
         for i in range(nXc):
             Nc[:, i] = uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])
-
+        
+        # Centroid 
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
-
+        
+        # Add the eta-coordinate (vertical) of the corder
         yshift = g.h_
         Xc[1, :, :] = Xc[1, :, :] + yshift
 
     return Xc, nXc, Nc
 
 def CRnodes(Lt, Lr, C, delta, n):
+
+    """
+    Coordinates of the nodes for the rectangular mesh in the center region
+
+    INPUT:
+    - Lt    : Length of the tapered edge for the center region
+    - Lr    : Length of the horizontal edge for the center region
+    - C     
+    - delta : Half-base opening angle
+    - n[i]  : Number of border strips elements: i = 0:5
+
+    OUTPUT:
+    - Xct   : Nodes in the tapered region
+    - Xcr   : Nodes in the rectangular region
+    """
     
+    # Angle and length of radial lines
     e = Lt * np.cos(delta)
     lt = np.zeros(n[2] + 1)
     ang = np.zeros(n[2] + 1)
@@ -606,3 +705,70 @@ def CRnodes(Lt, Lr, C, delta, n):
             Xcr[1, ir, ic] = y
 
     return Xct, Xcr
+
+#------------------------------------------------------#
+
+def plot2Elem(fig, axs, Xn, nXn, npoly, color, lw):
+    
+    """
+    Plot a group of polygonal elements in x-y plane
+
+    INPUT:
+    - Xn[j, n, i] : Polynomial element array
+    - nXn         : # of elements 
+    - npoly       : Order of polygon
+    - color       : Color in the plot
+    - lw          : Line width
+    """
+
+    for i in range(nXn):
+        x = np.zeros(npoly + 1)
+        y = np.zeros(npoly + 1)
+
+        for ipoly in range(npoly):
+            x[ipoly] = Xn[0, ipoly, i]
+            y[ipoly] = Xn[1, ipoly, i]
+        
+        x[npoly] = Xn[0, 0, i]
+        y[npoly] = Xn[1, 0, i]
+        cx = Xn[0, npoly, i]
+        cy = Xn[1, npoly, i]
+
+        axs.plot(x, y, color, linewidth=lw)
+        axs.plot(cx, cy, 'o')
+        axs.axis('equal')
+
+    return
+
+def plot3Elem(fig, axs, X, nX, N):
+    
+    """
+    Plot 3D elements with the unit normals
+
+    INPUT:
+    - X[j, n, i] : Rectangular element array
+    - nX         : # of elements
+    - N[j, i]    : Unit normal to the element
+    """
+
+    scale = 0.1
+    Nline = np.zeros((2, 3))
+    x = np.zeros(5)
+    y = np.zeros(5)
+    z = np.zeros(5)
+
+    for i in range(nX):
+        for n in range(4):
+            x[n] = X[0, n, i]
+            y[n] = X[1, n, i]
+            z[n] = X[2, n, i]
+        x[4] = X[0, 0, i]
+        y[4] = X[1, 0, i]
+        z[4] = X[2, 0, i]
+        axs.plot(x, y, z, 'k')
+        Nline[:,:] = np.array([X[:, 4, i], X[:, 4, i] + scale * N[:, i]]) 
+        axs.plot(Nline[:, 0], Nline[:, 1], Nline[:, 2], 'r') 
+        axs.axis('equal')
+
+
+    return
