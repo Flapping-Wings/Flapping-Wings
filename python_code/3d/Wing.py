@@ -1,5 +1,6 @@
 import numpy as np
 from globals import g
+import matplotlib.pyplot as plt
 
 """ Initialize all Wing dimensions for the forward and rear wings to use later in the code. """
 
@@ -133,8 +134,16 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     # Plot Mesh
     if g.mplot == 1:
-        print("hello")
+        fig2, ax2 = plt.subplots()
+        plot2Elem(Xb, nXb, 4, 'r', 2)
+        plot2Elem(Xc, nXc, 4, 'b', 2)
 
+        fig3, ax3 = plt.subplots()
+        plot3Elem(Xb, nXb, Nb)
+        plot3Elem(Xc, nXc, Nc)
+
+        plt.close('all')
+        
     return Xb, nXb, Nb, Xc, nXc, Nc, lo_, co_
 
 #------------------------------------------------------------#
@@ -691,3 +700,33 @@ def CRnodes(Lt, Lr, C, delta, n):
             Xcr[1, ir, ic] = y
 
     return Xct, Xcr
+
+#------------------------------------------------------#
+
+def plot2Elem(Xn, nXn, npoly, color, lw):
+    
+    """
+    Plot a group of polygonal elements in x-y plane
+
+    INPUT:
+    - Xn[j, n, i] : Polynomial element array
+    - nXn         : # of elements 
+    - npoly       : Order of polygon
+    - color       : Color in the plot
+    - lw          : Line width
+    """
+
+    return;
+
+def plot3Elem(X, nX, N):
+    
+    """
+    Plot 3D elements with the unit normals
+
+    INPUT:
+    - X[j, n, i] : Rectangular element array
+    - nX         : # of elements
+    - N[j, i]    : Unit normal to the element
+    """
+
+    return
