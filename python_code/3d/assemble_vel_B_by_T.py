@@ -28,4 +28,12 @@ def assemble_vel_B_by_T(nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_
     VBT_r: ndarray[i, n, j, w]
         Velocity on rear wing w due to all four wing vound vortices
     """
-    pass
+    VBT_f = np.zeros((3, 4, nxb_f, g.nwing))
+    VBT_r = np.zeros((3, 4, nxb_r, g.nwing))
+
+    VBT_f[:,:,:,0] = VBTs_f [:,:,:,0] + VBTs_12[:,:,:]   + VBTs_13[:,:,:]   + VBTs_14[:,:,:]
+    VBT_f[:,:,:,1] = VBTs_21[:,:,:]   + VBTs_f [:,:,:,1] + VBTs_23[:,:,:]   + VBTs_24[:,:,:]
+    VBT_r[:,:,:,0] = VBTs_31[:,:,:]   + VBTs_32[:,:,:]   + VBTs_r [:,:,:,0] + VBTs_34[:,:,:]
+    VBT_r[:,:,:,1] = VBTs_41[:,:,:]   + VBTs_42[:,:,:]   + VBTs_43[:,:,:]   + VBTs_r [:,:,:,1]
+
+    return VBT_f, VBT_r
