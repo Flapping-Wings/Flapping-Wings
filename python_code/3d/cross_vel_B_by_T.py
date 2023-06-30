@@ -1,4 +1,5 @@
 import numpy as np
+from mVORTEX import mVORTEX
 
 def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt):
     """
@@ -23,4 +24,50 @@ def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt):
     VBT: ndarray[j, n, iXb]
         TODO
     """
-    pass
+    VBT = np.zeros((3, 4, nXb)) 
+    GAMt = np.reshape(GAMA, nXt)
+
+    for i in range(nXb):
+        for n in range(4):
+            x = Xb[0, n, i]
+            y = Xb[1, n, i]
+            z = Xb[2, n, i]
+            u, v, w = 0, 0, 0
+
+            u1, v1, w1 = mVORTEX(x, y, z, 
+                                 Xt[0,0,:], Xt[1,0,:], Xt[2,0,:], 
+                                 Xt[0,1,:], Xt[1,1,:], Xt[2,1,:], 
+                                 GAMt)
+            u += u1
+            v += v1
+            w += w1
+
+            u2, v2, w2 = mVORTEX(x, y, z, 
+                                 Xt[0,1,:], Xt[1,1,:], Xt[2,1,:], 
+                                 Xt[0,2,:], Xt[1,2,:], Xt[2,2,:], 
+                                 GAMt)
+            u += u2
+            v += v2
+            w += w2
+
+            u3, v3, w3 = mVORTEX(x, y, z, 
+                                 Xt[0,2,:], Xt[1,2,:], Xt[2,2,:], 
+                                 Xt[0,3,:], Xt[1,3,:], Xt[2,3,:], 
+                                 GAMt)  
+            u += u3
+            v += v3
+            w += w3
+
+            u4, v4, w4 = mVORTEX(x, y, z, 
+                                 Xt[0,3,:], Xt[1,3,:], Xt[2,3,:], 
+                                 Xt[0,0,:], Xt[1,0,:], Xt[2,0,:], 
+                                 GAMt)
+            u += u4
+            v += v4
+            w += w4
+
+            VBT[0, n, i] = u
+            VBT[1, n, i] = v
+            VBT[2, n, i] = w
+
+    return VBT
