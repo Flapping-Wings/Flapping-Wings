@@ -84,22 +84,54 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     bang = np.pi * bang_ / 180.00
 
-    g.c_ = 2.0 * lt_ * np.sin(bang)
-    g.l_ = lt_ * np.cos(bang) + lr_
-    g.hfactor = hfac
-    g.wfactor = wfac
-    g.ielong = 0
+    g.c_ = 2.0 * lt_ * np.sin(bang) # Chord Length
+    g.l_ = lt_ * np.cos(bang) + lr_ # Span Length
+    g.hfactor = hfac                # Height of the border strip: 0.1 (high aspect ration wing (chord < span)), <= 0.05 (low aspect ration wing(chord > span))
+    g.wfactor = wfac                # Width of the border rectangular elements: ratio of w (element width) over h (height)
+    g.ielong = 0                    # Fixed # of border elements?: 0 (no), 1 (yes)
     
-    g.icamber = 0
-    g.acamber = 0.2
+    """
+    Center elements:
+    
+    If ielong == 0, use the same # of border strips (n(i)) to create rectangular grid:
+        Tapered Section
+        - nCelmti = n[2] : # of major division in x-direction
+        - nCelmtj = n[0] : # of major division in y-direction
+        Rectangular Section
+        - nCelmri = n[2] : # of square elements in x-direction
+        - nCelmrj = n[1] : # of square elements in y-direction
+    If ielong == 1, use n[2] to create rectangular grid
+        Tapered Section
+        - nCelmti = n[2] : # of major division in x-direction
+        - nCelmtj = n[2] : # of major division in y-direction
+        Rectangular Section
+        - nCelmri = n[2] : # of square elements in x-direction
+        - nCelmri = n[2] : # of square elements in y-direction
+    """
+    
+    g.icamber = 0     # Camber Direction: 0 (no camber), 1 (x-direction), 2 (y-direction), 3 (both directions)
+    g.acamber = 0.2   # Camber Amplitude
 
+    """
+    Elements in the border strips:
+    - Xb[j, n, i] = Border elements
+    - nXb         = # of border elements
+    - Nb[j, i]    = Unit Normal
+    """
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang)
 
+    """
+    Elements in the center region:
+    - Xc[j, n, i] = Center elements
+    - nXc         = # of center elements
+    - Nc[j, i]    = Unit Normal
+    """
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, n, wi_1)
 
     lo_ = g.l_
     co_ = g.c_
 
+    # Plot Mesh
     if g.mplot == 1:
         print("hello")
 
@@ -109,10 +141,29 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
 def WingBorder(lt, lr, delta):
     
+    """
+    Mesh for Tapered/Nontapered Rectangular Wings
+    
+    INPUT:
+    - lt           = Length of the tapered Section
+    - lr           = Length of the Rectangular Section
+    - delta        = half taper angle (radian) 
+    
+    OUTPUT:
+    - Xb[j, n, i]  = entire shed rectangular edge elements
+    - nXb          = # of border rectangular shed elements
+    - Nb[j, i]     = Unit normal vector for the rectangular element
+    - Lt
+    - Lr
+    - C
+    - n[i]         = # of rectangles in the border strip
+    - wi_0
+    """
+    
     N = 5                   # Number of border Strips
     g.h_ = g.hfactor * g.c_ # Height of each border strip
-    c = g.c_                  # Dimensional Chord Length
-    h = g.h_                  # Dimensional Border Height
+    c = g.c_                # Dimensional Chord Length
+    h = g.h_                # Dimensional Border Height
 
     # Global position of the origin of the border strip systems
     sdel = np.sin(delta)
@@ -128,11 +179,18 @@ def WingBorder(lt, lr, delta):
         n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c, delta, h)
 
     sumn = np.sum(n)
-    nXb = sumn
+    nXb = sumn # No Corner Elements
     Xb = np.zeros((3, 5, nXb))
     Nb = np.array([[],[],[]])
 
     inf = -1
+
+    print(f"wi: {wi}\n")
+    print(f"w: {w}\n")
+    print(f"wf: {wf}\n")
+    print(f"h: {h}\n")
+    print(f"xo: {xo}\n")
+    print(f"ang: {ang}\n")
 
     for i in range(N):
         xeE = BRelemLoc(n[i], wi[i], w[i], wf[i], h)
@@ -145,11 +203,14 @@ def WingBorder(lt, lr, delta):
         Xb[0:2, :, ini:(inf+1)] = xeE[:, :, 2:(n[i] + 1)]
         Xb[0:2, 1, inf] = xeE[:, 1, n[i]+1]
 
+    # Introduce the camber
     Xb[2, :, :] = Camber(Xb[0, :, :], Xb[1, :, :])
 
+    # Unit normal to the element
     for i in range(nXb):
         Nb = np.hstack((Nb, uNormal(Xb[0, :, i], Xb[1, :, i], Xb[2, :, i])))
 
+    # Centroid
     Xb[:, 4, :] = 0.25 * (Xb[:, 0, :] + Xb[:, 1, :] + Xb[:, 2, :] + Xb[:, 3, :])
 
     wi_0 = wi[0]
@@ -157,6 +218,27 @@ def WingBorder(lt, lr, delta):
     return Xb, nXb, Nb, Lt, Lr, C, n, wi_0
 
 def BStrip(lt, lr, c, delta, h):
+    
+    """
+    Width of the rectangular elements in the border strips with # of rectangular elements on them
+    
+    INPUT:
+    - lt     = Length of the tapered section
+    - lr     = Length of the Rectangular Section
+    - c      = Chord length of the rectangular section
+    - delta  = Half taper angle (radian)
+    - h      = height of the border strip
+    
+    OUTPUT:
+    - n[i]   = # of rectangles in the strip
+    - w[i]   = width of the multiple middle rectangular elements
+    - wi[i]  = width of the first rec element
+    - wf[i]  = width of the last rec element, where i = [0:5)
+    - Lt
+    - Lr
+    - C
+    """
+    
     alpha = 0.5 * (np.pi - delta)
     float_eps = np.finfo(float).eps
     
@@ -176,15 +258,15 @@ def BStrip(lt, lr, c, delta, h):
 
     # Border Strip 1
     Lt += float_eps
-    n[0] = np.floor(Lt / wh).astype(int)
+    n[0] = np.floor(Lt / wh).astype(int)  # # of rectangles in the strip
     r[0] = Lt % wh
     if n[0] != 0:
-        w[0] = wh + r[0] / n[0]
+        w[0] = wh + r[0] / n[0]  # Width of the multiple middle rectangular elements
     else:
         n[0] = 1
         w[0] = Lt
-    wi[0] = h * (1 / np.tan(delta))
-    wf[0] = h * (1 / np.tan(alpha))
+    wi[0] = h * (1 / np.tan(delta)) # Width of the first rec element
+    wf[0] = h * (1 / np.tan(alpha)) # Width of the last rec element
 
     # Border Strip 2
     Lr += float_eps
@@ -199,7 +281,7 @@ def BStrip(lt, lr, c, delta, h):
     wf[1] = h
 
     # Border Strip 3
-    C += float_eps
+    C += float_eps  # Add the small machine epsilon to avoid truncation
     n[2] = np.floor(C / wh)
     r[2] = C % wh
     if n[2] != 0:
@@ -213,24 +295,48 @@ def BStrip(lt, lr, c, delta, h):
     # Border Strip 4
     n[3] = n[1]
     w[3] = w[1]
-    wi[3] = wi[1]
-    wf[3] = wf[1]
+    wi[3] = wf[1]
+    wf[3] = wi[1]
 
     # Border Strip 5
     n[4] = n[0]
     w[4] = w[0]
-    wi[4] = wi[0]
-    wf[4] = wf[0]
+    wi[4] = wf[0]
+    wf[4] = wi[0]
 
     return n, w, wi, wf, Lt, Lr, C
 
+# TODO: Test this function
 def BStripElongated(lt, lr, c, delta, h):
+    
+    """
+    Width of the rectangular elements in the border strips
+    # of rectangular elements on them is fixed, determined by the # for the tip border
+
+    INPUT:
+    - lt     = Length of the tapered section
+    - lr     = Length of the Rectangular Section
+    - c      = Chord length of the rectangular section
+    - delta  = Half taper angle (radian)
+    - h      = height of the border strip
+    
+    OUTPUT:
+    - n[i]   = # of rectangles in the strip
+    - w[i]   = width of the multiple middle rectangular elements
+    - wi[i]  = width of the first rec element
+    - wf[i]  = width of the last rec element, where i = [0:5)
+    - Lt
+    - Lr
+    - C
+    
+    """
+    
     altha = 0.5 * (np.pi - delta)
     Lt = lt - h * ((1 / np.tan(delta)) + (1 / np.tan(altha)))
     Lr = lr - h * (1 / np.tan(altha) + 1)
     C = c - 2.0 * h
     float_eps = np.finfo(float).eps
-    tmp = C / h + float_eps
+    tmp = C / h + float_eps  # Add the smallest number to avoid truncation
 
     r = C % h
     n = np.zeros(5)
@@ -240,9 +346,9 @@ def BStripElongated(lt, lr, c, delta, h):
 
     # Border Strip 1 
     n[0] = np.floor(tmp).astype(int)
-    w[0] = Lt / n[0]
-    wi[0] = h * (1 / np.tan(delta))
-    wf[0] = h * (1 / np.tan(altha))
+    w[0] = Lt / n[0]                 # Width of the multiple middle rectangular elements
+    wi[0] = h * (1 / np.tan(delta))  # Width of the first rec element
+    wf[0] = h * (1 / np.tan(altha))  # Width of the last rec element
     
     # Border Strip 2
     n[1] = n[0]
@@ -259,27 +365,48 @@ def BStripElongated(lt, lr, c, delta, h):
     # Border Strip 4
     n[3] = n[0]
     w[3] = w[1]
-    wi[3] = wi[1]
+    wi[3] = wf[1]
     wf[3] = wi[1]
 
     # Border Strip 5
     n[4] = n[0]
     w[4] = w[0]
-    wi[4] = wi[0]
-    wf[4] = wf[0]
+    wi[4] = wf[0]
+    wf[4] = wi[0]
 
     return n, w, wi, wf, Lt, Lr, C
 
 def BRelemLoc(m, wi, w, wf, h):
     
+    """
+    Node Coordinates of local rectangular edge elements over a border strip
+    For each element, the node starts at the left bottom and rotates clock-wise
+    1     2
+       4
+    0     3
+    x = horizontal, y = vertical directions
+    
+    INPUT:
+    - m            = # of middle elements
+    - wi, w, wf    = size of initial, middle, and final elements (in y-direction)
+    - h            = height of all the elements (in x-direction)
+    
+    OUTPUT:
+    - xeE[j, n, i] = j coordinates of the n-th node of the i-th edge square elements
+                    -> j = 0,1 ; n = 0-4 (4 - center point) ; i = 0-(m+1)  
+    """
+    
+    # Element Width Array
     ww = np.zeros(m + 2)
     y = np.zeros(m + 2)
     xeE = np.zeros((2, 5, m+2))
 
+    # y-coordinates array of the center points
     ww[0] = wi
     ww[1:(m+1)] = w
     ww[m+1] = wf
 
+    # Coordinates of 5 nodes of elements
     y[0] = 0.5 * wi
     for i in range(1, m+2):
         y[i] = wi + (i - 0.5) * w
@@ -297,6 +424,18 @@ def BRelemLoc(m, wi, w, wf, h):
     return xeE
 
 def BRelem(xeE, Xo, Ang):
+    
+    """
+    Transform coordinates from local to global border rectangular elements
+    
+    INPUT:
+    - xeE[j, n, i]
+    -
+    
+    OUTPUT:
+    
+    """
+    
     new_xeE = xeE
     cang = np.cos(Ang)
     sang = np.sin(Ang)
@@ -340,8 +479,6 @@ def uNormal(x, y, z):
 def WingCenter(Lt, Lr, C, delta, n, wi_1):
 
     Xct, Xcr = CRnodes(Lt, Lr, C, delta, n)
-    print(f"Xct: {Xct}\n")
-    print(f"Xcr: {Xcr}\n")
 
     XctS = np.empty([2, 4, n[2], n[0]])
     XcrS = np.empty([2, 4, n[2], n[0]])
@@ -389,9 +526,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
                     XctR[j, 1, i] = XctS[j, 1, ir, ic]
                     XctR[j, 2, i] = XctS[j, 2, ir, ic]
                     XctR[j, 3, i] = XctS[j, 3, ir, ic]
-                print(f"i before increment: {i}")
                 i += 1
-        print(f"i after loops: {i}")
         
         nXctR = i
 
@@ -412,8 +547,6 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         nXc = nXctR + nXcrR
         Xc = np.zeros([2, 5, nXc])
         Nc = np.array([[],[],[]])
-        print(f"nXctR: {nXctR}, nXcrR: {nXcrR}, nXc: {nXc}")
-        print(f"XctR: {XctR}, XcrR: {XcrR}")
 
         Xc[:, 0:4, 0:nXctR] = XctR # TODO: Test if the indices are correct when outputting
         Xc[:, 0:4, nXctR:nXc] = XcrR
@@ -423,7 +556,6 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         Xc = np.vstack((Xc, temp))
         
         for i in range(nXc):
-            print(f"i in Nc: {i}")
             Nc = np.hstack((Nc, uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])))
 
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
@@ -461,9 +593,6 @@ def CRnodes(Lt, Lr, C, delta, n):
         z = (-0.5 + i / n[2]) * C
         lt[i] = np.sqrt(z ** 2 + e ** 2)
         ang[i] = np.arccos(z / lt[i])
-
-    print(f"LT: {lt}\n")
-    print(f"ANG: {ang}\n")
 
     # Tapered Region
     for ir in range(n[2] + 1):
