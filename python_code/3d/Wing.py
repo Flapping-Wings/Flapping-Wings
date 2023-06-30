@@ -185,13 +185,6 @@ def WingBorder(lt, lr, delta):
 
     inf = -1
 
-    print(f"wi: {wi}\n")
-    print(f"w: {w}\n")
-    print(f"wf: {wf}\n")
-    print(f"h: {h}\n")
-    print(f"xo: {xo}\n")
-    print(f"ang: {ang}\n")
-
     for i in range(N):
         xeE = BRelemLoc(n[i], wi[i], w[i], wf[i], h)
         xeE = BRelem(xeE, xo[:, i], ang[i])
@@ -306,7 +299,6 @@ def BStrip(lt, lr, c, delta, h):
 
     return n, w, wi, wf, Lt, Lr, C
 
-# TODO: Test this function
 def BStripElongated(lt, lr, c, delta, h):
     
     """
