@@ -299,6 +299,7 @@ def BStrip(lt, lr, c, delta, h):
 
     return n, w, wi, wf, Lt, Lr, C
 
+# TODO: Test this function
 def BStripElongated(lt, lr, c, delta, h):
     
     """
@@ -421,10 +422,12 @@ def BRelem(xeE, Xo, Ang):
     Transform coordinates from local to global border rectangular elements
     
     INPUT:
-    - xeE[j, n, i]
-    -
+    - xeE[j, n, i]  = local j coordinates of the n-th node of the i-th edge square elements
+    - Xo[j]         = global coordinates of the origin of the local system 
+    - Ang           = rotation of the local wrt of the global system
     
     OUTPUT:
+    - xeE[j, n, i]  = global j coordinates of the n-th node of the i-th node square elements
     
     """
     
@@ -440,7 +443,21 @@ def BRelem(xeE, Xo, Ang):
 
     return new_xeE
 
-def Camber(x, y): # TODO: Test if this actually works, this implementation might need some NumPy fandangling
+def Camber(x, y):
+
+    """
+    Calculate z values of the wing, given (x,y)
+
+    INPUT: (all lengths dimensional)
+    - x[j], y[j] = (x,y) coordinates of node j
+    - g.l_, g.c_ = span, chord lengths
+    - g.icamber  = camber option
+    - g.acamber  = camber amplitude
+
+    OUTPUT:
+    - z[j]       = z coordinates of node j
+
+    """
     
     if g.icamber == 0:
         z = np.zeros(x.shape)
@@ -455,14 +472,31 @@ def Camber(x, y): # TODO: Test if this actually works, this implementation might
     return z
 
 def uNormal(x, y, z):
+
+    """
+    Calculate the unit normal to the rectangular element 
+    1    2
+
+    0    3
+    x - horizontal, y vertical direction
+
+    INPUT:
+    - x[n], y[n], z[n] = coordinates of the n nodes of the element
+
+    OUTPUT:
+    - uN               = unit normal to the rectangular plane
+
+    """
     
     node = np.zeros([4,3])
+
     for i in range(4):
-        node[i, :] = np.array([x[i], y[i], z[i]])
+        node[i, :] = np.array([x[i], y[i], z[i]]) # [:] = 0:3
+
     N = np.cross(np.subtract(node[2, :], node[0, :]), np.subtract(node[1, :], node[3, :]))
     magN = np.linalg.norm(N)
     uN = N / magN
-    uN = uN[..., np.newaxis]
+    uN = uN[..., np.newaxis] # Make into column vector
 
     return uN
 
@@ -470,7 +504,33 @@ def uNormal(x, y, z):
 
 def WingCenter(Lt, Lr, C, delta, n, wi_1):
 
-    Xct, Xcr = CRnodes(Lt, Lr, C, delta, n)
+    """
+    Meshing for the center region
+
+    INPUT:
+    - Lt     : Length of the tapered edge for the center region
+    - Lr     : Length of the horizontal edge for the center region
+    - C      : Length of vertical tip edge of the center region
+    - delta  : Base opening angle / 2
+    - n[i]   : Number of border strip elements: i = 0:5 
+    - wi_1
+
+    OUTPUT:
+    - Xc     : Total center rectangular elements
+    - nXc    : # of total center rectangular elements
+    - Nc     : Unit normal to the elements
+    """
+
+    Xct, Xcr = CRnodes(Lt, Lr, C, delta, n) # Coordinates of the nodes for the center region
+
+    """
+    RECTANGULAR MESH POINTS BY ROWS (x-direction) & COLUMNS (y-direction)
+    For each element, the node starts at the bottom-left and rotates clock-wise
+    1     2       ir,ic+1   ir+1,ic+1
+       4      =
+    0     3       ir,ic     ir+1,ic
+    x - horizontal, y - vertical direction
+    """
 
     XctS = np.empty([2, 4, n[2], n[0]])
     XcrS = np.empty([2, 4, n[2], n[0]])
@@ -485,7 +545,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
                     XctS[j, 1, ir, ic] = Xct[j, ir    , ic + 1]
                     XctS[j, 2, ir, ic] = Xct[j, ir + 1, ic + 1]
                     XctS[j, 3, ir, ic] = Xct[j, ir + 1, ic    ]
-
+    # Rectangular Region
     for ic in range(n[1]):
         for ir in range(n[2]):
             for j in range(2):
@@ -499,7 +559,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         # Tapered Region - Triangular Apex Mesh w/ 4 Nodes
         i = 0
         ic = 0
-        XctR = np.empty([2, 4, n[0] + 1]) # TODO: This one is a bit iffy, might need a check on this one
+        XctR = np.empty([2, 4, n[0] + 1]) 
 
         for j in range(2):
             XctR[j, 0, i] = XctS[j, 0, 0, ic]
@@ -511,7 +571,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         i += 1
 
 
-        for ic in range(1, n[0]): # TODO: Test out of bounds error
+        for ic in range(1, n[0]):
             for ir in range(n[2]):
                 for j in range(2):
                     XctR[j, 0, i] = XctS[j, 0, ir, ic]
@@ -540,41 +600,66 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         Xc = np.zeros([2, 5, nXc])
         Nc = np.array([[],[],[]])
 
-        Xc[:, 0:4, 0:nXctR] = XctR # TODO: Test if the indices are correct when outputting
+        Xc[:, 0:4, 0:nXctR] = XctR 
         Xc[:, 0:4, nXctR:nXc] = XcrR
 
+        # Introduce the camber 
         temp = np.zeros((1, 5, nXc))
         temp[:, 0:4, 0:] = Camber(Xc[0, 0:4, :], Xc[1, 0:4, :])
         Xc = np.vstack((Xc, temp))
         
+        # Unit Normal to the element
         for i in range(nXc):
             Nc = np.hstack((Nc, uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])))
 
+        # Centroid
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
 
+        # Add the eta-coordinate (vertical) of the corder
         yshift = wi_1 / np.cos(delta)
         Xc[1, :, :] = Xc[1, :, :] + yshift
     else:
+        # Total center rectangular element
         nXc = nXcrR
         Xc = np.zeros([2, 4, nXc])
         Nc = np.zeros([3, nXc])
 
         Xc[:, :, 0:nXc] = XcrR
-
+        
+        # Introduce the Camber
         Xc[2, :, :] = Camber(Xc[0, :, :], Xc[1, :, :])
-
+        
+        # Unit normal to the element
         for i in range(nXc):
             Nc[:, i] = uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])
-
+        
+        # Centroid 
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
-
+        
+        # Add the eta-coordinate (vertical) of the corder
         yshift = g.h_
         Xc[1, :, :] = Xc[1, :, :] + yshift
 
     return Xc, nXc, Nc
 
 def CRnodes(Lt, Lr, C, delta, n):
+
+    """
+    Coordinates of the nodes for the rectangular mesh in the center region
+
+    INPUT:
+    - Lt    : Length of the tapered edge for the center region
+    - Lr    : Length of the horizontal edge for the center region
+    - C     
+    - delta : Half-base opening angle
+    - n[i]  : Number of border strips elements: i = 0:5
+
+    OUTPUT:
+    - Xct   : Nodes in the tapered region
+    - Xcr   : Nodes in the rectangular region
+    """
     
+    # Angle and length of radial lines
     e = Lt * np.cos(delta)
     lt = np.zeros(n[2] + 1)
     ang = np.zeros(n[2] + 1)
