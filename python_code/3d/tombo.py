@@ -17,6 +17,8 @@ from s_impulse_WT import s_impulse_WT
 from divide_GAM import divide_GAM
 from b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
 from vel_B_by_T import vel_B_by_T
+from cross_vel_B_by_T import cross_vel_B_by_T
+from assemble_vel_B_by_T import assemble_vel_B_by_T
 
 def tombo():
     # SETUP
@@ -260,6 +262,24 @@ def tombo():
         # VBTs_m(j,n,ixb,w);  vel on wing w due to total elem on wing w
         VBTs_f = vel_B_by_T(cVBT_f, GAM_f, nxt_f)
         VBTs_r = vel_B_by_T(cVBT_r, GAM_r, nxt_r)
+
+        # Border element veocity due to the total wing elements: cross-influence
+        VBTs_12 = cross_vel_B_by_T(Xb_f[:,:,:,0], g.nxb_f, Xt_f[:,:,:,1], GAM_f[1,:], nxt_f)
+        VBTs_13 = cross_vel_B_by_T(Xb_f[:,:,:,0], g.nxb_f, Xt_r[:,:,:,0], GAM_r[0,:], nxt_r)
+        VBTs_14 = cross_vel_B_by_T(Xb_f[:,:,:,0], g.nxb_f, Xt_r[:,:,:,1], GAM_r[1,:], nxt_r)
+        VBTs_21 = cross_vel_B_by_T(Xb_f[:,:,:,1], g.nxb_f, Xt_f[:,:,:,0], GAM_f[0,:], nxt_f)
+        VBTs_23 = cross_vel_B_by_T(Xb_f[:,:,:,1], g.nxb_f, Xt_r[:,:,:,0], GAM_r[0,:], nxt_r)
+        VBTs_24 = cross_vel_B_by_T(Xb_f[:,:,:,1], g.nxb_f, Xt_r[:,:,:,1], GAM_r[1,:], nxt_r)
+        VBTs_31 = cross_vel_B_by_T(Xb_r[:,:,:,0], g.nxb_r, Xt_f[:,:,:,0], GAM_f[0,:], nxt_f)
+        VBTs_32 = cross_vel_B_by_T(Xb_r[:,:,:,0], g.nxb_r, Xt_f[:,:,:,1], GAM_f[1,:], nxt_f)
+        VBTs_34 = cross_vel_B_by_T(Xb_r[:,:,:,0], g.nxb_r, Xt_r[:,:,:,1], GAM_r[1,:], nxt_r)
+        VBTs_41 = cross_vel_B_by_T(Xb_r[:,:,:,1], g.nxb_r, Xt_f[:,:,:,0], GAM_f[0,:], nxt_f)
+        VBTs_42 = cross_vel_B_by_T(Xb_r[:,:,:,1], g.nxb_r, Xt_f[:,:,:,1], GAM_f[1,:], nxt_f)
+        VBTs_43 = cross_vel_B_by_T(Xb_r[:,:,:,1], g.nxb_r, Xt_r[:,:,:,0], GAM_r[0,:], nxt_r)
+                        
+        # Assemble the total border element velocity due to two wings
+        VBT_f,VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
+                                          g.nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
 
 
 def check_input():
