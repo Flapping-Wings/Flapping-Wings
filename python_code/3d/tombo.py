@@ -280,6 +280,12 @@ def tombo():
         # Assemble the total border element velocity due to two wings
         VBT_f,VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
                                           g.nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
+        
+        # TODO: Velocity calculations
+
+        # Shed border vortex elements
+        Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
+        Xs_r = Xb_r + g.dt * (VBT_r + VBT_r)
 
 
 def check_input():
