@@ -287,6 +287,11 @@ def tombo():
         Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
         Xs_r = Xb_r + g.dt * (VBT_r + VBT_r)
 
+        # Convect wake vortices
+        # if g.istep > 0:
+        #     Xw_f = Xw_f + g.dt * (VWT_f + VWW_f)
+        #     Xw_r = Xw_r + g.dt * (VWT_f + VWW_f) 
+
 
 def check_input():
     if g.b_r - g.b_f >= 0.5 * (g.c_r + g.c_f):
