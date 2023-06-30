@@ -286,7 +286,7 @@ def tombo():
 
         # Shed border vortex elements
         Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
-        Xs_r = Xb_r + g.dt * (VBT_r + VBT_r)
+        Xs_r = Xb_r + g.dt * (VBT_r + VBW_r)
 
         # Convect wake vortices
         # if g.istep > 0:
