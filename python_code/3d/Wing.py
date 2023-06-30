@@ -750,7 +750,6 @@ def plot3Elem(fig, axs, X, nX, N):
     - nX         : # of elements
     - N[j, i]    : Unit normal to the element
     """
-    print(f"X: {X}")
 
     scale = 0.1
     Nline = np.zeros((2, 3))
@@ -767,8 +766,6 @@ def plot3Elem(fig, axs, X, nX, N):
         y[4] = X[1, 0, i]
         z[4] = X[2, 0, i]
         axs.plot(x, y, z, 'k')
-        temp = np.array([X[:, 4, i], X[:, 4, i] + scale * N[:, i]]) 
-        print(f"temp: {temp}")
         Nline[:,:] = np.array([X[:, 4, i], X[:, 4, i] + scale * N[:, i]]) 
         axs.plot(Nline[:, 0], Nline[:, 1], Nline[:, 2], 'r') 
         axs.axis('equal')
