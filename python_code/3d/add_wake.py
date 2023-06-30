@@ -1,4 +1,5 @@
 import numpy as np
+from globals import g
 
 def add_wake(nXb, GAMAb, Xs, GAMAw, Xw):
     """
@@ -27,4 +28,11 @@ def add_wake(nXb, GAMAb, Xs, GAMAw, Xw):
         Location of wake voritces for next step
         (in wing-fixed system)
     """
-    pass
+    # Add the newly shed vortices to the wake vortices
+    GAMAw = [GAMAw, GAMAb]  # increment in each step
+    nXw = np.shape(GAMAw)[1]
+
+    # Add the location of the newly shed vortices to existing wake vortex locations
+    s = np.shape(Xw)
+    for i in range(g.nwing):
+        Xw[:3, :4, s[2]:nXw, i] = Xs[:3, :4, :nXb, i]
