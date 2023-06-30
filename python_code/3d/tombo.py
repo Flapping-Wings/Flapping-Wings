@@ -19,6 +19,7 @@ from b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
 from vel_B_by_T import vel_B_by_T
 from cross_vel_B_by_T import cross_vel_B_by_T
 from assemble_vel_B_by_T import assemble_vel_B_by_T
+from add_wake import add_wake
 
 def tombo():
     # SETUP
@@ -290,7 +291,22 @@ def tombo():
         # Convect wake vortices
         # if g.istep > 0:
         #     Xw_f = Xw_f + g.dt * (VWT_f + VWW_f)
-        #     Xw_r = Xw_r + g.dt * (VWT_f + VWW_f) 
+        #     Xw_r = Xw_r + g.dt * (VWT_f + VWW_f)
+
+        # Add shed vortices to wake vortex
+        if g.istep == 1:
+            # Front wings
+            GAMw_f = GAMAb_f
+            nxw_f = g.nxb_f
+            Xw_f = Xs_f
+            # Rear wings
+            GAMw_r = GAMAb_r
+            nxw_r = g.nxb_r
+            Xw_r = Xs_r
+        else:
+            # TODO: pre-allocate Xw_f, Xw_r
+            GAMw_f, nxw_f, Xw_f = add_wake(g.nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
+            GAMw_r, nxw_r, Xw_r = add_wake(g.nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
 
 
 def check_input():
