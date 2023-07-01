@@ -36,3 +36,5 @@ def add_wake(nXb, GAMAb, Xs, GAMAw, Xw):
     s = np.shape(Xw)
     for i in range(g.nwing):
         Xw[:3, :4, s[2]:nXw, i] = Xs[:3, :4, :nXb, i]
+
+    return GAMAw, nXw, Xw
