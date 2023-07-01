@@ -20,6 +20,7 @@ from vel_B_by_T import vel_B_by_T
 from cross_vel_B_by_T import cross_vel_B_by_T
 from assemble_vel_B_by_T import assemble_vel_B_by_T
 from add_wake import add_wake
+from vel_by import vel_by
 
 def tombo():
     # SETUP
@@ -98,6 +99,10 @@ def tombo():
     # Velocity value matrices
     VBW_f = np.zeros((3, 4, g.nxb_f, g.nwing))
     VBW_r = np.zeros((3, 4, g.nxb_r, g.nwing))
+    VWT_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
+    VWT_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
+    VWW_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
+    VWW_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
 
     # TODO: Document Xc_f/r
     Xc_f = np.zeros((3, 4, g.nxc_f, 2))
@@ -282,7 +287,24 @@ def tombo():
         VBT_f,VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
                                           g.nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
         
-        # TODO: Velocity calculations
+        # Velocity from wake vortices
+        if g.istep > 0:
+            # Velocity of the border elements due to wake vortices
+            for i in range(g.nwing):
+                VBW_f[:3, :4, :g.nxb_f, i] = vel_by(g.istep, Xb_f[:,:,:,i], g.nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                VBW_r[:3, :4, :g.nxb_r, i] = vel_by(g.istep, Xb_r[:,:,:,i], g.nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+        
+            # Velocity of the wake elements due to total wing vortices
+            for i in range(g.nwing):
+                # TODO: pre-allocate
+                VWT_f[:3, :4, :(g.istep-1)*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
+                VWT_r[:3, :4, :(g.istep-1)*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
+            
+            # Velocity of the wake elements due to wake elements
+            for i in range(g.nwing):
+                # TODO: pre-allocate
+                VWW_f[:3, :4, :(g.istep-1)*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                VWW_r[:3, :4, :(g.istep-1)*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
 
         # Shed border vortex elements
         Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
