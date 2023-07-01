@@ -69,8 +69,8 @@ def tombo():
     # Total wake vortex number
     nxw_f = 0; nxw_r = 0
     # Wake vortex location array (after convection)
-    Xw_f = np.zeros((3, 4, g.nxb_f, g.nwing))
-    Xw_r = np.zeros((3, 4, g.nxb_r, g.nwing))
+    Xw_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
+    Xw_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
     # Shed vortex location array 
     Xs_f = np.zeros((3, 4, g.nxb_f, g.nwing))
     Xs_r = np.zeros((3, 4, g.nxb_r, g.nwing))
@@ -297,34 +297,34 @@ def tombo():
             # Velocity of the wake elements due to total wing vortices
             for i in range(g.nwing):
                 # TODO: pre-allocate
-                VWT_f[:3, :4, :(g.istep-1)*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
-                VWT_r[:3, :4, :(g.istep-1)*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
+                VWT_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
+                VWT_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
             
             # Velocity of the wake elements due to wake elements
             for i in range(g.nwing):
                 # TODO: pre-allocate
-                VWW_f[:3, :4, :(g.istep-1)*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
-                VWW_r[:3, :4, :(g.istep-1)*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                VWW_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                VWW_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
 
         # Shed border vortex elements
         Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
         Xs_r = Xb_r + g.dt * (VBT_r + VBW_r)
 
         # Convect wake vortices
-        # if g.istep > 0:
-        #     Xw_f = Xw_f + g.dt * (VWT_f + VWW_f)
-        #     Xw_r = Xw_r + g.dt * (VWT_f + VWW_f)
+        if g.istep > 0:
+            Xw_f = Xw_f + g.dt * (VWT_f + VWW_f)
+            Xw_r = Xw_r + g.dt * (VWT_f + VWW_f)
 
         # Add shed vortices to wake vortex
         if g.istep == 0:
             # Front wings
             GAMw_f = GAMAb_f
             nxw_f = g.nxb_f
-            Xw_f = Xs_f
+            Xw_f[:, :, :10, :] = Xs_f
             # Rear wings
             GAMw_r = GAMAb_r
             nxw_r = g.nxb_r
-            Xw_r = Xs_r
+            Xw_r[:, :, :10, :] = Xs_r
         else:
             # TODO: pre-allocate Xw_f, Xw_r
             GAMw_f, nxw_f, Xw_f = add_wake(g.nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
