@@ -1,11 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import splev, splrep, splder
+from globals import g
 
 def force_moment(rho_, v_, d_1, nstep, dt, U):
-    global limpa_f, aimpa_f, limpw_f, aimpw_f, limpa_r, aimpa_r, limpw_r, aimpw_r
-    global folder, nwing
-
     # Reference values of force and moment
     f_ = rho_ * (v_ * d_1)**2
     m_ = f_ * d_1
@@ -15,11 +13,11 @@ def force_moment(rho_, v_, d_1, nstep, dt, U):
 
     # Combine impulses
     # Front wings
-    limps_f = limpa_f + limpw_f
-    aimps_f = aimpa_f + aimpw_f
+    limps_f = g.limpa_f + g.limpw_f
+    aimps_f = g.aimpa_f + g.aimpw_f
     # Rear wings
-    limps_r = limpa_r + limpw_r
-    aimps_r = aimpa_r + aimpw_r
+    limps_r = g.limpa_r + g.limpw_r
+    aimps_r = g.aimpa_r + g.aimpw_r
 
     # Add contributions from nwing/2 wings
     # Front wings
@@ -34,7 +32,7 @@ def force_moment(rho_, v_, d_1, nstep, dt, U):
     aimp = aimp_f + aimp_r
 
     # Get the splines and their derivatives for the impulses
-    for i in range(nwing):
+    for i in range(g.nwing):
         time = dt * np.arange(1, nstep + 1)
         impLx = splrep(time, limp[0, :])
         impLy = splrep(time, limp[1, :])
@@ -80,35 +78,35 @@ def force_moment(rho_, v_, d_1, nstep, dt, U):
     fm = plt.figure()
     plt.plot(times, forcex, 'x-k')
     plt.grid(True)
-    plt.savefig(folder + 'f&m/fx.png')
+    plt.savefig(g.folder + 'f&m/fx.png')
     plt.close(fm)
 
     fm = plt.figure()
     plt.plot(times, forcey, '+-k')
     plt.grid(True)
-    plt.savefig(folder + 'f&m/fy.png')
+    plt.savefig(g.folder + 'f&m/fy.png')
     plt.close(fm)
 
     fm = plt.figure()
     plt.plot(times, forcez, 'x-k')
     plt.grid(True)
-    plt.savefig(folder + 'f&m/fz.png')
+    plt.savefig(g.folder + 'f&m/fz.png')
     plt.close(fm)
 
     fm = plt.figure()
     plt.plot(times, momentx, 'o-r')
     plt.grid(True)
-    plt.savefig(folder + 'f&m/m1.png')
+    plt.savefig(g.folder + 'f&m/m1.png')
     plt.close(fm)
 
     fm = plt.figure()
     plt.plot(times, momenty, 'o-r')
     plt.grid(True)
-    plt.savefig(folder + 'f&m/m2.png')
+    plt.savefig(g.folder + 'f&m/m2.png')
     plt.close(fm)
 
     fm = plt.figure()
     plt.plot(times, momentz, 'o-r')
     plt.grid(True)
-    plt.savefig(folder + 'f&m/m3.png')
+    plt.savefig(g.folder + 'f&m/m3.png')
     plt.close(fm)
