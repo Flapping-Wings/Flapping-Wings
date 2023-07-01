@@ -47,17 +47,17 @@ def vel_by(istep, X_target, nX_target, X_f, GAMA_f, nX_f, X_r, GAMA_r, nX_r):
                 v += v1
                 w += w1
                 u2, v2, w2 = mVORTEX(x, y, z, X[0,1,:], X[1,1,:], X[2,1,:], X[0,2,:], X[1,2,:], X[2,2,:], GAM)
-                u += u1
-                v += v1
-                w += w1
+                u += u2
+                v += v2
+                w += w2
                 u3, v3, w3 = mVORTEX(x, y, z, X[0,2,:], X[1,2,:], X[2,2,:], X[0,3,:], X[1,3,:], X[2,3,:], GAM)
-                u += u1
-                v += v1
-                w += w1
+                u += u3
+                v += v3
+                w += w3
                 u4, v4, w4 = mVORTEX(x, y, z, X[0,3,:], X[1,3,:], X[2,3,:], X[0,0,:], X[1,0,:], X[2,0,:], GAM)
-                u += u1
-                v += v1
-                w += w1
+                u += u4
+                v += v4
+                w += w4
 
                 vel[0, n, i] += u
                 vel[1, n, i] += v
