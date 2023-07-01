@@ -46,8 +46,8 @@ def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nX
     # TODO: Lots of repetition, probably lots of parallelizable tasks, lots of opitmization opportunities
     # Contribution from forward wing wake
     GAMAw = GAMAw2_f[0, :]
-    GAMw = np.reshape(GAMAw, (1, 1 , nXw_f))
-    Xw = Xw2_f[:, :, :, 0]
+    GAMw = np.reshape(GAMAw, nXw_f)
+    Xw = Xw2_f[:, :, :nXw_f, 0]
     for i in range(nXt):
         x = XC[0, i]
         y = XC[1, i]
@@ -74,8 +74,8 @@ def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nX
         Vncw[i] += u * NC[0, i] + v * NC[1, i] + w * NC[2, i]
     
     GAMAw = GAMAw2_f[1, :]
-    GAMw = np.reshape(GAMAw, (1, 1, nXw_f))
-    Xw = Xw2_f[:, :, :, 1]
+    GAMw = np.reshape(GAMAw, nXw_f)
+    Xw = Xw2_f[:, :, :nXw_f, 1]
     for i in range(nXt):
         x = XC[0, i]
         y = XC[1, i]
@@ -103,8 +103,8 @@ def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nX
  
     # Contribution from rear wing wake
     GAMAw = GAMAw2_r[0, :]
-    GAMw = np.reshape(GAMAw, (1, 1, nXw_r))
-    Xw = Xw2_r[:, :, :, 0]
+    GAMw = np.reshape(GAMAw, nXw_r)
+    Xw = Xw2_r[:, :, :nXw_r, 0]
     for i in range(nXt):
         x = XC[0, i]
         y = XC[1, i]
@@ -131,8 +131,8 @@ def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nX
         Vncw[i] += u * NC[0, i] + v * NC[1, i] + w * NC[2, i]
     
     GAMAw = GAMAw2_r[1, :]
-    GAMw = np.reshape(GAMAw, (1, 1, nXw_r))
-    Xw = Xw2_r[:, :, :, 1]
+    GAMw = np.reshape(GAMAw, nXw_r)
+    Xw = Xw2_r[:, :, :nXw_r, 1]
     for i in range(nXt):
         x = XC[0, i]
         y = XC[1, i]
