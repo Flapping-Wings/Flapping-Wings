@@ -297,13 +297,11 @@ def tombo():
         
             # Velocity of the wake elements due to total wing vortices
             for i in range(g.nwing):
-                # TODO: pre-allocate
                 VWT_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
                 VWT_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
             
             # Velocity of the wake elements due to wake elements
             for i in range(g.nwing):
-                # TODO: pre-allocate
                 VWW_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
                 VWW_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
 
@@ -327,7 +325,6 @@ def tombo():
             nxw_r = g.nxb_r
             Xw_r[:, :, :10, :] = Xs_r
         else:
-            # TODO: pre-allocate Xw_f, Xw_r
             GAMw_f, nxw_f, Xw_f = add_wake(g.nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
             GAMw_r, nxw_r, Xw_r = add_wake(g.nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
 
