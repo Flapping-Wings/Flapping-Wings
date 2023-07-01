@@ -29,7 +29,7 @@ def add_wake(nXb, GAMAb, Xs, GAMAw, Xw):
         (in wing-fixed system)
     """
     # Add the newly shed vortices to the wake vortices
-    GAMAw = [GAMAw, GAMAb]  # increment in each step
+    GAMAw = np.hstack((GAMAw, GAMAb))   # build incrementally each step
     nXw = np.shape(GAMAw)[1]
 
     # Add the location of the newly shed vortices to existing wake vortex locations
