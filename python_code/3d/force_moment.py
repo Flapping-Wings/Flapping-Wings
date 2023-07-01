@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import splev, splrep, splder
 
-def tbforceMoment(rho_, v_, d_1, nstep, dt, U):
+def force_moment(rho_, v_, d_1, nstep, dt, U):
     global limpa_f, aimpa_f, limpw_f, aimpw_f, limpa_r, aimpa_r, limpw_r, aimpw_r
     global folder, nwing
 
