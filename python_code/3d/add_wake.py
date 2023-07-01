@@ -33,8 +33,8 @@ def add_wake(nXb, GAMAb, Xs, GAMAw, Xw):
     nXw = np.shape(GAMAw)[1]
 
     # Add the location of the newly shed vortices to existing wake vortex locations
-    s = np.shape(Xw)
+    s = g.istep * nXb
     for i in range(g.nwing):
-        Xw[:3, :4, s[2]:nXw, i] = Xs[:3, :4, :nXb, i]
+        Xw[:, :, s:nXw, i] = Xs[:, :, :nXb, i]
 
     return GAMAw, nXw, Xw
