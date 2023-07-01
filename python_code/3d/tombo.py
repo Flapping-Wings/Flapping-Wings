@@ -21,6 +21,7 @@ from cross_vel_B_by_T import cross_vel_B_by_T
 from assemble_vel_B_by_T import assemble_vel_B_by_T
 from add_wake import add_wake
 from force_moment import force_moment
+from vel_by import vel_by
 
 def tombo():
     # SETUP
@@ -69,22 +70,22 @@ def tombo():
     # Total wake vortex number
     nxw_f = 0; nxw_r = 0
     # Wake vortex location array (after convection)
-    Xw_f = np.zeros((3, 4, g.nxb_f, g.nwing))
-    Xw_r = np.zeros((3, 4, g.nxb_r, g.nwing))
+    Xw_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
+    Xw_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
     # Shed vortex location array 
     Xs_f = np.zeros((3, 4, g.nxb_f, g.nwing))
     Xs_r = np.zeros((3, 4, g.nxb_r, g.nwing))
 
     if g.nstep > 3:
         # Initialize the linear and angular impulse arrays
-        limpa_f = np.zeros((3, g.nstep, g.nwing))
-        limpa_r = np.zeros((3, g.nstep, g.nwing))
-        aimpa_f = np.zeros((3, g.nstep, g.nwing))
-        aimpa_r = np.zeros((3, g.nstep, g.nwing))
-        limpw_f = np.zeros((3, g.nstep, g.nwing))
-        limpw_r = np.zeros((3, g.nstep, g.nwing))
-        aimpw_f = np.zeros((3, g.nstep, g.nwing))
-        aimpw_r = np.zeros((3, g.nstep, g.nwing))
+        g.limpa_f = np.zeros((3, g.nstep, g.nwing))
+        g.limpa_r = np.zeros((3, g.nstep, g.nwing))
+        g.aimpa_f = np.zeros((3, g.nstep, g.nwing))
+        g.aimpa_r = np.zeros((3, g.nstep, g.nwing))
+        g.limpw_f = np.zeros((3, g.nstep, g.nwing))
+        g.limpw_r = np.zeros((3, g.nstep, g.nwing))
+        g.aimpw_f = np.zeros((3, g.nstep, g.nwing))
+        g.aimpw_r = np.zeros((3, g.nstep, g.nwing))
 
     # Normal velocity on the wing due to the wing motion & wake vortices
     Vnc_f  = np.zeros((g.nwing, nxt_f))
@@ -99,6 +100,10 @@ def tombo():
     # Velocity value matrices
     VBW_f = np.zeros((3, 4, g.nxb_f, g.nwing))
     VBW_r = np.zeros((3, 4, g.nxb_r, g.nwing))
+    VWT_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
+    VWT_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
+    VWW_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
+    VWW_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
 
     # TODO: Document Xc_f/r
     Xc_f = np.zeros((3, 4, g.nxc_f, 2))
@@ -235,20 +240,20 @@ def tombo():
                              beta[0:2], phi[0:2], theta[0:2], a[0:2])
             for j in range(3):
                 for w in range(g.nwing):
-                    limpa_f[j, g.istep, w] = limpa[j, w]
-                    aimpa_f[j, g.istep, w] = aimpa[j, w]
-                    limpw_f[j, g.istep, w] = limpw[j, w]
-                    aimpw_f[j, g.istep, w] = aimpw[j, w]
+                    g.limpa_f[j, g.istep, w] = limpa[j, w]
+                    g.aimpa_f[j, g.istep, w] = aimpa[j, w]
+                    g.limpw_f[j, g.istep, w] = limpw[j, w]
+                    g.aimpw_f[j, g.istep, w] = aimpw[j, w]
             # Rear wing
             limpa, aimpa, limpw, aimpw = \
                 s_impulse_WT(g.istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
                              beta[2:4], phi[2:4], theta[2:4], a[2:4]) 
             for j in range(3):
                 for w in range(g.nwing):
-                    limpa_r[j, g.istep, w] = limpa[j, w]
-                    aimpa_r[j, g.istep, w] = aimpa[j, w]
-                    limpw_r[j, g.istep, w] = limpw[j, w]
-                    aimpw_r[j, g.istep, w] = aimpw[j, w]  
+                    g.limpa_r[j, g.istep, w] = limpa[j, w]
+                    g.aimpa_r[j, g.istep, w] = aimpa[j, w]
+                    g.limpw_r[j, g.istep, w] = limpw[j, w]
+                    g.aimpw_r[j, g.istep, w] = aimpw[j, w]  
 
         # Extract GAMAb (border & shed ) from GAM
         GAMAb_f = divide_GAM(GAM_f, g.nxb_f)
@@ -283,29 +288,43 @@ def tombo():
         VBT_f,VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
                                           g.nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
         
-        # TODO: Velocity calculations
+        # Velocity from wake vortices
+        if g.istep > 0:
+            # Velocity of the border elements due to wake vortices
+            for i in range(g.nwing):
+                VBW_f[:3, :4, :g.nxb_f, i] = vel_by(g.istep, Xb_f[:,:,:,i], g.nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                VBW_r[:3, :4, :g.nxb_r, i] = vel_by(g.istep, Xb_r[:,:,:,i], g.nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+        
+            # Velocity of the wake elements due to total wing vortices
+            for i in range(g.nwing):
+                VWT_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
+                VWT_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
+            
+            # Velocity of the wake elements due to wake elements
+            for i in range(g.nwing):
+                VWW_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                VWW_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
 
         # Shed border vortex elements
         Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
         Xs_r = Xb_r + g.dt * (VBT_r + VBW_r)
 
         # Convect wake vortices
-        # if g.istep > 0:
-        #     Xw_f = Xw_f + g.dt * (VWT_f + VWW_f)
-        #     Xw_r = Xw_r + g.dt * (VWT_f + VWW_f)
+        if g.istep > 0:
+            Xw_f = Xw_f + g.dt * (VWT_f + VWW_f)
+            Xw_r = Xw_r + g.dt * (VWT_f + VWW_f)
 
         # Add shed vortices to wake vortex
         if g.istep == 0:
             # Front wings
             GAMw_f = GAMAb_f
             nxw_f = g.nxb_f
-            Xw_f = Xs_f
+            Xw_f[:, :, :10, :] = Xs_f
             # Rear wings
             GAMw_r = GAMAb_r
             nxw_r = g.nxb_r
-            Xw_r = Xs_r
+            Xw_r[:, :, :10, :] = Xs_r
         else:
-            # TODO: pre-allocate Xw_f, Xw_r
             GAMw_f, nxw_f, Xw_f = add_wake(g.nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
             GAMw_r, nxw_r, Xw_r = add_wake(g.nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
 
