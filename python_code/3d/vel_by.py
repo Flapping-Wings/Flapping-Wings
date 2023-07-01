@@ -1,6 +1,7 @@
 import numpy as np
+from mVORTEX import mVORTEX
 
-def vel_by(istep, Xb, nXb, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nXw_r):
+def vel_by(istep, X_target, nX_target, X_f, GAMA_f, nX_f, X_r, GAMA_r, nX_r):
     """
     Calculate velocity at target nodes due to source vortices
 
@@ -11,21 +12,87 @@ def vel_by(istep, Xb, nXb, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nXw_r):
     ----------
     istep: int
         Current iteration step
-    Xw: ndarray[j, n, iXw]
+    X_target: ndarray[j, n, iXw]
         Coordinate j of observation node n of the target element node
-    nXw: int
+    nX: int
         Number of target elements
-    Xt2_f: ndarray[j, n, iXt, w]
+    X_f: ndarray[j, n, iXt, w]
         Coordinate j of source node n for source elements on front wings
-    GAMA2_f: ndarray[w, iXt]
+    GAMA_f: ndarray[w, iXt]
         Source elements on front wings
-    nXt_f: int
+    nX_f: int
         Number of source elements on front wings
-    Xt2_r: ndarray[j, n, iXt, w]
+    X_r: ndarray[j, n, iXt, w]
         Coordinate j of source node n for source elements on rear wings
-    GAMA2_r: ndarray[w, iXt]
+    GAMA_r: ndarray[w, iXt]
         Source elements on rear wings
-    nXt_r: int
-        Number of total elements on rear wings 
+    nX_r: int
+        Number of total elements on rear wings
+
+    Returns
+    -------
+    vel: ndarray[j, n, iXb]
+        Induced velocity
     """
-    pass
+    def helper(vel, X, GAMA):
+        for i in range(nX_target):
+            for n in range(4):
+                x = X_target(0, n, i)
+                y = X_target(1, n, i)
+                z = X_target(2, n, i)
+                u, v, w = 0, 0, 0
+
+                u1, v1, w1 = mVORTEX(x, y, z, X[0,0,:], X[1,0,:], X[2,0,:], X[0,1,:], X[1,1,:], X[2,1,:], GAMA)
+                u += u1
+                v += v1
+                w += w1
+                u2, v2, w2 = mVORTEX(x, y, z, X[0,1,:], X[1,1,:], X[2,1,:], X[0,2,:], X[1,2,:], X[2,2,:], GAMA)
+                u += u1
+                v += v1
+                w += w1
+                u3, v3, w3 = mVORTEX(x, y, z, X[0,2,:], X[1,2,:], X[2,2,:], X[0,3,:], X[1,3,:], X[2,3,:], GAMA)
+                u += u1
+                v += v1
+                w += w1
+                u4, v4, w4 = mVORTEX(x, y, z, X[0,3,:], X[1,3,:], X[2,3,:], X[0,0,:], X[1,0,:], X[2,0,:], GAMA)
+                u += u1
+                v += v1
+                w += w1
+
+                vel[0, n, i] += u
+                vel[1, n, i] += v
+                vel[2, n, i] += w
+    
+
+    vel = np.zeros((3, 4, nX_target))
+
+    if istep == 0:
+        return vel
+
+    # Front wings
+    # Contribution from right wing
+    GAMAw = GAMA_f[0,:]
+    GAMw = np.reshape(GAMAw, nX_f)
+    Xw = X_f[:,:,:,0]
+    helper(vel, Xw, GAMw)
+
+    # Contribution from left wing
+    GAMAw = GAMA_f[1,:]
+    GAMw = np.reshape(GAMAw, nX_f)
+    Xw = X_f[:,:,:,1]
+    helper(vel, Xw, GAMAw)
+
+    # Rear wings
+    # Contribution from right wing
+    GAMAw = GAMA_r[0,:]
+    GAMw = np.reshape(GAMAw, nX_r)
+    Xw = X_r[:,:,:,0]
+    helper(vel, Xw, GAMw)
+
+    # Contribution from left wing
+    GAMAw = GAMA_r[1,:]
+    GAMw = np.reshape(GAMAw, nX_r)
+    Xw = X_r[:,:,:,1]
+    helper(vel, Xw, GAMAw)
+
+    return vel
