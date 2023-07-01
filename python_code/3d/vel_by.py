@@ -37,9 +37,9 @@ def vel_by(istep, X_target, nX_target, X_f, GAMA_f, nX_f, X_r, GAMA_r, nX_r):
     def helper(vel, X, GAMA):
         for i in range(nX_target):
             for n in range(4):
-                x = X_target(0, n, i)
-                y = X_target(1, n, i)
-                z = X_target(2, n, i)
+                x = X_target[0, n, i]
+                y = X_target[1, n, i]
+                z = X_target[2, n, i]
                 u, v, w = 0, 0, 0
 
                 u1, v1, w1 = mVORTEX(x, y, z, X[0,0,:], X[1,0,:], X[2,0,:], X[0,1,:], X[1,1,:], X[2,1,:], GAMA)
