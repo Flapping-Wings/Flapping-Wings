@@ -20,7 +20,7 @@ class g:
 
     # Output files
 
-    folder: str = 'fig/'
+    folder: str = 'python_code/3d/fig/'
     """Path to output folder"""
     # fid = open(f"{folder}/output.txt", 'w')
     """Output file"""
