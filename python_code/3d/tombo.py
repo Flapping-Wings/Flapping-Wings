@@ -20,6 +20,7 @@ from vel_B_by_T import vel_B_by_T
 from cross_vel_B_by_T import cross_vel_B_by_T
 from assemble_vel_B_by_T import assemble_vel_B_by_T
 from add_wake import add_wake
+from force_moment import force_moment
 from vel_by import vel_by
 
 def tombo():
@@ -329,6 +330,12 @@ def tombo():
             # TODO: pre-allocate Xw_f, Xw_r
             GAMw_f, nxw_f, Xw_f = add_wake(g.nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
             GAMw_r, nxw_r, Xw_r = add_wake(g.nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
+
+    # END TIME MARCH
+
+    # Calculate the force and moment on the airfoil
+    if g.nstep > 3:
+        force_moment(g.rho_, g.v_, g.d_[0], g.nstep, g.dt, U)
 
 
 def check_input():
