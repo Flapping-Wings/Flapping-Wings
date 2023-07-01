@@ -34,7 +34,6 @@ def add_wake(nXb, GAMAb, Xs, GAMAw, Xw):
 
     # Add the location of the newly shed vortices to existing wake vortex locations
     s = g.istep * nXb
-    for i in range(g.nwing):
-        Xw[:, :, s:nXw, i] = Xs[:, :, :nXb, i]
+    Xw[:, :, s:nXw, :g.nwing] = Xs[:, :, :nXb, :g.nwing]
 
     return GAMAw, nXw, Xw
