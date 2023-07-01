@@ -73,13 +73,15 @@ def s_impulse_WT(istep, U, t, Xt, Xw, GAM, GAMAw, beta, phi, theta, a):
         aimpa[:,i] = aimp
 
         if istep > 0:
+            s = GAMAw.shape[1]  # Index limit to account for pre-allocation
+
             # Wake vortices
             # Linear impulse
-            n1, n2, limp = limpulse(Xw_T[:,:,:,i], GAMAw[i,:], beta[i], phi[i], theta[i], a[i])
+            n1, n2, limp = limpulse(Xw_T[:,:,:s,i], GAMAw[i,:], beta[i], phi[i], theta[i], a[i])
             limpw[:,i] = limp       # limpw(:,istep) + limp
 
             # Angular impulse
-            aimp = aimpulse(Xw_T[:,:,:,i], n1, n2, GAMAw[i,:], beta[i], phi[i], theta[i], a[i])
+            aimp = aimpulse(Xw_T[:,:,:s,i], n1, n2, GAMAw[i,:], beta[i], phi[i], theta[i], a[i])
             aimpw[:,i] = aimp       # aimpw(:,istep) + aimp
     
     return limpa, aimpa, limpw, aimpw
