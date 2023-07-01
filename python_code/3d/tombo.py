@@ -78,14 +78,14 @@ def tombo():
 
     if g.nstep > 3:
         # Initialize the linear and angular impulse arrays
-        limpa_f = np.zeros((3, g.nstep, g.nwing))
-        limpa_r = np.zeros((3, g.nstep, g.nwing))
-        aimpa_f = np.zeros((3, g.nstep, g.nwing))
-        aimpa_r = np.zeros((3, g.nstep, g.nwing))
-        limpw_f = np.zeros((3, g.nstep, g.nwing))
-        limpw_r = np.zeros((3, g.nstep, g.nwing))
-        aimpw_f = np.zeros((3, g.nstep, g.nwing))
-        aimpw_r = np.zeros((3, g.nstep, g.nwing))
+        g.limpa_f = np.zeros((3, g.nstep, g.nwing))
+        g.limpa_r = np.zeros((3, g.nstep, g.nwing))
+        g.aimpa_f = np.zeros((3, g.nstep, g.nwing))
+        g.aimpa_r = np.zeros((3, g.nstep, g.nwing))
+        g.limpw_f = np.zeros((3, g.nstep, g.nwing))
+        g.limpw_r = np.zeros((3, g.nstep, g.nwing))
+        g.aimpw_f = np.zeros((3, g.nstep, g.nwing))
+        g.aimpw_r = np.zeros((3, g.nstep, g.nwing))
 
     # Normal velocity on the wing due to the wing motion & wake vortices
     Vnc_f  = np.zeros((g.nwing, nxt_f))
@@ -240,20 +240,20 @@ def tombo():
                              beta[0:2], phi[0:2], theta[0:2], a[0:2])
             for j in range(3):
                 for w in range(g.nwing):
-                    limpa_f[j, g.istep, w] = limpa[j, w]
-                    aimpa_f[j, g.istep, w] = aimpa[j, w]
-                    limpw_f[j, g.istep, w] = limpw[j, w]
-                    aimpw_f[j, g.istep, w] = aimpw[j, w]
+                    g.limpa_f[j, g.istep, w] = limpa[j, w]
+                    g.aimpa_f[j, g.istep, w] = aimpa[j, w]
+                    g.limpw_f[j, g.istep, w] = limpw[j, w]
+                    g.aimpw_f[j, g.istep, w] = aimpw[j, w]
             # Rear wing
             limpa, aimpa, limpw, aimpw = \
                 s_impulse_WT(g.istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
                              beta[2:4], phi[2:4], theta[2:4], a[2:4]) 
             for j in range(3):
                 for w in range(g.nwing):
-                    limpa_r[j, g.istep, w] = limpa[j, w]
-                    aimpa_r[j, g.istep, w] = aimpa[j, w]
-                    limpw_r[j, g.istep, w] = limpw[j, w]
-                    aimpw_r[j, g.istep, w] = aimpw[j, w]  
+                    g.limpa_r[j, g.istep, w] = limpa[j, w]
+                    g.aimpa_r[j, g.istep, w] = aimpa[j, w]
+                    g.limpw_r[j, g.istep, w] = limpw[j, w]
+                    g.aimpw_r[j, g.istep, w] = aimpw[j, w]  
 
         # Extract GAMAb (border & shed ) from GAM
         GAMAb_f = divide_GAM(GAM_f, g.nxb_f)
