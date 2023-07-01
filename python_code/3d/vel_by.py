@@ -73,26 +73,26 @@ def vel_by(istep, X_target, nX_target, X_f, GAMA_f, nX_f, X_r, GAMA_r, nX_r):
     # Contribution from right wing
     GAMA = GAMA_f[0,:]
     GAM = np.reshape(GAMA, nX_f)
-    X = X_f[:,:,:,0]
+    X = X_f[:,:,:nX_f,0]
     helper(vel, X, GAM)
 
     # Contribution from left wing
     GAMA = GAMA_f[1,:]
     GAM = np.reshape(GAMA, nX_f)
-    X = X_f[:,:,:,1]
+    X = X_f[:,:,:nX_f,1]
     helper(vel, X, GAM)
 
     # Rear wings
     # Contribution from right wing
     GAMA = GAMA_r[0,:]
     GAM = np.reshape(GAMA, nX_r)
-    X = X_r[:,:,:,0]
+    X = X_r[:,:,:nX_r,0]
     helper(vel, X, GAM)
 
     # Contribution from left wing
     GAMA = GAMA_r[1,:]
     GAM = np.reshape(GAMA, nX_r)
-    X = X_r[:,:,:,1]
+    X = X_r[:,:,:nX_r,1]
     helper(vel, X, GAM)
 
     return vel
