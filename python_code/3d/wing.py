@@ -129,7 +129,7 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     co_ = g.c_
 
     # Plot Mesh
-    if g.mplot == 1:
+    if g.mplot:
         fig2, ax2 = plt.subplots()
         plot2Elem(fig2, ax2, Xb, nXb, 4, 'r', 2)
         plot2Elem(fig2, ax2, Xc, nXc, 4, 'b', 2)
