@@ -204,7 +204,8 @@ class g:
 
     itaper: bool = True
     """Toggle wing taper"""
-    ielong = None
+    ielong: bool  = False
+    """Toggle fixed number of border elements"""
     hfactor: float = None
     """
     TODO
