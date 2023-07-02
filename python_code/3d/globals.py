@@ -205,7 +205,13 @@ class g:
     itaper: bool = True
     """Toggle wing taper"""
     ielong = None
-    hfactor = None
+    hfactor: float = None
+    """
+    TODO
+    Ratio of wing height to chord length:
+    - `0.1`: high aspect ratio wing (`chord < span`)
+    - `<= 0.05`: low aspect ratio wing (`chord > span`)
+    """
     wfactor = None
     c_: float = None
     """Wing chord length (used temporarily)"""
