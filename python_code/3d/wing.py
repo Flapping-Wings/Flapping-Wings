@@ -83,7 +83,6 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     g.l_ = lt_ * np.cos(bang) + lr_ # Span Length
     g.hfactor = hfac                # Height of the border strip: 0.1 (high aspect ration wing (chord < span)), <= 0.05 (low aspect ration wing(chord > span))
     g.wfactor = wfac                # Width of the border rectangular elements: ratio of w (element width) over h (height)
-    g.ielong = 0                    # Fixed # of border elements?: 0 (no), 1 (yes)
     
     """
     Center elements:
