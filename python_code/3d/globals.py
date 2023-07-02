@@ -209,7 +209,8 @@ class g:
     wfactor = None
     c_: float = None
     """Wing chord length (used temporarily)"""
-    l_ = None
+    l_: float = None
+    """Wing span length (used temporarily)"""
 
     icamber: int = 0
     """
