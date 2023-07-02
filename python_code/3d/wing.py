@@ -60,10 +60,6 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     - co_ : chord length
 
     """
-
-    # Symmetrical Tapered Mesh
-    g.mplot = 1
-
     """
     Rectangular Elements Count:
     - nXb   : # of shed edge elements
