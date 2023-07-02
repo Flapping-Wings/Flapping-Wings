@@ -202,10 +202,11 @@ class g:
     aimpw_r = None
     """Angular impulse from wake vortices (rear)"""
 
+    itaper: bool = True
+    """Toggle wing taper"""
     ielong = None
     hfactor = None
     wfactor = None
-    itaper = None
     c_ = None
     l_ = None
     icamber = None
