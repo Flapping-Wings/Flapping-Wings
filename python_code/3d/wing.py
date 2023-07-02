@@ -73,9 +73,7 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     """
 
-    # Assume a tapered wing by default
-    g.itaper = True
-
+    # Wing is tapered by default
     if bang_ == 90:
         g.itaper = False
 
