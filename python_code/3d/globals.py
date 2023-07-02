@@ -209,5 +209,12 @@ class g:
     wfactor = None
     c_ = None
     l_ = None
-    icamber = None
+
+    icamber: int = 0
+    """
+    Camber direction: 
+    - `0`: no camber
+    - `1`: x-direction
+    - `2`: y-direction
+    - `3`: both directions"""
     acamber = None
