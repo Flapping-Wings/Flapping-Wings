@@ -74,10 +74,10 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     """
 
     # Assume a tapered wing by default
-    g.itaper = 1
+    g.itaper = True
 
     if bang_ == 90:
-        g.itaper = 0
+        g.itaper = False
 
     bang = np.pi * bang_ / 180.00
 
@@ -546,7 +546,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
     XcrS = np.empty([2, 4, n[2], n[0]])
     XcrR = np.empty([2, 4, n[1] * n[2]])
 
-    if g.itaper == 1:
+    if g.itaper:
         # Tapered Region
         for ic in range(n[0]):
             for ir in range(n[2]):
@@ -565,7 +565,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
                 XcrS[j, 3, ir, ic] = Xcr[j, ir + 1, ic    ]
 
     # Rectangular and Polygon Mesh
-    if g.itaper == 1:
+    if g.itaper:
         # Tapered Region - Triangular Apex Mesh w/ 4 Nodes
         i = 0
         ic = 0
@@ -604,7 +604,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
             i += 1
     nXcrR = i
 
-    if g.itaper == 1:
+    if g.itaper:
         # Total Center Rectangular Elements
         nXc = nXctR + nXcrR
         Xc = np.zeros([2, 5, nXc])
