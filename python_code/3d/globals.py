@@ -217,4 +217,5 @@ class g:
     - `1`: x-direction
     - `2`: y-direction
     - `3`: both directions"""
-    acamber = None
+    acamber: float = 0.2
+    """Camber amplitude"""
