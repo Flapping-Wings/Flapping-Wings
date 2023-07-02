@@ -207,7 +207,8 @@ class g:
     ielong = None
     hfactor = None
     wfactor = None
-    c_ = None
+    c_: float = None
+    """Wing chord length (used temporarily)"""
     l_ = None
 
     icamber: int = 0
