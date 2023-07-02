@@ -212,7 +212,8 @@ class g:
     - `0.1`: high aspect ratio wing (`chord < span`)
     - `<= 0.05`: low aspect ratio wing (`chord > span`)
     """
-    wfactor = None
+    wfactor: float = None
+    """Ratio of element width to wing height    """
     c_: float = None
     """Wing chord length (used temporarily)"""
     l_: float = None
