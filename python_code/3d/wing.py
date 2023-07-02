@@ -2,10 +2,10 @@ import numpy as np
 from globals import g
 import matplotlib.pyplot as plt
 
-""" Initialize all Wing dimensions for the forward and rear wings to use later in the code. """
-
 def wing():
     """
+    Initialize all Wing dimensions for the forward and rear wings to use later in the code.
+
     Output (ALL DIMENSIONAL):
 
     -------FORWARD WING--------
