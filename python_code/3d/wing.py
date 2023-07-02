@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 """ Initialize all Wing dimensions for the forward and rear wings to use later in the code. """
 
-def Wing():
+def wing():
     """
     Output (ALL DIMENSIONAL):
 
