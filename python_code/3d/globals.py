@@ -245,5 +245,7 @@ class g:
     """Ratio of element width to wing height"""
     ielong: bool  = False
     """Toggle fixed number of border elements"""
+    h_: float = None
+    """Height of each border strip"""
 
     rt = None
