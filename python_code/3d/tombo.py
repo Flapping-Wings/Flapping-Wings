@@ -13,7 +13,7 @@ from n_vel_T_by_W import n_vel_T_by_W
 from cross_matrix import cross_matrix
 from assemble_matrix import assemble_matrix
 from solution import solution
-# from plot_GAM import plot_GAM
+from plot_GAM import plot_GAM
 # from plot_WB import plot_WB
 from s_impulse_WT import s_impulse_WT
 from divide_GAM import divide_GAM
@@ -230,12 +230,12 @@ def tombo():
 
         # Plot GAMA at the collocation points of the elements
         # using the unit normal direction: positive up and negative down
-        # if g.gplot:
-        #     for i in range(g.nwing):
-        #         # Front wing
-        #         plot_GAM(0, i, t, GAM_f[i,:], XC_f[:,:,i], NC_f[:,:,i])
-        #         # Rear wing
-        #         plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
+        if g.gplot:
+            for i in range(g.nwing):
+                # Front wing
+                plot_GAM(0, i, t, GAM_f[i,:], XC_f[:,:,i], NC_f[:,:,i])
+                # Rear wing
+                plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
 
         # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
         # plot_WB(0, g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f)     # Front wing
