@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from globals import g
 
-def tbplotGAM(m, iwing, t, GAMA, XC, NC):
+def plot_GAM(m, iwing, t, GAMA, XC, NC):
     # Plot GAMA at the collocation points of elements using the normal direction
     # INPUT:
     # m: 1 (front), 2 (rear) wing
