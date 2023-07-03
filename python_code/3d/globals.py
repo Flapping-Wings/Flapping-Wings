@@ -3,6 +3,7 @@ import numpy.typing as npt
 
 class g:
     # General configuration
+    # ---------------------
 
     stime: bool = True
     """
@@ -19,6 +20,7 @@ class g:
 
 
     # Output files
+    # ------------
 
     folder: str = 'python_code/3d/fig/'
     """Path to output folder"""
@@ -27,6 +29,7 @@ class g:
 
 
     # Plotting
+    # --------
 
     iplot: bool = True
     """Toggle chord path plot"""
@@ -43,6 +46,7 @@ class g:
 
 
     # Time
+    # ----
 
     t_: float = None
     """Reference time"""
@@ -55,6 +59,7 @@ class g:
 
 
     # Body geometry
+    # -------------
 
     twing: int = 4
     """Total number of wings"""
@@ -69,8 +74,10 @@ class g:
 
 
     # Wing geometry
+    # -------------
 
     # General
+
     itaper: bool = True
     """Toggle wing taper"""
     # TODO: maybe add taper or bang_ global var
@@ -96,6 +103,7 @@ class g:
     """
 
     # Front wing
+
     xb_f = None
     """Border element coordinates (front)"""
     nxb_f = None
@@ -116,6 +124,7 @@ class g:
     """Border height (front)"""
 
     # Rear wing
+
     xb_r = None
     """Border element coordinates (rear)"""
     nxb_r = None
@@ -137,6 +146,7 @@ class g:
 
 
     # Wing motion
+    # -----------
 
     v_: float = None
     """Reference velocity"""
@@ -186,6 +196,7 @@ class g:
 
 
     # Fluid
+    # -----
 
     rho_: float = 0.001225
     """Air density"""
@@ -197,6 +208,7 @@ class g:
 
 
     # Cutoffs (error)
+    # ---------------
     
     RCUT: float = 1.0e-10
     """Distance between source and observation points to be judged as zero"""
@@ -207,6 +219,7 @@ class g:
     """
 
     # Impulse arrays
+    # --------------
 
     limpa_f = None
     """Linear impulse from bound vortices (front)"""
@@ -225,8 +238,8 @@ class g:
     aimpw_r = None
     """Angular impulse from wake vortices (rear)"""
 
+
     # TODO: Finish below
-    
 
     wfactor: float = None
     """Ratio of element width to wing height"""
