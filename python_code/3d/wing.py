@@ -87,14 +87,14 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     """
     Center elements:
     
-    If ielong == 0, use the same # of border strips (n(i)) to create rectangular grid:
+    If ielong is False, use the same # of border strips (n(i)) to create rectangular grid:
         Tapered Section
         - nCelmti = n[2] : # of major division in x-direction
         - nCelmtj = n[0] : # of major division in y-direction
         Rectangular Section
         - nCelmri = n[2] : # of square elements in x-direction
         - nCelmrj = n[1] : # of square elements in y-direction
-    If ielong == 1, use n[2] to create rectangular grid
+    If ielong is True, use n[2] to create rectangular grid
         Tapered Section
         - nCelmti = n[2] : # of major division in x-direction
         - nCelmtj = n[2] : # of major division in y-direction
@@ -176,7 +176,7 @@ def WingBorder(lt, lr, delta):
     ang = np.array([delta, 0.0, -0.5*np.pi, -(np.pi), -(np.pi+delta)])
 
     # Width of the rectangular elements in the border strips and number of rectangular elements on them
-    if g.ielong == 0:
+    if g.ielong:
         n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c, delta, h)
     else:
         n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c, delta, h)
