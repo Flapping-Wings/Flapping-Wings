@@ -18,13 +18,7 @@ def tbplotGAM(m, iwing, t, GAMA, XC, NC):
     zaif = XC[2]
     xtip = xaif + sf * np.multiply(GAMA , NC[0])
     ytip = yaif + sf * np.multiply(GAMA , NC[1])
-    ztip = zaif + sf * np.multiply( GAMA , NC[2])
-    print(xtip)
-    print(ytip)
-    print(ztip)
-    print(xaif)
-    print(yaif)
-    print(zaif)
+    ztip = zaif + sf * np.multiply(GAMA , NC[2])
 
     # Plot GAMA along the normal velocity vectors at collocation points
     fig = plt.figure()
