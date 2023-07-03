@@ -176,7 +176,7 @@ def WingBorder(lt, lr, delta):
     ang = np.array([delta, 0.0, -0.5*np.pi, -(np.pi), -(np.pi+delta)])
 
     # Width of the rectangular elements in the border strips and number of rectangular elements on them
-    if g.ielong:
+    if not g.ielong:
         n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c, delta, h)
     else:
         n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c, delta, h)
