@@ -36,13 +36,13 @@ def tbplotGAM(m, iwing, t, GAMA, XC, NC):
     ax.set_box_aspect([1, 1, 1])
     ax.axis('equal')
 
-    if m == 1:
-        if iwing == 1:
+    if m == 0:
+        if iwing == 0:
             plt.savefig(g.folder + 'debug/GAMA_fr_' + str(t) + '.png')
         else:
             plt.savefig(g.folder + 'debug/GAMA_fl_' + str(t) + '.png')
     else:
-        if iwing == 1:
+        if iwing == 0:
             plt.savefig(g.folder + 'debug/GAMA_rr_' + str(t) + '.png')
         else:
             plt.savefig(g.folder + 'debug/GAMA_rl_' + str(t) + '.png')
