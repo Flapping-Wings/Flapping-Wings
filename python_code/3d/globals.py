@@ -70,6 +70,31 @@ class g:
 
     # Wing geometry
 
+    # General
+    itaper: bool = True
+    """Toggle wing taper"""
+    # TODO: maybe add taper or bang_ global var
+    c_: float = None
+    """Wing chord length (used temporarily)"""
+    l_: float = None
+    """Wing span length (used temporarily)"""
+    icamber: int = 0
+    """
+    Camber direction: 
+    - `0`: no camber
+    - `1`: x-direction
+    - `2`: y-direction
+    - `3`: both directions"""
+    acamber: float = 0.2
+    """Camber amplitude"""
+    hfactor: float = None
+    """
+    TODO
+    Ratio of wing height to chord length:
+    - `0.1`: high aspect ratio wing (`chord < span`)
+    - `<= 0.05`: low aspect ratio wing (`chord > span`)
+    """
+
     # Front wing
     xb_f = None
     """Border element coordinates (front)"""
@@ -181,9 +206,7 @@ class g:
     within this distance from the vortex line and/or its extension is set to zero
     """
 
-    # TODO: Finish below
-    
-    rt = None
+    # Impulse arrays
 
     limpa_f = None
     """Linear impulse from bound vortices (front)"""
@@ -202,30 +225,12 @@ class g:
     aimpw_r = None
     """Angular impulse from wake vortices (rear)"""
 
-    itaper: bool = True
-    """Toggle wing taper"""
+    # TODO: Finish below
+    
+
+    wfactor: float = None
+    """Ratio of element width to wing height"""
     ielong: bool  = False
     """Toggle fixed number of border elements"""
-    hfactor: float = None
-    """
-    TODO
-    Ratio of wing height to chord length:
-    - `0.1`: high aspect ratio wing (`chord < span`)
-    - `<= 0.05`: low aspect ratio wing (`chord > span`)
-    """
-    wfactor: float = None
-    """Ratio of element width to wing height    """
-    c_: float = None
-    """Wing chord length (used temporarily)"""
-    l_: float = None
-    """Wing span length (used temporarily)"""
 
-    icamber: int = 0
-    """
-    Camber direction: 
-    - `0`: no camber
-    - `1`: x-direction
-    - `2`: y-direction
-    - `3`: both directions"""
-    acamber: float = 0.2
-    """Camber amplitude"""
+    rt = None
