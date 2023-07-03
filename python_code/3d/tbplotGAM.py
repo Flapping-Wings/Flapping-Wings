@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from globals import g
 
 def tbplotGAM(m, iwing, t, GAMA, XC, NC):
     # Plot GAMA at the collocation points of elements using the normal direction
@@ -9,7 +10,6 @@ def tbplotGAM(m, iwing, t, GAMA, XC, NC):
     # GAMA: GAMA(i)
     # XC: coordinate j of the collocation point
     # NC: unit normal component j at the collocation
-    global folder
 
     # End points for the vector
     sf = 1.0  # Scale factor for the velocity plot
@@ -38,13 +38,13 @@ def tbplotGAM(m, iwing, t, GAMA, XC, NC):
 
     if m == 1:
         if iwing == 1:
-            plt.savefig(folder + 'debug/GAMA_fr_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_fr_' + str(t) + '.png')
         else:
-            plt.savefig(folder + 'debug/GAMA_fl_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_fl_' + str(t) + '.png')
     else:
         if iwing == 1:
-            plt.savefig(folder + 'debug/GAMA_rr_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_rr_' + str(t) + '.png')
         else:
-            plt.savefig(folder + 'debug/GAMA_rl_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_rl_' + str(t) + '.png')
 
     plt.close(fig)
