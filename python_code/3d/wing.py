@@ -102,10 +102,6 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
         - nCelmri = n[2] : # of square elements in x-direction
         - nCelmri = n[2] : # of square elements in y-direction
     """
-    
-    g.icamber = 0     # Camber Direction: 0 (no camber), 1 (x-direction), 2 (y-direction), 3 (both directions)
-    g.acamber = 0.2   # Camber Amplitude
-
     """
     Elements in the border strips:
     - Xb[j, n, i] : Border elements
