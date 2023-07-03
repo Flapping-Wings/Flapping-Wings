@@ -371,11 +371,11 @@ def tombo():
             # Front wings
             GAMw_f = GAMAb_f
             nxw_f = g.nxb_f
-            Xw_f[:, :, :10, :] = Xs_f
+            Xw_f[:, :, :g.nxb_f, :] = Xs_f
             # Rear wings
             GAMw_r = GAMAb_r
             nxw_r = g.nxb_r
-            Xw_r[:, :, :10, :] = Xs_r
+            Xw_r[:, :, :g.nxb_r, :] = Xs_r
         else:
             GAMw_f, nxw_f, Xw_f = add_wake(g.nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
             GAMw_r, nxw_r, Xw_r = add_wake(g.nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
