@@ -48,4 +48,3 @@ def tbplotGAM(m, iwing, t, GAMA, XC, NC):
             plt.savefig(folder + 'debug/GAMA_rl_' + str(t) + '.png')
 
     plt.close(fig)
-    del xaif, yaif, zaif, xtip, ytip, ztip
