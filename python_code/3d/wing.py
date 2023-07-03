@@ -2,10 +2,10 @@ import numpy as np
 from globals import g
 import matplotlib.pyplot as plt
 
-""" Initialize all Wing dimensions for the forward and rear wings to use later in the code. """
-
-def Wing():
+def wing():
     """
+    Initialize all Wing dimensions for the forward and rear wings to use later in the code.
+
     Output (ALL DIMENSIONAL):
 
     -------FORWARD WING--------
@@ -60,10 +60,6 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     - co_ : chord length
 
     """
-
-    # Symmetrical Tapered Mesh
-    g.mplot = 1
-
     """
     Rectangular Elements Count:
     - nXb   : # of shed edge elements
@@ -77,11 +73,9 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     """
 
-    # Assume a tapered wing by default
-    g.itaper = 1
-
+    # Wing is tapered by default
     if bang_ == 90:
-        g.itaper = 0
+        g.itaper = False
 
     bang = np.pi * bang_ / 180.00
 
@@ -89,19 +83,18 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     g.l_ = lt_ * np.cos(bang) + lr_ # Span Length
     g.hfactor = hfac                # Height of the border strip: 0.1 (high aspect ration wing (chord < span)), <= 0.05 (low aspect ration wing(chord > span))
     g.wfactor = wfac                # Width of the border rectangular elements: ratio of w (element width) over h (height)
-    g.ielong = 0                    # Fixed # of border elements?: 0 (no), 1 (yes)
     
     """
     Center elements:
     
-    If ielong == 0, use the same # of border strips (n(i)) to create rectangular grid:
+    If ielong is False, use the same # of border strips (n(i)) to create rectangular grid:
         Tapered Section
         - nCelmti = n[2] : # of major division in x-direction
         - nCelmtj = n[0] : # of major division in y-direction
         Rectangular Section
         - nCelmri = n[2] : # of square elements in x-direction
         - nCelmrj = n[1] : # of square elements in y-direction
-    If ielong == 1, use n[2] to create rectangular grid
+    If ielong is True, use n[2] to create rectangular grid
         Tapered Section
         - nCelmti = n[2] : # of major division in x-direction
         - nCelmtj = n[2] : # of major division in y-direction
@@ -109,10 +102,6 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
         - nCelmri = n[2] : # of square elements in x-direction
         - nCelmri = n[2] : # of square elements in y-direction
     """
-    
-    g.icamber = 0     # Camber Direction: 0 (no camber), 1 (x-direction), 2 (y-direction), 3 (both directions)
-    g.acamber = 0.2   # Camber Amplitude
-
     """
     Elements in the border strips:
     - Xb[j, n, i] : Border elements
@@ -133,7 +122,7 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
     co_ = g.c_
 
     # Plot Mesh
-    if g.mplot == 1:
+    if g.mplot:
         fig2, ax2 = plt.subplots()
         plot2Elem(fig2, ax2, Xb, nXb, 4, 'r', 2)
         plot2Elem(fig2, ax2, Xc, nXc, 4, 'b', 2)
@@ -187,7 +176,7 @@ def WingBorder(lt, lr, delta):
     ang = np.array([delta, 0.0, -0.5*np.pi, -(np.pi), -(np.pi+delta)])
 
     # Width of the rectangular elements in the border strips and number of rectangular elements on them
-    if g.ielong == 0:
+    if not g.ielong:
         n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c, delta, h)
     else:
         n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c, delta, h)
@@ -550,7 +539,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
     XcrS = np.empty([2, 4, n[2], n[0]])
     XcrR = np.empty([2, 4, n[1] * n[2]])
 
-    if g.itaper == 1:
+    if g.itaper:
         # Tapered Region
         for ic in range(n[0]):
             for ir in range(n[2]):
@@ -569,7 +558,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
                 XcrS[j, 3, ir, ic] = Xcr[j, ir + 1, ic    ]
 
     # Rectangular and Polygon Mesh
-    if g.itaper == 1:
+    if g.itaper:
         # Tapered Region - Triangular Apex Mesh w/ 4 Nodes
         i = 0
         ic = 0
@@ -608,7 +597,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
             i += 1
     nXcrR = i
 
-    if g.itaper == 1:
+    if g.itaper:
         # Total Center Rectangular Elements
         nXc = nXctR + nXcrR
         Xc = np.zeros([2, 5, nXc])

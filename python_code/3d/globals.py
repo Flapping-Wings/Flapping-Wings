@@ -3,6 +3,7 @@ import numpy.typing as npt
 
 class g:
     # General configuration
+    # ---------------------
 
     stime: bool = True
     """
@@ -19,6 +20,7 @@ class g:
 
 
     # Output files
+    # ------------
 
     folder: str = 'python_code/3d/fig/'
     """Path to output folder"""
@@ -27,6 +29,7 @@ class g:
 
 
     # Plotting
+    # --------
 
     iplot: bool = True
     """Toggle chord path plot"""
@@ -43,6 +46,7 @@ class g:
 
 
     # Time
+    # ----
 
     t_: float = None
     """Reference time"""
@@ -55,6 +59,7 @@ class g:
 
 
     # Body geometry
+    # -------------
 
     twing: int = 4
     """Total number of wings"""
@@ -69,8 +74,36 @@ class g:
 
 
     # Wing geometry
+    # -------------
+
+    # General
+
+    itaper: bool = True
+    """Toggle wing taper"""
+    # TODO: maybe add taper or bang_ global var
+    c_: float = None
+    """Wing chord length (used temporarily)"""
+    l_: float = None
+    """Wing span length (used temporarily)"""
+    icamber: int = 0
+    """
+    Camber direction: 
+    - `0`: no camber
+    - `1`: x-direction
+    - `2`: y-direction
+    - `3`: both directions"""
+    acamber: float = 0.2
+    """Camber amplitude"""
+    hfactor: float = None
+    """
+    TODO
+    Ratio of wing height to chord length:
+    - `0.1`: high aspect ratio wing (`chord < span`)
+    - `<= 0.05`: low aspect ratio wing (`chord > span`)
+    """
 
     # Front wing
+
     xb_f = None
     """Border element coordinates (front)"""
     nxb_f = None
@@ -91,6 +124,7 @@ class g:
     """Border height (front)"""
 
     # Rear wing
+
     xb_r = None
     """Border element coordinates (rear)"""
     nxb_r = None
@@ -112,6 +146,7 @@ class g:
 
 
     # Wing motion
+    # -----------
 
     v_: float = None
     """Reference velocity"""
@@ -161,6 +196,7 @@ class g:
 
 
     # Fluid
+    # -----
 
     rho_: float = 0.001225
     """Air density"""
@@ -172,6 +208,7 @@ class g:
 
 
     # Cutoffs (error)
+    # ---------------
     
     RCUT: float = 1.0e-10
     """Distance between source and observation points to be judged as zero"""
@@ -181,9 +218,8 @@ class g:
     within this distance from the vortex line and/or its extension is set to zero
     """
 
-    # TODO: Finish below
-    
-    rt = None
+    # Impulse arrays
+    # --------------
 
     limpa_f = None
     """Linear impulse from bound vortices (front)"""
@@ -202,11 +238,14 @@ class g:
     aimpw_r = None
     """Angular impulse from wake vortices (rear)"""
 
-    ielong = None
-    hfactor = None
-    wfactor = None
-    itaper = None
-    c_ = None
-    l_ = None
-    icamber = None
-    acamber = None
+
+    # TODO: Finish below
+
+    wfactor: float = None
+    """Ratio of element width to wing height"""
+    ielong: bool  = False
+    """Toggle fixed number of border elements"""
+    h_: float = None
+    """Height of each border strip"""
+
+    rt = None

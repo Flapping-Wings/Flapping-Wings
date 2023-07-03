@@ -60,26 +60,33 @@ def assemble_matrix(nxt_f,
     `MVN`: ndarray[2 * (nxt_f + nxt_r), 2 * (nxt_f + nxt_r)]
         Assembled matrix
     """
-    MVN = np.zeros((2 * (nxt_f + nxt_r), 2 * (nxt_f + nxt_r)))
+    # MVN = np.zeros((2 * (nxt_f + nxt_r), 2 * (nxt_f + nxt_r)))
 
-    MVN[0:nxt_f,    0             :   nxt_f           ] = MVNs_f [0:nxt_f, 0:nxt_f, 0]
-    MVN[0:nxt_f,    nxt_f         : 2*nxt_f           ] = MVNs_12[0:nxt_f, 0:nxt_f ]
-    MVN[0:nxt_f,  2*nxt_f         :(2*nxt_f +   nxt_r)] = MVNs_13[0:nxt_f, 0:nxt_r ]
-    MVN[0:nxt_f, (2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] = MVNs_14[0:nxt_f, 0:nxt_r ]
+    # MVN[0:nxt_f,    0             :   nxt_f           ] = MVNs_f [0:nxt_f, 0:nxt_f, 0]
+    # MVN[0:nxt_f,    nxt_f         : 2*nxt_f           ] = MVNs_12[0:nxt_f, 0:nxt_f ]
+    # MVN[0:nxt_f,  2*nxt_f         :(2*nxt_f +   nxt_r)] = MVNs_13[0:nxt_f, 0:nxt_r ]
+    # MVN[0:nxt_f, (2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] = MVNs_14[0:nxt_f, 0:nxt_r ]
  
-    MVN[nxt_f: 2*nxt_f,   0            :   nxt_f           ] = MVNs_21[0:nxt_f, 0:nxt_f ]
-    MVN[nxt_f: 2*nxt_f,   nxt_f        : 2*nxt_f           ] = MVNs_f [0:nxt_f, 0:nxt_f, 1]
-    MVN[nxt_f: 2*nxt_f, 2*nxt_f        :(2*nxt_f +   nxt_r)] = MVNs_23[0:nxt_f, 0:nxt_r ]
-    MVN[nxt_f: 2*nxt_f, 2*nxt_f + nxt_r:(2*nxt_f + 2*nxt_r)] = MVNs_24[0:nxt_f, 0:nxt_r ]
+    # MVN[nxt_f: 2*nxt_f,   0            :   nxt_f           ] = MVNs_21[0:nxt_f, 0:nxt_f ]
+    # MVN[nxt_f: 2*nxt_f,   nxt_f        : 2*nxt_f           ] = MVNs_f [0:nxt_f, 0:nxt_f, 1]
+    # MVN[nxt_f: 2*nxt_f, 2*nxt_f        :(2*nxt_f +   nxt_r)] = MVNs_23[0:nxt_f, 0:nxt_r ]
+    # MVN[nxt_f: 2*nxt_f, 2*nxt_f + nxt_r:(2*nxt_f + 2*nxt_r)] = MVNs_24[0:nxt_f, 0:nxt_r ]
  
-    MVN[2*nxt_f:(2*nxt_f + nxt_r),   0            :   nxt_f           ] = MVNs_31[0:nxt_r, 0:nxt_f ]
-    MVN[2*nxt_f:(2*nxt_f + nxt_r),   nxt_f        : 2*nxt_f           ] = MVNs_32[0:nxt_r, 0:nxt_f ]
-    MVN[2*nxt_f:(2*nxt_f + nxt_r), 2*nxt_f        :(2*nxt_f +   nxt_r)] = MVNs_r [0:nxt_r, 0:nxt_r, 0]
-    MVN[2*nxt_f:(2*nxt_f + nxt_r), 2*nxt_f + nxt_r:(2*nxt_f + 2*nxt_r)] = MVNs_34[0:nxt_r, 0:nxt_r ]
+    # MVN[2*nxt_f:(2*nxt_f + nxt_r),   0            :   nxt_f           ] = MVNs_31[0:nxt_r, 0:nxt_f ]
+    # MVN[2*nxt_f:(2*nxt_f + nxt_r),   nxt_f        : 2*nxt_f           ] = MVNs_32[0:nxt_r, 0:nxt_f ]
+    # MVN[2*nxt_f:(2*nxt_f + nxt_r), 2*nxt_f        :(2*nxt_f +   nxt_r)] = MVNs_r [0:nxt_r, 0:nxt_r, 0]
+    # MVN[2*nxt_f:(2*nxt_f + nxt_r), 2*nxt_f + nxt_r:(2*nxt_f + 2*nxt_r)] = MVNs_34[0:nxt_r, 0:nxt_r ]
  
-    MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r),    0             :   nxt_f           ] = MVNs_41[0:nxt_r, 0:nxt_f ]
-    MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r),    nxt_f         : 2*nxt_f           ] = MVNs_42[0:nxt_r, 0:nxt_f ]
-    MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r), 2*nxt_f          :(2*nxt_f +   nxt_r)] = MVNs_43[0:nxt_r, 0:nxt_r ]
-    MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r), (2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] = MVNs_r [0:nxt_r, 0:nxt_r, 1]
+    # MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r),    0             :   nxt_f           ] = MVNs_41[0:nxt_r, 0:nxt_f ]
+    # MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r),    nxt_f         : 2*nxt_f           ] = MVNs_42[0:nxt_r, 0:nxt_f ]
+    # MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r), 2*nxt_f          :(2*nxt_f +   nxt_r)] = MVNs_43[0:nxt_r, 0:nxt_r ]
+    # MVN[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r), (2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] = MVNs_r [0:nxt_r, 0:nxt_r, 1]
+
+    MVN = np.block([
+        [MVNs_f[:,:,0], MVNs_12,       MVNs_13,       MVNs_14      ],
+        [MVNs_21,       MVNs_f[:,:,1], MVNs_23,       MVNs_24      ],
+        [MVNs_31,       MVNs_32,       MVNs_r[:,:,0], MVNs_34      ],
+        [MVNs_41,       MVNs_42,       MVNs_43,       MVNs_r[:,:,1]]
+    ])
 
     return MVN
