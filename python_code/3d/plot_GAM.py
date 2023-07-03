@@ -38,13 +38,13 @@ def plot_GAM(m, iwing, t, GAMA, XC, NC):
 
     if m == 0:
         if iwing == 0:
-            plt.savefig(g.folder + 'debug/GAMA_fr_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_fr_' + f'{t:.4f}' + '.png')
         else:
-            plt.savefig(g.folder + 'debug/GAMA_fl_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_fl_' + f'{t:.4f}' + '.png')
     else:
         if iwing == 0:
-            plt.savefig(g.folder + 'debug/GAMA_rr_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_rr_' + f'{t:.4f}' + '.png')
         else:
-            plt.savefig(g.folder + 'debug/GAMA_rl_' + str(t) + '.png')
+            plt.savefig(g.folder + 'debug/GAMA_rl_' + f'{t:.4f}' + '.png')
 
     plt.close(fig)
