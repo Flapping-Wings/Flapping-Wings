@@ -1,4 +1,9 @@
 import numpy as np
+
+import matplotlib.pyplot as plt
+
+plt.ioff()
+
 from scipy.io import loadmat
 
 from globals import g
@@ -25,22 +30,24 @@ from add_wake import add_wake
 from force_moment import force_moment
 from vel_by import vel_by
 
+
 def tombo():
     # SETUP
     # -----
+    create_directories()
 
-    g.xb_f, g.nxb_f, g.nb_f, g.xc_f, g.nxc_f, g.nc_f, g.l_f, g.c_f, g.h_f,  \
-    g.xb_r, g.nxb_r, g.nb_r, g.xc_r, g.nxc_r, g.nc_r, g.l_r, g.c_r, g.h_r = \
+    g.xb_f, g.nxb_f, g.nb_f, g.xc_f, g.nxc_f, g.nc_f, g.l_f, g.c_f, g.h_f, \
+        g.xb_r, g.nxb_r, g.nb_r, g.xc_r, g.nxc_r, g.nc_r, g.l_r, g.c_r, g.h_r = \
         wing()
-    
+
     l, c, h, phiT, phiB, a, beta, delta, gMax, U, \
-    xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d =      \
-        nd_data(g.l_f, g.c_f, g.h_f, g.l_r, g.c_r, g.h_r, 
-                g.phiT_, g.phiB_, g.a_, g.beta_, g.delta_, g.gMax_, g.U_, 
+        xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d = \
+        nd_data(g.l_f, g.c_f, g.h_f, g.l_r, g.c_r, g.h_r,
+                g.phiT_, g.phiB_, g.a_, g.beta_, g.delta_, g.gMax_, g.U_,
                 g.xb_f, g.xc_f, g.xb_r, g.xc_r, g.b_f, g.b_r)
-       
-    g.LCUT = 0.1 * h[0]  
-    
+
+    g.LCUT = 0.1 * h[0]
+
     check_input()
     log_input(c, a, d, gMax)
 
@@ -50,15 +57,16 @@ def tombo():
     # Rear right wing
     xc_r, xb_r, xt_r, nxt_r, xC_r, nC_r = \
         wing_total(xb_r, g.nxb_r, g.nb_r, xc_r, g.nxc_r, g.nc_r)
-       
+
     # Wake vortex magnitude array
     GAMw_f = np.zeros((g.nwing, g.nxb_f))
     GAMw_r = np.zeros((g.nwing, g.nxb_r))
     # Total wake vortex number
-    nxw_f = 0; nxw_r = 0
+    nxw_f = 0;
+    nxw_r = 0
     # Wake vortex location array (after convection)
-    Xw_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
-    Xw_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
+    Xw_f = np.zeros((3, 4, g.nxb_f * g.nstep, g.nwing))
+    Xw_r = np.zeros((3, 4, g.nxb_r * g.nstep, g.nwing))
     # Shed vortex location array 
     Xs_f = np.zeros((3, 4, g.nxb_f, g.nwing))
     Xs_r = np.zeros((3, 4, g.nxb_r, g.nwing))
@@ -75,8 +83,8 @@ def tombo():
         g.aimpw_r = np.zeros((3, g.nstep, g.nwing))
 
     # Normal velocity on the wing due to the wing motion & wake vortices
-    Vnc_f  = np.zeros((g.nwing, nxt_f))
-    Vnc_r  = np.zeros((g.nwing, nxt_r))
+    Vnc_f = np.zeros((g.nwing, nxt_f))
+    Vnc_r = np.zeros((g.nwing, nxt_r))
     Vncw_f = np.zeros((g.nwing, nxt_r))
     Vncw_r = np.zeros((g.nwing, nxt_f))
 
@@ -87,10 +95,10 @@ def tombo():
     # Velocity value matrices
     VBW_f = np.zeros((3, 4, g.nxb_f, g.nwing))
     VBW_r = np.zeros((3, 4, g.nxb_r, g.nwing))
-    VWT_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
-    VWT_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
-    VWW_f = np.zeros((3, 4, g.nxb_f*g.nstep, g.nwing))
-    VWW_r = np.zeros((3, 4, g.nxb_r*g.nstep, g.nwing))
+    VWT_f = np.zeros((3, 4, g.nxb_f * g.nstep, g.nwing))
+    VWT_r = np.zeros((3, 4, g.nxb_r * g.nstep, g.nwing))
+    VWW_f = np.zeros((3, 4, g.nxb_f * g.nstep, g.nwing))
+    VWW_r = np.zeros((3, 4, g.nxb_r * g.nstep, g.nwing))
 
     # TODO: Document Xc_f/r
     Xc_f = np.zeros((3, 4, g.nxc_f, 2))
@@ -108,7 +116,6 @@ def tombo():
     NC_f = np.zeros((3, nxt_f, 2))
     NC_r = np.zeros((3, nxt_r, 2))
 
-
     # TIME MARCH
     # ----------
     for w in range(g.nwing):
@@ -117,7 +124,7 @@ def tombo():
 
     for g.istep in range(g.nstep):
         if g.idebg:
-            data = loadmat(f"python_code/3d/matlab_data/data{g.istep+1}.mat")
+            data = loadmat(f"python_code/3d/matlab_data/data{g.istep + 1}.mat")
 
         t = g.istep * g.dt
 
@@ -129,104 +136,103 @@ def tombo():
 
         for i in range(g.twing):
             phi[i], theta[i], dph[i], dth[i] = \
-                wing_m(g.mpath[i], t, g.rt[i], g.tau[i], e[i], 
+                wing_m(g.mpath[i], t, g.rt[i], g.tau[i], e[i],
                        gMax[i], g.p[i], g.rtOff[i], phiT[i], phiB[i])
-            
+
         # Get global coordinates of the points on the wing
         for i in range(g.nwing):
             # Front wing
-            Xc_f[:,:,:,i], Xb_f[:,:,:,i], Xt_f[:,:,:,i], XC_f[:,:,i], NC_f[:,:,i] = \
+            Xc_f[:, :, :, i], Xb_f[:, :, :, i], Xt_f[:, :, :, i], XC_f[:, :, i], NC_f[:, :, i] = \
                 lr_mass_L2GT(i, beta[i], delta, phi[i], theta[i], a[i], U, t, b_f,
-                            xc_f, xb_f, xt_f, xC_f, nC_f)
+                             xc_f, xb_f, xt_f, xC_f, nC_f)
             # Rear wing                                                                       
-            Xc_r[:,:,:,i], Xb_r[:,:,:,i], Xt_r[:,:,:,i], XC_r[:,:,i], NC_r[:,:,i] = \
-                lr_mass_L2GT(i, beta[i+2], delta, phi[i+2], theta[i+2], a[i+2], U, t, b_r,
+            Xc_r[:, :, :, i], Xb_r[:, :, :, i], Xt_r[:, :, :, i], XC_r[:, :, i], NC_r[:, :, i] = \
+                lr_mass_L2GT(i, beta[i + 2], delta, phi[i + 2], theta[i + 2], a[i + 2], U, t, b_r,
                              xc_r, xb_r, xt_r, xC_r, nC_r)
-            
+
         if g.idebg:
-            print(f"Xc {g.istep+1}")
+            print(f"Xc {g.istep + 1}")
             print(np.allclose(Xc_f, data['Xc_f'], atol=1e-16))
             print(np.allclose(Xc_r, data['Xc_r'], atol=1e-16))
 
         # Find velocity of the wing
         for i in range(g.nwing):
             # Front wing
-            Vnc_f[i,:] = lrs_wing_NVs(0, i, xC_f, XC_f[:,:,i], NC_f[:,:,i], t, theta[i],
-                                      phi[i], dph[i], dth[i], a[i], beta[i], U)
+            Vnc_f[i, :] = lrs_wing_NVs(0, i, xC_f, XC_f[:, :, i], NC_f[:, :, i], t, theta[i],
+                                       phi[i], dph[i], dth[i], a[i], beta[i], U)
             # Rear wing
-            Vnc_r[i,:] = lrs_wing_NVs(1, i, xC_r, XC_r[:,:,i], NC_r[:,:,i], t, theta[i+2],
-                                      phi[i+2], dph[i+2], dth[i+2], a[i+2], beta[i+2], U)
-            
+            Vnc_r[i, :] = lrs_wing_NVs(1, i, xC_r, XC_r[:, :, i], NC_r[:, :, i], t, theta[i + 2],
+                                       phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U)
+
         if g.idebg:
-            print(f"Vnc {g.istep+1}")
+            print(f"Vnc {g.istep + 1}")
             print(np.allclose(Vnc_f, data['Vnc_f'], atol=1e-16))
             print(np.allclose(Vnc_r, data['Vnc_r'], atol=1e-16))
 
         # Normal vel on each airfoil by front & rear, right & left wake vortices
         # For each wing, there are 4 wake vortex contributions
-        for i in range(g.nwing): 
+        for i in range(g.nwing):
             # Front wing
-            Vncw_f[i,:] = n_vel_T_by_W(g.istep, nxt_f, XC_f[:,:,i], NC_f[:,:,i], 
-                                       Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)   
+            Vncw_f[i, :] = n_vel_T_by_W(g.istep, nxt_f, XC_f[:, :, i], NC_f[:, :, i],
+                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
             # Rear wing  
-            Vncw_r[i,:] = n_vel_T_by_W(g.istep, nxt_r, XC_r[:,:,i], NC_r[:,:,i], 
-                                       Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
-            
+            Vncw_r[i, :] = n_vel_T_by_W(g.istep, nxt_r, XC_r[:, :, i], NC_r[:, :, i],
+                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+
         if g.idebg:
-            print(f"Vncw {g.istep+1}")
+            print(f"Vncw {g.istep + 1}")
             print(np.allclose(Vncw_f, data['Vncw_f'], atol=1e-16))
             print(np.allclose(Vncw_r, data['Vncw_r'], atol=1e-16))
 
         # Calculation of the time-dependent sub-matrices MVNs_ij (i~=j)
         # target wing=1, source wing=2
-        MVNs_12 = cross_matrix(XC_f[:,:,0], NC_f[:,:,0], nxt_f, Xt_f[:,:,:,1], nxt_f)
+        MVNs_12 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_f[:, :, :, 1], nxt_f)
         # target wing=1, source wing=3
-        MVNs_13 = cross_matrix(XC_f[:,:,0], NC_f[:,:,0], nxt_f, Xt_r[:,:,:,0], nxt_r) 
+        MVNs_13 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 0], nxt_r)
         # target wing=1, source wing=4
-        MVNs_14 = cross_matrix(XC_f[:,:,0], NC_f[:,:,0], nxt_f, Xt_r[:,:,:,1], nxt_r) 
+        MVNs_14 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 1], nxt_r)
         # target wing=1, source wing=2
-        MVNs_21 = cross_matrix(XC_f[:,:,1], NC_f[:,:,1], nxt_f, Xt_f[:,:,:,0], nxt_f)
+        MVNs_21 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_f[:, :, :, 0], nxt_f)
         # target wing=1, source wing=3
-        MVNs_23 = cross_matrix(XC_f[:,:,1], NC_f[:,:,1], nxt_f, Xt_r[:,:,:,0], nxt_r) 
+        MVNs_23 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 0], nxt_r)
         # target wing=1, source wing=4
-        MVNs_24 = cross_matrix(XC_f[:,:,1], NC_f[:,:,1], nxt_f, Xt_r[:,:,:,1], nxt_r)     
+        MVNs_24 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 1], nxt_r)
         # target wing=1, source wing=2
-        MVNs_31 = cross_matrix(XC_r[:,:,0], NC_r[:,:,0], nxt_r, Xt_f[:,:,:,0], nxt_f)
+        MVNs_31 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 0], nxt_f)
         # target wing=1, source wing=3
-        MVNs_32 = cross_matrix(XC_r[:,:,0], NC_r[:,:,0], nxt_r, Xt_f[:,:,:,1], nxt_f) 
+        MVNs_32 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 1], nxt_f)
         # target wing=1, source wing=4
-        MVNs_34 = cross_matrix(XC_r[:,:,0], NC_r[:,:,0], nxt_r, Xt_r[:,:,:,1], nxt_r) 
+        MVNs_34 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_r[:, :, :, 1], nxt_r)
         # target wing=1, source wing=2
-        MVNs_41 = cross_matrix(XC_r[:,:,1], NC_r[:,:,1], nxt_r, Xt_f[:,:,:,0], nxt_f)
+        MVNs_41 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 0], nxt_f)
         # target wing=1, source wing=3
-        MVNs_42 = cross_matrix(XC_r[:,:,1], NC_r[:,:,1], nxt_r, Xt_f[:,:,:,1], nxt_f) 
+        MVNs_42 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 1], nxt_f)
         # target wing=1, source wing=4
-        MVNs_43 = cross_matrix(XC_r[:,:,1], NC_r[:,:,1], nxt_r, Xt_r[:,:,:,0], nxt_r) 
-    
+        MVNs_43 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_r[:, :, :, 0], nxt_r)
+
         # Assemble the total matrix using MVNs_f[:,:,1], MVNs_r[:,:,1], MVNs_ij[:,:]
         MVN = assemble_matrix(nxt_f, nxt_r, MVNs_f, MVNs_r,
-                             MVNs_12, MVNs_13, MVNs_14,
-                             MVNs_21, MVNs_23, MVNs_24,
-                             MVNs_31, MVNs_32, MVNs_34,
-                             MVNs_41, MVNs_42, MVNs_43)
-        
+                              MVNs_12, MVNs_13, MVNs_14,
+                              MVNs_21, MVNs_23, MVNs_24,
+                              MVNs_31, MVNs_32, MVNs_34,
+                              MVNs_41, MVNs_42, MVNs_43)
+
         # Solve the system of equations
         GAMA = solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r)
 
         if g.idebg:
-            print(f"MVN and GAMA {g.istep+1}:")
+            print(f"MVN and GAMA {g.istep + 1}:")
             print(np.allclose(MVN, data['MVN'], atol=1e-16))
             print(np.allclose(GAMA, data['GAMA'], atol=1e-16))
-
 
         # Split GAMA into 4 parts
         GAM_f = np.zeros((2, nxt_f))
         GAM_r = np.zeros((2, nxt_r))
 
-        GAM_f[0, 0:nxt_f] = GAMA[0:nxt_f]                               # Front right wing
-        GAM_f[1, 0:nxt_f] = GAMA[nxt_f:(2*nxt_f)]                       # Front left  wing
-        GAM_r[0, 0:nxt_r] = GAMA[(2*nxt_f):(2*nxt_f + nxt_r)]           # Rear right wing
-        GAM_r[1, 0:nxt_r] = GAMA[(2*nxt_f + nxt_r):(2*nxt_f + 2*nxt_r)] # Rear left  wing
+        GAM_f[0, 0:nxt_f] = GAMA[0:nxt_f]  # Front right wing
+        GAM_f[1, 0:nxt_f] = GAMA[nxt_f:(2 * nxt_f)]  # Front left  wing
+        GAM_r[0, 0:nxt_r] = GAMA[(2 * nxt_f):(2 * nxt_f + nxt_r)]  # Rear right wing
+        GAM_r[1, 0:nxt_r] = GAMA[(2 * nxt_f + nxt_r):(2 * nxt_f + 2 * nxt_r)]  # Rear left  wing
 
         # Plot GAMA at the collocation points of the elements
         # using the unit normal direction: positive up and negative down
@@ -241,13 +247,13 @@ def tombo():
         # plot_WB(0, g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f)     # Front wing
         # plot_WB(1, g.istep, g.nxb_r, nxw_r, Xb_r, Xw_r)     # Rear wing
 
-        if g.nstep > 3:     # At least 4 steps needed to calculate forces and moments
+        if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
             # Include all of the bound vortices and wake vortices
             # For istep=1, there are no wake vortices
             # Front wing
             limpa, aimpa, limpw, aimpw = \
-                s_impulse_WT(g.istep, U, t, Xt_f, Xw_f, GAM_f, GAMw_f, 
+                s_impulse_WT(g.istep, U, t, Xt_f, Xw_f, GAM_f, GAMw_f,
                              beta[0:2], phi[0:2], theta[0:2], a[0:2])
             for j in range(3):
                 for w in range(g.nwing):
@@ -258,16 +264,16 @@ def tombo():
             # Rear wing
             limpa, aimpa, limpw, aimpw = \
                 s_impulse_WT(g.istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
-                             beta[2:4], phi[2:4], theta[2:4], a[2:4]) 
+                             beta[2:4], phi[2:4], theta[2:4], a[2:4])
             for j in range(3):
                 for w in range(g.nwing):
                     g.limpa_r[j, g.istep, w] = limpa[j, w]
                     g.aimpa_r[j, g.istep, w] = aimpa[j, w]
                     g.limpw_r[j, g.istep, w] = limpw[j, w]
-                    g.aimpw_r[j, g.istep, w] = aimpw[j, w]  
+                    g.aimpw_r[j, g.istep, w] = aimpw[j, w]
 
         if g.idebg:
-            print(f"Impulse arrays {g.istep+1}:")
+            print(f"Impulse arrays {g.istep + 1}:")
             print(np.allclose(data['limpa_f'], g.limpa_f, atol=1e-16))
             print(np.allclose(data['aimpa_f'], g.aimpa_f, atol=1e-16))
             print(np.allclose(data['limpw_f'], g.limpw_f, atol=1e-16))
@@ -282,7 +288,7 @@ def tombo():
         GAMAb_r = divide_GAM(GAM_r, g.nxb_r)
 
         if g.idebg:
-            print(f"GAMAb {g.istep+1}:")
+            print(f"GAMAb {g.istep + 1}:")
             print(np.allclose(GAMAb_f, data['GAMAb_f'], atol=1e-16))
             print(np.allclose(GAMAb_r, data['GAMAb_r'], atol=1e-16))
 
@@ -293,7 +299,7 @@ def tombo():
         cVBT_r = b_vel_B_by_T_matrix(g.nxb_r, nxt_r, Xb_r, Xt_r)
 
         if g.idebg:
-            print(f"cVBT {g.istep+1}:")
+            print(f"cVBT {g.istep + 1}:")
             print(np.allclose(cVBT_f, data['cVBT_f'], atol=1e-16))
             print(np.allclose(cVBT_r, data['cVBT_r'], atol=1e-16))
 
@@ -303,59 +309,65 @@ def tombo():
         VBTs_r = vel_B_by_T(cVBT_r, GAM_r, nxt_r)
 
         if g.idebg:
-            print(f"VBTs {g.istep+1}:")
+            print(f"VBTs {g.istep + 1}:")
             print(np.allclose(VBTs_f, data['VBTs_f'], atol=1e-16))
             print(np.allclose(VBTs_r, data['VBTs_r'], atol=1e-16))
 
         # Border element veocity due to the total wing elements: cross-influence
-        VBTs_12 = cross_vel_B_by_T(Xb_f[:,:,:,0], g.nxb_f, Xt_f[:,:,:,1], GAM_f[1,:], nxt_f)
-        VBTs_13 = cross_vel_B_by_T(Xb_f[:,:,:,0], g.nxb_f, Xt_r[:,:,:,0], GAM_r[0,:], nxt_r)
-        VBTs_14 = cross_vel_B_by_T(Xb_f[:,:,:,0], g.nxb_f, Xt_r[:,:,:,1], GAM_r[1,:], nxt_r)
-        VBTs_21 = cross_vel_B_by_T(Xb_f[:,:,:,1], g.nxb_f, Xt_f[:,:,:,0], GAM_f[0,:], nxt_f)
-        VBTs_23 = cross_vel_B_by_T(Xb_f[:,:,:,1], g.nxb_f, Xt_r[:,:,:,0], GAM_r[0,:], nxt_r)
-        VBTs_24 = cross_vel_B_by_T(Xb_f[:,:,:,1], g.nxb_f, Xt_r[:,:,:,1], GAM_r[1,:], nxt_r)
-        VBTs_31 = cross_vel_B_by_T(Xb_r[:,:,:,0], g.nxb_r, Xt_f[:,:,:,0], GAM_f[0,:], nxt_f)
-        VBTs_32 = cross_vel_B_by_T(Xb_r[:,:,:,0], g.nxb_r, Xt_f[:,:,:,1], GAM_f[1,:], nxt_f)
-        VBTs_34 = cross_vel_B_by_T(Xb_r[:,:,:,0], g.nxb_r, Xt_r[:,:,:,1], GAM_r[1,:], nxt_r)
-        VBTs_41 = cross_vel_B_by_T(Xb_r[:,:,:,1], g.nxb_r, Xt_f[:,:,:,0], GAM_f[0,:], nxt_f)
-        VBTs_42 = cross_vel_B_by_T(Xb_r[:,:,:,1], g.nxb_r, Xt_f[:,:,:,1], GAM_f[1,:], nxt_f)
-        VBTs_43 = cross_vel_B_by_T(Xb_r[:,:,:,1], g.nxb_r, Xt_r[:,:,:,0], GAM_r[0,:], nxt_r)
-                        
+        VBTs_12 = cross_vel_B_by_T(Xb_f[:, :, :, 0], g.nxb_f, Xt_f[:, :, :, 1], GAM_f[1, :], nxt_f)
+        VBTs_13 = cross_vel_B_by_T(Xb_f[:, :, :, 0], g.nxb_f, Xt_r[:, :, :, 0], GAM_r[0, :], nxt_r)
+        VBTs_14 = cross_vel_B_by_T(Xb_f[:, :, :, 0], g.nxb_f, Xt_r[:, :, :, 1], GAM_r[1, :], nxt_r)
+        VBTs_21 = cross_vel_B_by_T(Xb_f[:, :, :, 1], g.nxb_f, Xt_f[:, :, :, 0], GAM_f[0, :], nxt_f)
+        VBTs_23 = cross_vel_B_by_T(Xb_f[:, :, :, 1], g.nxb_f, Xt_r[:, :, :, 0], GAM_r[0, :], nxt_r)
+        VBTs_24 = cross_vel_B_by_T(Xb_f[:, :, :, 1], g.nxb_f, Xt_r[:, :, :, 1], GAM_r[1, :], nxt_r)
+        VBTs_31 = cross_vel_B_by_T(Xb_r[:, :, :, 0], g.nxb_r, Xt_f[:, :, :, 0], GAM_f[0, :], nxt_f)
+        VBTs_32 = cross_vel_B_by_T(Xb_r[:, :, :, 0], g.nxb_r, Xt_f[:, :, :, 1], GAM_f[1, :], nxt_f)
+        VBTs_34 = cross_vel_B_by_T(Xb_r[:, :, :, 0], g.nxb_r, Xt_r[:, :, :, 1], GAM_r[1, :], nxt_r)
+        VBTs_41 = cross_vel_B_by_T(Xb_r[:, :, :, 1], g.nxb_r, Xt_f[:, :, :, 0], GAM_f[0, :], nxt_f)
+        VBTs_42 = cross_vel_B_by_T(Xb_r[:, :, :, 1], g.nxb_r, Xt_f[:, :, :, 1], GAM_f[1, :], nxt_f)
+        VBTs_43 = cross_vel_B_by_T(Xb_r[:, :, :, 1], g.nxb_r, Xt_r[:, :, :, 0], GAM_r[0, :], nxt_r)
+
         # Assemble the total border element velocity due to two wings
-        VBT_f,VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
-                                          g.nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
-        
+        VBT_f, VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
+                                           g.nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
+
         if g.idebg:
-            print(f"VBT {g.istep+1}:")
+            print(f"VBT {g.istep + 1}:")
             print(np.allclose(VBT_f, data['VBT_f'], atol=1e-16))
             print(np.allclose(VBT_r, data['VBT_r'], atol=1e-16))
-        
+
         # Velocity from wake vortices
         if g.istep > 0:
             # Velocity of the border elements due to wake vortices
             for i in range(g.nwing):
-                VBW_f[:3, :4, :g.nxb_f, i] = vel_by(g.istep, Xb_f[:,:,:,i], g.nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
-                VBW_r[:3, :4, :g.nxb_r, i] = vel_by(g.istep, Xb_r[:,:,:,i], g.nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
-        
+                VBW_f[:3, :4, :g.nxb_f, i] = vel_by(g.istep, Xb_f[:, :, :, i], g.nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r,
+                                                    GAMw_r, nxw_r)
+                VBW_r[:3, :4, :g.nxb_r, i] = vel_by(g.istep, Xb_r[:, :, :, i], g.nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r,
+                                                    GAMw_r, nxw_r)
+
             # Velocity of the wake elements due to total wing vortices
             for i in range(g.nwing):
-                VWT_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
-                VWT_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xt_f, GAM_f, nxt_f, Xt_r, GAM_r, nxt_r)
-            
+                VWT_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[:, :, :, i], nxw_f, Xt_f, GAM_f, nxt_f,
+                                                              Xt_r, GAM_r, nxt_r)
+                VWT_r[:3, :4, :g.istep * g.nxb_r, i] = vel_by(g.istep, Xw_r[:, :, :, i], nxw_r, Xt_f, GAM_f, nxt_f,
+                                                              Xt_r, GAM_r, nxt_r)
+
             # Velocity of the wake elements due to wake elements
             for i in range(g.nwing):
-                VWW_f[:3, :4, :g.istep*g.nxb_f, i] = vel_by(g.istep, Xw_f[:,:,:,i], nxw_f, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
-                VWW_r[:3, :4, :g.istep*g.nxb_r, i] = vel_by(g.istep, Xw_r[:,:,:,i], nxw_r, Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                VWW_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[:, :, :, i], nxw_f, Xw_f, GAMw_f, nxw_f,
+                                                              Xw_r, GAMw_r, nxw_r)
+                VWW_r[:3, :4, :g.istep * g.nxb_r, i] = vel_by(g.istep, Xw_r[:, :, :, i], nxw_r, Xw_f, GAMw_f, nxw_f,
+                                                              Xw_r, GAMw_r, nxw_r)
 
         if g.idebg:
-            print(f"VBW, VWT, VWW {g.istep+1}:")
+            print(f"VBW, VWT, VWW {g.istep + 1}:")
             print(np.allclose(VBW_f, data['VBW_f'], atol=1e-16))
             print(np.allclose(VBW_r, data['VBW_r'], atol=1e-16))
             if g.istep > 0:
-                print(np.allclose(VWT_f[:,:,:nxw_f,:], data['VWT_f'], atol=1e-16))
-                print(np.allclose(VWT_r[:,:,:nxw_r,:], data['VWT_r'], atol=1e-16))
-                print(np.allclose(VWW_f[:,:,:nxw_f,:], data['VWW_f'], atol=1e-16))
-                print(np.allclose(VWW_r[:,:,:nxw_r,:], data['VWW_r'], atol=1e-16))
+                print(np.allclose(VWT_f[:, :, :nxw_f, :], data['VWT_f'], atol=1e-16))
+                print(np.allclose(VWT_r[:, :, :nxw_r, :], data['VWT_r'], atol=1e-16))
+                print(np.allclose(VWW_f[:, :, :nxw_f, :], data['VWW_f'], atol=1e-16))
+                print(np.allclose(VWW_r[:, :, :nxw_r, :], data['VWW_r'], atol=1e-16))
 
         # Shed border vortex elements
         Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
@@ -381,7 +393,7 @@ def tombo():
             GAMw_r, nxw_r, Xw_r = add_wake(g.nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
 
         if g.idebg:
-            print(f"End {g.istep+1}:")
+            print(f"End {g.istep + 1}:")
             print(np.allclose(GAMw_f, data['GAMw_f'], atol=1e-16))
             print(np.allclose(nxw_f, data['nxw_f'], atol=1e-16))
             print(np.allclose(Xw_f[:, :, :nxw_f, :], data['Xw_f'], atol=1e-16))
@@ -401,15 +413,36 @@ def check_input():
         print("Wing clearance checked")
     else:
         raise ValueError("rear and forward wings interfere")
-    
+
     if np.any(g.p < 4):
         raise ValueError("p must >=4 for all wings")
-    
+
     if np.any(np.abs(g.rtOff) > 0.5):
         raise ValueError("-0.5 <= rtOff <= 0.5 must be satisfied for all wings")
-    
+
     if np.any((g.tau < 0) | (g.tau >= 2)):
         raise ValueError("0 <= tau < 2 must be satisfied for all wings")
+
+
+def create_directories():
+    from pathlib import Path
+
+    base_dir = Path(g.folder)
+    if not base_dir.exists():
+        base_dir.mkdir()
+
+    mesh_dir = base_dir / Path("mesh")
+    if not mesh_dir.exists():
+        mesh_dir.mkdir()
+
+    debug_dir = base_dir / Path("debug")
+    if not debug_dir.exists():
+        debug_dir.mkdir()
+
+    wake_dir = base_dir / Path("wake")
+    if not wake_dir.exists():
+        wake_dir.mkdir()
+
 
 def log_input(c, a, d, gMax):
     # TODO: Print delta_, b_f, b_r
@@ -420,25 +453,24 @@ def log_input(c, a, d, gMax):
     # TODO: Print gMax_, p, rtOff, tau, 
     # TODO: Print U_
     # TODO: Print nstep, dt
-    
-    air = np.sqrt(np.sum(g.U_**2))
+
+    air = np.sqrt(np.sum(g.U_ ** 2))
     # TODO: Print air speed
     if air > 1.0E-03:
         # Flapping/Air Seed Ratio
         fk = 2 * g.f_ * g.d_ / air
         # TODO: Print fk
         # Pitch/Flapping Speed Ratio
-        r = 0.5 * ((0.5*c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
+        r = 0.5 * ((0.5 * c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
         # TODO: Print r
         # Pitch/Air Speed Ratio
         k = fk * r
         # TODO: Print k
     else:
         # Pitch/Flapping Speed Ratio
-        r = 0.5 * ((0.5*c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
+        r = 0.5 * ((0.5 * c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
         # TODO: Print r
 
-   
 
 if __name__ == "__main__":
     tombo()
