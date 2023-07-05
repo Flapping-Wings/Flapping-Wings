@@ -124,7 +124,7 @@ def tombo():
 
     for g.istep in range(g.nstep):
         if g.idebg:
-            data = loadmat(f"python_code/3d/matlab_data/data{g.istep + 1}.mat")
+            data = loadmat(f"matlab_data/data{g.istep + 1}.mat")
 
         t = g.istep * g.dt
 
