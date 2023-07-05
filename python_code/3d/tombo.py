@@ -62,7 +62,7 @@ def tombo():
     GAMw_f = np.zeros((g.nwing, g.nxb_f))
     GAMw_r = np.zeros((g.nwing, g.nxb_r))
     # Total wake vortex number
-    nxw_f = 0;
+    nxw_f = 0
     nxw_r = 0
     # Wake vortex location array (after convection)
     Xw_f = np.zeros((3, 4, g.nxb_f * g.nstep, g.nwing))
