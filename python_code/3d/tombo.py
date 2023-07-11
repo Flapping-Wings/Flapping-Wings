@@ -443,6 +443,10 @@ def create_directories():
     if not wake_dir.exists():
         wake_dir.mkdir()
 
+    f_and_m = base_dir / Path("f&m")
+    if not f_and_m.exists():
+        f_and_m.mkdir()
+
 
 def log_input(c, a, d, gMax):
     # TODO: Print delta_, b_f, b_r

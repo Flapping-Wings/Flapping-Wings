@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+from globals import g
 
 def tbwingPathNCL(iwing, t, rt, e, c, a, b, beta, delta, gMax, p, rtOff, tau, U, V, W, phiT, phiB, l, AZ, EL):
-    global iplot, folder, gid
 
     # LOCAL Variables
     sump = phiT - phiB
@@ -54,7 +54,7 @@ def tbwingPathNCL(iwing, t, rt, e, c, a, b, beta, delta, gMax, p, rtOff, tau, U,
     XTB, ZTB, YTB = tbtranslate(XTB, ZTB, YTB, t, U, V, W, b, delta)
     XCB, ZCB, YCB = tbtranslate(XCB, ZCB, YCB, t, U, V, W, b, delta)
 
-    if iplot == 1:
+    if g.iplot == 1:
         plt.plot([XL, XT, XTB, XLB, XL], [YL, YT, YTB, YLB, YL], [ZL, ZT, ZTB, ZLB, ZL])
         plt.plot(XC, YC, ZC, '-', linewidth=2)
         plt.plot(XCB, YCB, ZCB, 'r-', linewidth=2)
@@ -62,7 +62,7 @@ def tbwingPathNCL(iwing, t, rt, e, c, a, b, beta, delta, gMax, p, rtOff, tau, U,
         plt.axis('equal')
         plt.grid(True)
         if iwing == 4:
-            plt.savefig(folder + 'pass/wingPass.png')
+            plt.savefig(g.folder + 'pass/wingPass.png')
         plt.show()
 
 def wingMotionNC(a, x0L, x0T, x0C, y0L, y0T, y0C, theta, phi, beta):

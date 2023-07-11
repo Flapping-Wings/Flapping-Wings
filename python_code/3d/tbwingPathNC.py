@@ -24,9 +24,6 @@ def tbwingPathNC(iwing,t,rt,e,c,a,b,beta,delta,gMax,p,rtOff, tau,U, V,W,phiT,phi
     # l         wing span
     # AZ, EL    3dplot view
 
-    # Global Variables
-    global iplot, folder, gid
-
     # LOCAL Variables
     sump = phiT - phiB
 
@@ -66,9 +63,9 @@ def tbwingPathNC(iwing,t,rt,e,c,a,b,beta,delta,gMax,p,rtOff, tau,U, V,W,phiT,phi
     XTB, ZTB, YTB = tbtranslate(XTB, ZTB, YTB, t, U, V, W, b, delta)
     XCB, ZCB, YCB = tbtranslate(XCB, ZCB, YCB, t, U, V, W, b, delta)
 
-    if iplot == 1:
+    if g.iplot == 1:
         if iwing == 1:
-            gid = plt.figure()
+            g.gid = plt.figure()
 
         plt.plot([XL, XT, XTB, XLB, XL], [YL, YT, YTB, YLB, YL], [ZL, ZT, ZTB, ZLB, ZL])
         plt.plot(XC, YC, ZC, '-', linewidth=2)
@@ -76,7 +73,7 @@ def tbwingPathNC(iwing,t,rt,e,c,a,b,beta,delta,gMax,p,rtOff, tau,U, V,W,phiT,phi
         plt.view_init(AZ, EL)
         plt.axis('equal')
         plt.grid(True)
-        plt.savefig(folder + 'pass/chordPassR.fig')
+        plt.savefig(g.folder + 'pass/chordPassR.fig')
         plt.show()
 
 def dptableG(t, rt, tau, p, rtOff):

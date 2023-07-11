@@ -2,7 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-def tbwingPathTail(td, nhp, w, iwing, t, rt, e, c, a, b, beta, delta, gMax, p, rtOff, tau, U, V, W, phiT, phiB, l, AZ, EL):
+
+def tbwingPathTail(td, nhp, w, iwing, t, rt, e, c, a, b, beta, delta, gMax, p, rtOff, tau, U, V, W, phiT, phiB, l, AZ,
+                   EL):
     # Wing path For left wing
     # INPUT Variables (all nondimensional)
     # td        1 (top-down), 2(down-up)
@@ -26,16 +28,14 @@ def tbwingPathTail(td, nhp, w, iwing, t, rt, e, c, a, b, beta, delta, gMax, p, r
     # l         wing span
     # AZ, EL    3dplot view
 
-    global iplot, folder, gid
-
     # LOCAL Variables
     sump = phiT - phiB
 
     # Rolling Motion
-    phi = 0.5 * sump * cosTailG(td, nhp, t, rt, tau, e)
+    phi = 0.5 * sump * cosTailG(td, nhp, t, rt, g.tau, e)
 
     # Rotational Motion
-    gam = tableSTailG(td, nhp, t, rt, tau, p, rtOff)
+    gam = tableSTailG(td, nhp, t, rt, g.tau, p, rtOff)
     theta = gMax * gam
 
     # Effective flap plane angle considering the body angle
@@ -77,7 +77,7 @@ def tbwingPathTail(td, nhp, w, iwing, t, rt, e, c, a, b, beta, delta, gMax, p, r
     XTB, ZTB, YTB = tbtranslate(XTB, ZTB, YTB, t, U, V, W, b, delta)
     XCB, ZCB, YCB = tbtranslate(XCB, ZCB, YCB, t, U, V, W, b, delta)
 
-    if iplot == 1:
+    if g.iplot == 1:
         if iwing == 1:
             gid = plt.figure()
         plt.plot([XL, XT, XTB, XLB, XL], [YL, YT, YTB, YLB, YL], [ZL, ZT, ZTB, ZLB, ZL])
@@ -88,9 +88,10 @@ def tbwingPathTail(td, nhp, w, iwing, t, rt, e, c, a, b, beta, delta, gMax, p, r
         plt.grid(True)
 
         if iwing == 1:
-            plt.savefig(folder + 'pass/wingPassTail.png')
+            plt.savefig(g.folder + 'pass/wingPassTail.png')
 
         plt.show()
+
 
 def cosTailG(t, e):
     # cos tail function for an arbitrary time
@@ -101,12 +102,13 @@ def cosTailG(t, e):
     y += e
     return y
 
+
 def tableSTailG(t, p, rtOff):
     # Table function for an arbitrary time
-    global tau
     tB = t % 8
-    y = tableSTailB(tB + tau, p, rtOff)
+    y = tableSTailB(tB + g.tau, p, rtOff)
     return y
+
 
 def tableSTailB(td, nhp, t, rt, tau, p, rtOff):
     # Table function with tail for gamma for 4 periods 0 <= t <= 8
@@ -116,12 +118,14 @@ def tableSTailB(td, nhp, t, rt, tau, p, rtOff):
     }
     return switch_td[td](nhp, t, rt, tau, p, rtOff)
 
+
 def tableSTailB_case1(nhp, t, rt, tau, p, rtOff):
     switch_nhp = {
         8: lambda t, rt, tau, p, rtOff: tableSTailB_case1_nhp8(t, rt, tau, p, rtOff),
         4: lambda t, rt, tau, p, rtOff: tableSTailB_case1_nhp4(t, rt, tau, p, rtOff)
     }
     return switch_nhp[nhp](t, rt, tau, p, rtOff)
+
 
 def tableSTailB_case1_nhp8(t, rt, tau, p, rtOff):
     f0 = 1.0 / (1.0 + np.exp(-2.0 * p * (t * rt + tau - (0.0 + rtOff))))
@@ -133,6 +137,7 @@ def tableSTailB_case1_nhp8(t, rt, tau, p, rtOff):
     y = -f0 + f1 - f2 + f3 - f4 - f8
     return y
 
+
 def tableSTailB_case1_nhp4(t, rt, tau, p, rtOff):
     f0 = 1.0 / (1.0 + np.exp(-2.0 * p * (t * rt + tau - (0.0 + rtOff))))
     f1 = 2.0 / (1.0 + np.exp(-2.0 * p * (t * rt + tau - (1.0 + rtOff))))
@@ -141,12 +146,14 @@ def tableSTailB_case1_nhp4(t, rt, tau, p, rtOff):
     y = -f0 + f1 - f2 - f4
     return y
 
+
 def tableSTailB_case2(nhp, t, rt, tau, p, rtOff):
     switch_nhp = {
         8: lambda t, rt, tau, p, rtOff: tableSTailB_case2_nhp8(t, rt, tau, p, rtOff),
         4: lambda t, rt, tau, p, rtOff: tableSTailB_case2_nhp4(t, rt, tau, p, rtOff)
     }
     return switch_nhp[nhp](t, rt, tau, p, rtOff)
+
 
 def tableSTailB_case2_nhp8(t, rt, tau, p, rtOff):
     f0 = 1.0 / (1.0 + np.exp(-2.0 * p * (t * rt + tau - (0.0 + rtOff))))
@@ -158,6 +165,7 @@ def tableSTailB_case2_nhp8(t, rt, tau, p, rtOff):
     y = f0 - f1 + f2 - f3 + f4 + f8
     return y
 
+
 def tableSTailB_case2_nhp4(t, rt, tau, p, rtOff):
     f0 = 1.0 / (1.0 + np.exp(-2.0 * p * (t * rt + tau - (0.0 + rtOff))))
     f1 = 2.0 / (1.0 + np.exp(-2.0 * p * (t * rt + tau - (1.0 + rtOff))))
@@ -167,8 +175,9 @@ def tableSTailB_case2_nhp4(t, rt, tau, p, rtOff):
     y = -y
     return y
 
+
 def wingMotionNC(a, x0L, x0T, x0C, y0L, y0T, y0C, theta, phi, beta):
-    #INPUT
+    # INPUT
     # a         rotation offset from the y-axis
     # x0L,y0L   leading edge point on the wing-coordinate
     # x0C,y0C   center point on the wing-coordinate
@@ -188,9 +197,10 @@ def wingMotionNC(a, x0L, x0T, x0C, y0L, y0T, y0C, theta, phi, beta):
 
     return XL, YL, ZL, XT, YT, ZT, XC, YC, ZC
 
+
 def tbtranslate(X, Z, Y, t, U, V, W, b, delta):
-    #translation of the loction
-    #INPUT
+    # translation of the loction
+    # INPUT
     # X,Z,Y     position
     # U,V,W     air speed (constant)
     # t         time
@@ -202,8 +212,9 @@ def tbtranslate(X, Z, Y, t, U, V, W, b, delta):
 
     return X, Z, Y
 
+
 def wingMotionNCB(a, x0, y0, theta, phi):
-    #Motion of a single point on a non-cambered wing
+    # Motion of a single point on a non-cambered wing
     # a         rotation offfset
     # xo,yo     coordinates of the wing point
     # theta     pitch
@@ -214,8 +225,9 @@ def wingMotionNCB(a, x0, y0, theta, phi):
 
     return x, y, z
 
+
 def yRotate(sb, cb, x, z, y):
-    #INPUT
+    # INPUT
     # sb,cb         sin and cos beta
     # x,z,y         position for beta=pi/2
     X = sb * x + cb * z
@@ -223,6 +235,7 @@ def yRotate(sb, cb, x, z, y):
     Y = y
 
     return X, Z, Y
+
 
 def cosTailB(td, nhp, t, rt, tau):
     # Basic cos function (0 <= t <= 4) with a tail (4 <= t <= 8)
@@ -234,6 +247,7 @@ def cosTailB(td, nhp, t, rt, tau):
     }
     return switch_td[td](nhp, t, rt, tau, y)
 
+
 def cosTailB_case1(nhp, t, rt, tau, y):
     for i in range(len(t)):
         if t[i] <= nhp / 2:
@@ -241,6 +255,7 @@ def cosTailB_case1(nhp, t, rt, tau, y):
         else:
             y[i] = 1
     return y
+
 
 def cosTailB_case2(nhp, t, rt, tau, y):
     for i in range(len(t)):
