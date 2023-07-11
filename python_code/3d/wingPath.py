@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from globals import g
 
 def wingPath(t, e, c, a, beta, gMax, p, rtOff, U, V, W, phiT, phiB, l, AZ, EL):
     # Wing motion path for cambered wing
@@ -17,13 +18,12 @@ def wingPath(t, e, c, a, beta, gMax, p, rtOff, U, V, W, phiT, phiB, l, AZ, EL):
     # l         wing span
     # AZ, EL    3dplot view
     # ========================================================================
-    global tau, iplot, folder
 
     # LOCAL Variables
     sump = phiT - phiB
 
     # Rolling Motion
-    phi = 0.5 * sump * (np.cos(np.pi * (t + tau)) + e)
+    phi = 0.5 * sump * (np.cos(np.pi * (t + g.tau)) + e)
 
     # Rotational Motion
     f = tableG(t, p, rtOff)
@@ -61,24 +61,23 @@ def wingPath(t, e, c, a, beta, gMax, p, rtOff, U, V, W, phiT, phiB, l, AZ, EL):
     #XTB, ZTB, YTB = translate(XTB, ZTB, YTB, t, U, V, W)
     #XCB, ZCB, YCB = translate(XCB, ZCB, YCB, t, U, V, W)
 
-    #if iplot == 1:
-    #    fig = plt.figure()
-    #    ax = fig.add_subplot(111, projection='3d')
-    #    ax.plot([XL, XT, XTB, XLB, XL], [YL, YT, YTB, YLB, YL], [ZL, ZT, ZTB, ZLB, ZL])
-    #    ax.plot(XC, YC, ZC, '-', linewidth=2)
-    #    ax.plot(XCB, YCB, ZCB, 'r-', linewidth=2)
-    #    ax.view_init(AZ, EL)
-    #    ax.axis('equal')
-    #    ax.grid(True)
-    #    plt.savefig(folder + 'pass/chordPassR.fig')
-    #    plt.close()
+    if g.iplot == 1:
+       fig = plt.figure()
+       ax = fig.add_subplot(111, projection='3d')
+       ax.plot([XL, XT, XTB, XLB, XL], [YL, YT, YTB, YLB, YL], [ZL, ZT, ZTB, ZLB, ZL])
+       ax.plot(XC, YC, ZC, '-', linewidth=2)
+       ax.plot(XCB, YCB, ZCB, 'r-', linewidth=2)
+       ax.view_init(AZ, EL)
+       ax.axis('equal')
+       ax.grid(True)
+       plt.savefig(g.folder + 'pass/chordPassR.fig')
+       plt.close()
 
 def tableG(t, p, rtOff):
     # Table function for an arbitrary time
-    global tau
 
     tB = t % 2
-    y = tableB(tB + tau, p, rtOff)
+    y = tableB(tB + g.tau, p, rtOff)
 
     return y
 
@@ -103,19 +102,17 @@ def Camber2(x, y, c, l):
     # x(j),y(j) x, y coordinates of the node j
     # l,c       span, chord lengths
 
-    global icamber, acamber
-
     # icamber   camber option
     # acamber   camber amplitude
 
-    if icamber == 0:
+    if g.icamber == 0:
         z = np.zeros_like(x)
-    elif icamber == 1:
-        z = acamber * (-(x / (0.5 * c)) ** 2 + 1)
-    elif icamber == 2:
-        z = acamber * (-(y / l) ** 2 + 1)
-    elif icamber == 3:
-        z = acamber * (-(x / (0.5 * c)) ** 2 + 1) * (-(y / l) ** 2 + 1)
+    elif g.icamber == 1:
+        z = g.acamber * (-(x / (0.5 * c)) ** 2 + 1)
+    elif g.icamber == 2:
+        z = g.acamber * (-(y / l) ** 2 + 1)
+    elif g.icamber == 3:
+        z = g.acamber * (-(x / (0.5 * c)) ** 2 + 1) * (-(y / l) ** 2 + 1)
     else:
         print('Use icamber 1, 2, or 3')
 

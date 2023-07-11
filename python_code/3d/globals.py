@@ -41,7 +41,7 @@ class g:
     """Toggle gamma plot"""
     wplot: bool = True
     """Toggle wake vortex plot"""
-    idebg: bool = True
+    idebg: bool = False
     """Toggle debug prints"""
 
 
