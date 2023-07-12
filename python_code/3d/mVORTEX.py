@@ -60,16 +60,14 @@ def mVORTEX(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     # and assigned 0 values for each of the following vector outputs.
     # This way, their contributions are effectively set to zero.
     COEF[i] = GAMA[i] / (4.0 * np.pi * SQUARE[i]) * (ROR1[i] / R1[i] - ROR2[i] / R2[i])
-    U[i] = R1R2X[i] * COEF[i]
-    V[i] = R1R2Y[i] * COEF[i]
-    W[i] = R1R2Z[i] * COEF[i]
+    U = R1R2X * COEF
+    V = R1R2Y * COEF
+    W = R1R2Z * COEF
 
     # For each velocity component, sum contributions from all line segments 
-    # into a single scalar.
-    # Only non-zero components (indicated by index i) are summed (Zero
-    # components are skipped, but they have no contribution to the sum anyway.)
-    u = np.sum(U[i])
-    v = np.sum(V[i])
-    w = np.sum(W[i])
+    # into a single scalar
+    u = U.sum()
+    v = V.sum()
+    w = W.sum()
 
     return u, v, w
