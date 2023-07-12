@@ -4,16 +4,16 @@ from globals import g
 def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     """
     Calculate the induced velocity [U, V, W] at multiple points
-    [X, Y, Z] due to one line segment with strength GAMA per unit
-    length pointing in the direction [x2, y2, z2] - [x1, y1, z1]
+    [x, y, z] due to one line segment with strength GAMA per unit
+    length pointing in the direction [X2, Y2, Z2] - [X1, Y1, Z1]
 
     Parameters
     ----------
-    X, Y, Z: ndarrays
+    x, y, z: ndarrays
         Coordinates of observation points
-    x1, y1, z1: floats
+    X1, Y1, Z1: floats
         Endpoint 1 of the line
-    x2, y2, z2: floats
+    X2, Y2, Z2: floats
         Endpoint 2 of the line
     GAMA: float
         TODO
@@ -21,7 +21,7 @@ def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     Returns
     -------
     U, V, W: ndarrays
-        Velocity components at the observation points [X, Y, Z]
+        Velocity components at the observation points [x, y, z]
         due to one line
     """
     # Calculate R1 x R2
