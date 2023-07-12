@@ -27,20 +27,26 @@ def mVORTEX(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
         Velocity components at the observation point [x, y, z] due to 
         all lines with common sides, belonging to all vortex elements
     """
-    # TODO: Optimize out repeated calculations
     # Calculate R1 x R2
-    R1R2X = (y - Y1) * (z - Z2) - (z - Z1) * (y - Y2)
-    R1R2Y = (z - Z1) * (x - X2) - (x - X1) * (z - Z2)
-    R1R2Z = (x - X1) * (y - Y2) - (y - Y1) * (x - X2)
+    x_diff1 = x - X1
+    y_diff1 = y - Y1
+    z_diff1 = z - Z1
+    x_diff2 = x - X2
+    y_diff2 = y - Y2
+    z_diff2 = z - Z2
+
+    R1R2X = y_diff1 * z_diff2 - z_diff1 * y_diff2
+    R1R2Y = z_diff1 * x_diff2 - x_diff1 * z_diff2
+    R1R2Z = x_diff1 * y_diff2 - y_diff1 * x_diff2
     
     # Calculate (R1 x R2) ** 2
     SQUARE = R1R2X * R1R2X + R1R2Y * R1R2Y + R1R2Z * R1R2Z
     
     # Calculate R0(R1/R(R1) - R2/R(R2))
-    R1 = np.sqrt((x-X1) * (x-X1) + (y-Y1) *(y-Y1) + (z-Z1) *(z-Z1))
-    R2 = np.sqrt((x-X2) * (x-X2) + (y-Y2) *(y-Y2) + (z-Z2) *(z-Z2))    
-    ROR1 = (X2-X1) * (x-X1) + (Y2-Y1) * (y-Y1) + (Z2-Z1) * (z-Z1)
-    ROR2 = (X2-X1) * (x-X2) + (Y2-Y1) * (y-Y2) + (Z2-Z1) * (z-Z2)
+    R1 = np.sqrt(x_diff1 * x_diff1 + y_diff1 * y_diff1 + z_diff1 * z_diff1)
+    R2 = np.sqrt(x_diff2 * x_diff2 + y_diff2 * y_diff2 + z_diff2 * z_diff2)   
+    ROR1 = (X2-X1) * x_diff1 + (Y2-Y1) * y_diff1 + (Z2-Z1) * z_diff1
+    ROR2 = (X2-X1) * x_diff2 + (Y2-Y1) * y_diff2 + (Z2-Z1) * z_diff2
 
     zshape = np.shape(X1)
     COEF = np.zeros(zshape)
@@ -60,16 +66,14 @@ def mVORTEX(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     # and assigned 0 values for each of the following vector outputs.
     # This way, their contributions are effectively set to zero.
     COEF[i] = GAMA[i] / (4.0 * np.pi * SQUARE[i]) * (ROR1[i] / R1[i] - ROR2[i] / R2[i])
-    U[i] = R1R2X[i] * COEF[i]
-    V[i] = R1R2Y[i] * COEF[i]
-    W[i] = R1R2Z[i] * COEF[i]
+    U = R1R2X * COEF
+    V = R1R2Y * COEF
+    W = R1R2Z * COEF
 
     # For each velocity component, sum contributions from all line segments 
-    # into a single scalar.
-    # Only non-zero components (indicated by index i) are summed (Zero
-    # components are skipped, but they have no contribution to the sum anyway.)
-    u = np.sum(U[i])
-    v = np.sum(V[i])
-    w = np.sum(W[i])
+    # into a single scalar
+    u = U.sum()
+    v = V.sum()
+    w = W.sum()
 
     return u, v, w

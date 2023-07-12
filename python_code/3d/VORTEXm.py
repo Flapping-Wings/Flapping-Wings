@@ -1,19 +1,19 @@
 import numpy as np
 from globals import g
 
-def VORTEXm(X, Y, Z, x1, y1, z1, x2, y2, z2, GAMA):
+def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     """
     Calculate the induced velocity [U, V, W] at multiple points
-    [X, Y, Z] due to one line segment with strength GAMA per unit
-    length pointing in the direction [x2, y2, z2] - [x1, y1, z1]
+    [x, y, z] due to one line segment with strength GAMA per unit
+    length pointing in the direction [X2, Y2, Z2] - [X1, Y1, Z1]
 
     Parameters
     ----------
-    X, Y, Z: ndarrays
+    x, y, z: ndarrays
         Coordinates of observation points
-    x1, y1, z1: floats
+    X1, Y1, Z1: floats
         Endpoint 1 of the line
-    x2, y2, z2: floats
+    X2, Y2, Z2: floats
         Endpoint 2 of the line
     GAMA: float
         TODO
@@ -21,25 +21,31 @@ def VORTEXm(X, Y, Z, x1, y1, z1, x2, y2, z2, GAMA):
     Returns
     -------
     U, V, W: ndarrays
-        Velocity components at the observation points [X, Y, Z]
+        Velocity components at the observation points [x, y, z]
         due to one line
     """
     # Calculate R1 x R2
-    R1R2X = (Y - y1) * (Z - z2) - (Z - z1) * (Y - y2)
-    R1R2Y = (Z - z1) * (X - x2) - (X - x1) * (Z - z2)
-    R1R2Z = (X - x1) * (Y - y2) - (Y - y1) * (X - x2)
+    x_diff1 = x - X1
+    y_diff1 = y - Y1
+    z_diff1 = z - Z1
+    x_diff2 = x - X2
+    y_diff2 = y - Y2
+    z_diff2 = z - Z2
+
+    R1R2X = y_diff1 * z_diff2 - z_diff1 * y_diff2
+    R1R2Y = z_diff1 * x_diff2 - x_diff1 * z_diff2
+    R1R2Z = x_diff1 * y_diff2 - y_diff1 * x_diff2
 
     # Calculate (R1 x R2) ** 2
     SQUARE = R1R2X * R1R2X + R1R2Y * R1R2Y + R1R2Z * R1R2Z
 
     # Calculate R0(R1/R(R1) - R2/R(R2))
-    # TODO: Optimize out repeated calculations
-    R1 = np.sqrt((X-x1) * (X-x1) + (Y-y1) * (Y-y1) + (Z-z1) * (Z-z1))
-    R2 = np.sqrt((X-x2) * (X-x2) + (Y-y2) * (Y-y2) + (Z-z2) * (Z-z2))    
-    ROR1 = (x2-x1) * (X-x1) + (y2-y1) * (Y-y1) + (z2-z1) * (Z-z1)
-    ROR2 = (x2-x1) * (X-x2) + (y2-y1) * (Y-y2) + (z2-z1) * (Z-z2)
+    R1 = np.sqrt(x_diff1 * x_diff1 + y_diff1 * y_diff1 + z_diff1 * z_diff1)
+    R2 = np.sqrt(x_diff2 * x_diff2 + y_diff2 * y_diff2 + z_diff2 * z_diff2)   
+    ROR1 = (X2-X1) * x_diff1 + (Y2-Y1) * y_diff1 + (Z2-Z1) * z_diff1
+    ROR2 = (X2-X1) * x_diff2 + (Y2-Y1) * y_diff2 + (Z2-Z1) * z_diff2
 
-    zshape = np.shape(X)
+    zshape = np.shape(x)
     COEF = np.zeros(zshape)
     U = np.zeros(zshape)
     V = np.zeros(zshape)
@@ -57,8 +63,8 @@ def VORTEXm(X, Y, Z, x1, y1, z1, x2, y2, z2, GAMA):
     # and assigned 0 values for each of the following vector outputs.
     # This way, their contributions are effectively set to zero.
     COEF[i] = GAMA / (4.0 * np.pi * SQUARE[i]) * (ROR1[i] / R1[i] - ROR2[i] / R2[i])
-    U[i] = R1R2X[i] * COEF[i]
-    V[i] = R1R2Y[i] * COEF[i]
-    W[i] = R1R2Z[i] * COEF[i]
+    U = R1R2X * COEF
+    V = R1R2Y * COEF
+    W = R1R2Z * COEF
 
     return U, V, W
