@@ -19,7 +19,7 @@ from cross_matrix import cross_matrix
 from assemble_matrix import assemble_matrix
 from solution import solution
 from plot_GAM import plot_GAM
-# from plot_WB import plot_WB
+from plot_WB import plot_WB
 from s_impulse_WT import s_impulse_WT
 from divide_GAM import divide_GAM
 from b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
@@ -244,8 +244,7 @@ def tombo():
                 plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
 
         # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
-        # plot_WB(0, g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f)     # Front wing
-        # plot_WB(1, g.istep, g.nxb_r, nxw_r, Xb_r, Xw_r)     # Rear wing
+        plot_WB(g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
 
         if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
