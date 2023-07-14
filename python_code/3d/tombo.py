@@ -244,7 +244,8 @@ def tombo():
                 plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
 
         # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
-        plot_WB(g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
+        if g.wplot:
+            plot_WB(g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
 
         if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
