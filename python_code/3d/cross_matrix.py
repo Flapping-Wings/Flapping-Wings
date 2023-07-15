@@ -39,9 +39,10 @@ def cross_matrix(XC, NC, nxT, Xt, nxS):
         W = np.zeros(s[1])
 
         for j in range(4):
+            k = (j + 1) % 4
             dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :],
                                  Xt[0, j, i], Xt[1, j, i], Xt[2, j, i],
-                                 Xt[0, (j + 1) % 4, i], Xt[1, (j + 1) % 4, i], Xt[2, (j + 1) % 4, i],
+                                 Xt[0, k, i], Xt[1, k, i], Xt[2, k, i],
                                  1.0)
             U += dU
             V += dV
