@@ -46,9 +46,10 @@ def lr_set_matrix(iwing, Xt, nXt, XC, NC):
         W = np.zeros(s[1])
 
         for n in range(4):
+            k = (n + 1) % 4
             dU, dV, dW = VORTEXm(XC__[0], XC__[1], XC__[2],
                                  Xt__[0, n, i], Xt__[1, n, i], Xt__[2, n, i],
-                                 Xt__[0, (n+1)%4, i], Xt__[1, (n+1)%4, i], Xt__[2, (n+1)%4, i],
+                                 Xt__[0, k, i], Xt__[1, k, i], Xt__[2, k, i],
                                  1.0)
             U += dU
             V += dV
