@@ -1,7 +1,7 @@
 import numpy as np
 from VORTEXm import VORTEXm
 
-def lr_set_matrix2(iwing, Xt, nXt, XC, NC):
+def lr_set_matrix(iwing, Xt, nXt, XC, NC):
     """
     Set up a self-coefficient matrix for the nonpenetration condition on the 
     airfoil surface: coefficient matrix of normal vel by itself
