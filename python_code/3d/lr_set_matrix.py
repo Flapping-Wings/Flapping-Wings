@@ -1,7 +1,7 @@
 import numpy as np
 from VORTEXm import VORTEXm
 
-def lr_set_matrix(iwing, Xt, nXt, XC, NC):
+def lr_set_matrix2(iwing, Xt, nXt, XC, NC):
     """
     Set up a self-coefficient matrix for the nonpenetration condition on the 
     airfoil surface: coefficient matrix of normal vel by itself
@@ -38,46 +38,23 @@ def lr_set_matrix(iwing, Xt, nXt, XC, NC):
         NC__[1, :] = -NC__[1, :]
 
     VN = np.zeros((nXt, nXt))
-    s = np.shape(XC__)
-    
+    s = XC__.shape
+
     for i in range(nXt):
-        U = np.zeros((1, s[1]))
-        V = np.zeros((1, s[1]))
-        W = np.zeros((1, s[1]))
+        U = np.zeros(s[1])
+        V = np.zeros(s[1])
+        W = np.zeros(s[1])
 
-        dU, dV, dW = VORTEXm(XC__[0, :], XC__[1, :], XC__[2, :], 
-                             Xt__[0, 0, i], Xt__[1, 0, i], Xt__[2, 0, i], 
-                             Xt__[0, 1, i], Xt__[1, 1, i], Xt__[2, 1, i], 
-                             1.0)
-        U = U + dU
-        V = V + dV
-        W = W + dW
-
-        dU, dV, dW = VORTEXm(XC__[0, :], XC__[1, :], XC__[2, :], 
-                             Xt__[0, 1, i], Xt__[1, 1, i], Xt__[2, 1, i], 
-                             Xt__[0, 2, i], Xt__[1, 2, i], Xt__[2, 2, i], 
-                             1.0)
-        U = U + dU
-        V = V + dV
-        W = W + dW
-
-        dU, dV, dW = VORTEXm(XC__[0, :], XC__[1, :], XC__[2, :], 
-                             Xt__[0, 2, i], Xt__[1, 2, i], Xt__[2, 2, i], 
-                             Xt__[0, 3, i], Xt__[1, 3, i], Xt__[2, 3, i], 
-                             1.0)
-        U = U + dU
-        V = V + dV
-        W = W + dW
-
-        dU, dV, dW = VORTEXm(XC__[0, :], XC__[1, :], XC__[2, :], 
-                             Xt__[0, 3, i], Xt__[1, 3, i], Xt__[2, 3, i], 
-                             Xt__[0, 0, i], Xt__[1, 0, i], Xt__[2, 0, i], 
-                             1.0)
-        U = U + dU
-        V = V + dV
-        W = W + dW
+        for n in range(4):
+            dU, dV, dW = VORTEXm(XC__[0], XC__[1], XC__[2],
+                                 Xt__[0, n, i], Xt__[1, n, i], Xt__[2, n, i],
+                                 Xt__[0, (n+1)%4, i], Xt__[1, (n+1)%4, i], Xt__[2, (n+1)%4, i],
+                                 1.0)
+            U += dU
+            V += dV
+            W += dW
 
         # Normal velocity
-        VN[:, i] = (U * NC__[0, :] + V * NC__[1, :] + W * NC__[2, :])
+        VN[:, i] = U * NC__[0] + V * NC__[1] + W * NC__[2]
 
     return VN

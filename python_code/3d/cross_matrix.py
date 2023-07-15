@@ -38,38 +38,15 @@ def cross_matrix(XC, NC, nxT, Xt, nxS):
         V = np.zeros(s[1])
         W = np.zeros(s[1])
 
-        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
-                             Xt[0, 0, i], Xt[1, 0, i], Xt[2, 0, i], 
-                             Xt[0, 1, i], Xt[1, 1, i], Xt[2, 1, i], 
-                             1.0) 
-        U = U + dU
-        V = V + dV
-        W = W + dW
+        for j in range(4):
+            dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :],
+                                 Xt[0, j, i], Xt[1, j, i], Xt[2, j, i],
+                                 Xt[0, (j + 1) % 4, i], Xt[1, (j + 1) % 4, i], Xt[2, (j + 1) % 4, i],
+                                 1.0)
+            U += dU
+            V += dV
+            W += dW
 
-        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
-                             Xt[0, 1, i], Xt[1, 1, i], Xt[2, 1, i], 
-                             Xt[0, 2, i], Xt[1, 2, i], Xt[2, 2, i], 
-                             1.0)
-        U = U + dU
-        V = V + dV
-        W = W + dW
-
-        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
-                             Xt[0, 2, i], Xt[1, 2, i], Xt[2, 2, i], 
-                             Xt[0, 3, i], Xt[1, 3, i], Xt[2, 3, i], 
-                             1.0)
-        U = U + dU
-        V = V + dV
-        W = W + dW
-
-        dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :], 
-                             Xt[0, 3, i], Xt[1, 3, i], Xt[2, 3, i], 
-                             Xt[0, 0, i], Xt[1, 0, i], Xt[2, 0, i], 
-                             1.0)
-        U = U + dU
-        V = V + dV
-        W = W + dW
-        
         # Normal velocity
         VN[:, i] = (U * NC[0, :] + V * NC[1, :] + W * NC[2, :])
 
