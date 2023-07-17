@@ -248,3 +248,6 @@ h_: float = None
 """Height of each border strip"""
 
 rt = None
+
+"""Plot Variables Dictionary"""
+iterations = []
