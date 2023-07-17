@@ -29,6 +29,7 @@ from assemble_vel_B_by_T import assemble_vel_B_by_T
 from add_wake import add_wake
 from force_moment import force_moment
 from vel_by import vel_by
+from plot_function import plot_graphs
 
 
 def tombo():
@@ -123,6 +124,9 @@ def tombo():
         MVNs_r[:, :, w] = lr_set_matrix(w, xt_r, nxt_r, xC_r, nC_r)
 
     for g.istep in range(g.nstep):
+
+        iteration = {}
+        
         if g.idebg:
             data = loadmat(f"matlab_data/data{g.istep + 1}.mat")
 
@@ -159,10 +163,10 @@ def tombo():
         for i in range(g.nwing):
             # Front wing
             Vnc_f[i, :] = lrs_wing_NVs(0, i, xC_f, XC_f[:, :, i], NC_f[:, :, i], t, theta[i],
-                                       phi[i], dph[i], dth[i], a[i], beta[i], U)
+                                       phi[i], dph[i], dth[i], a[i], beta[i], U, iteration)
             # Rear wing
             Vnc_r[i, :] = lrs_wing_NVs(1, i, xC_r, XC_r[:, :, i], NC_r[:, :, i], t, theta[i + 2],
-                                       phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U)
+                                       phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U, iteration)
 
         if g.idebg:
             print(f"Vnc {g.istep + 1}")
@@ -239,13 +243,43 @@ def tombo():
         if g.gplot:
             for i in range(g.nwing):
                 # Front wing
-                plot_GAM(0, i, t, GAM_f[i,:], XC_f[:,:,i], NC_f[:,:,i])
+
+                iteration["GAM_front"] = {
+                    "i": i,
+                    "t": t,
+                    "GAM_f": np.copy(GAM_f[i,:]),
+                    "XC_f": np.copy(XC_f[:,:,i]),
+                    "NC_f": np.copy(NC_f[:,:,i])
+                }
+                
+                # plot_GAM(0, i, t, GAM_f[i,:], XC_f[:,:,i], NC_f[:,:,i])
+
                 # Rear wing
-                plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
+
+                iteration["GAM_rear"] = {
+                    "i": i,
+                    "t": t,
+                    "GAM_r": np.copy(GAM_r[i,:]),
+                    "XC_r": np.copy(XC_r[:,:,i]),
+                    "NC_r": np.copy(NC_r[:,:,i])
+                }
+                
+                # plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
 
         # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
         if g.wplot:
-            plot_WB(g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
+            iteration["wake"] = {
+                "istep": g.istep,
+                "nxb_f": g.nxb_f,
+                "nxw_f": nxw_f,
+                "Xb_f": np.copy(Xb_f),
+                "Xw_f": np.copy(Xw_f),
+                "nxb_r": g.nxb_r,
+                "nxw_r": nxw_r,
+                "Xb_r": np.copy(Xb_r),
+                "Xw_r": np.copy(Xw_r)
+            }
+            # plot_WB(g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
 
         if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
@@ -401,11 +435,14 @@ def tombo():
             print(np.allclose(nxt_r, data['nxt_r'], atol=1e-16))
             print(np.allclose(Xw_r[:, :, :nxw_r, :], data['Xw_r'], atol=1e-16))
 
+        g.iterations.append(iteration)
     # END TIME MARCH
 
     # Calculate the force and moment on the airfoil
     if g.nstep > 3:
         force_moment(g.rho_, g.v_, g.d_[0], g.nstep, g.dt, U)
+
+    plot_graphs()
 
 
 def check_input():
@@ -474,6 +511,7 @@ def log_input(c, a, d, gMax):
         # Pitch/Flapping Speed Ratio
         r = 0.5 * ((0.5 * c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
         # TODO: Print r
+
 
 
 if __name__ == "__main__":
