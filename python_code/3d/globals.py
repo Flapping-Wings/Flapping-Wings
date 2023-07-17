@@ -249,3 +249,6 @@ class g:
     """Height of each border strip"""
 
     rt = None
+
+    """Plot Variables Dictionary"""
+    iterations = []
