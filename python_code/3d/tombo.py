@@ -119,9 +119,8 @@ def tombo():
 
     # TIME MARCH
     # ----------
-    for w in range(g.nwing):
-        MVNs_f[:, :, w] = lr_set_matrix(w, xt_f, nxt_f, xC_f, nC_f)
-        MVNs_r[:, :, w] = lr_set_matrix(w, xt_r, nxt_r, xC_r, nC_r)
+    MVNs_f = lr_set_matrix(xt_f, nxt_f, xC_f, nC_f)
+    MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r)
 
     for g.istep in range(g.nstep):
 
