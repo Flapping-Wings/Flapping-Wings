@@ -1,6 +1,6 @@
 import numpy as np
 
-from globals import g
+import globals as g
 
 
 def vel_B_by_T(cVBT, GAM, nXt):

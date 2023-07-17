@@ -1,5 +1,5 @@
 import numpy as np
-from globals import g
+import globals as g
 
 def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     """

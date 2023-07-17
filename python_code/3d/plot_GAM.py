@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from globals import g
+import globals as g
 
 def plot_GAM(m, iwing, t, GAMA, XC, NC):
     # Plot GAMA at the collocation points of elements using the normal direction

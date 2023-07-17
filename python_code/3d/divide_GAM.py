@@ -1,5 +1,5 @@
 import numpy as np
-from globals import g
+import globals as g
 
 def divide_GAM(GAM, nxb):
     """
