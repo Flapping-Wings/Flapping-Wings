@@ -1,6 +1,8 @@
 import numpy as np
 import globals as g
+from numba import njit
 
+@njit(cache=True)
 def mVORTEX(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     """
     Calculates the induced velocity [u, v, w] at a point [x, y, z]
