@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.io import loadmat
 
-from globals import g
+import globals as g
 from VORTEXm import VORTEXm
 
 

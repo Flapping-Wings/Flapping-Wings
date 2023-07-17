@@ -6,7 +6,7 @@ plt.ioff()
 
 from scipy.io import loadmat
 
-from globals import g
+import globals as g
 from wing import wing
 from nd_data import nd_data
 from wing_total import wing_total

@@ -1,5 +1,5 @@
 import numpy as np
-from globals import g
+import globals as g
 
 # TODO: Remove unused parameters beta, phi, theta
 def s_impulse_WT(istep, U, t, Xt, Xw, GAM, GAMAw, beta, phi, theta, a):
