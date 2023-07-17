@@ -109,3 +109,5 @@ def plot_normal_vel(XC, Vnc, NC, m, iwing, t):
             plt.savefig(g.folder + 'debug/Vairfoil_rr_' + f'{t:.4f}' + '.png')
         else:
             plt.savefig(g.folder + 'debug/Vairfoil_rl_' + f'{t:.4f}' + '.png')
+
+    plt.close(fig)
