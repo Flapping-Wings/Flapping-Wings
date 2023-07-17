@@ -1,5 +1,5 @@
 import numpy as np
-from globals import g
+import globals as g
 
 def nd_data(
         l_f, 

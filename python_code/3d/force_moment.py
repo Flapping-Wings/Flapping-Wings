@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import splev, splrep, splder
-from globals import g
+import globals as g
 
 def force_moment(rho_, v_, d_1, nstep, dt, U):
     # Reference values of force and moment

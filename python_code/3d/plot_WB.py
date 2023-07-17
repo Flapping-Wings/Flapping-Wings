@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from globals import g
+import globals as g
 
 def plot_WB(istep, nXb_f, nXw_f, Xb_f, Xw_f, nXb_r, nXw_r, Xb_r, Xw_r):
     """

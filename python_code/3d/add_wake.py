@@ -1,5 +1,5 @@
 import numpy as np
-from globals import g
+import globals as g
 
 def add_wake(nXb, GAMAb, Xs, GAMAw, Xw):
     """
