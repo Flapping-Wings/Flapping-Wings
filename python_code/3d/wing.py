@@ -50,7 +50,7 @@ def wing():
     return Xb_f, nXb_f, Nb_f, Xc_f, nXc_f, Nc_f, l_f, c_f, h_f, Xb_r, nXb_r, Nb_r, Xc_r, nXc_r, Nc_r, l_r, c_r, h_r
 
 
-def symmetrix_5_sided_mesh(W, lt_, lr_, bang_, hfac, wfac):
+def symmetrix_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     """
     Create a symmetric, 5-sided wing mesh
 
@@ -85,8 +85,8 @@ def symmetrix_5_sided_mesh(W, lt_, lr_, bang_, hfac, wfac):
 
     g.c_ = 2.0 * lt_ * np.sin(bang) # Chord Length
     g.l_ = lt_ * np.cos(bang) + lr_ # Span Length
-    g.hfactor = hfac                # Height of the border strip: 0.1 (high aspect ration wing (chord < span)), <= 0.05 (low aspect ration wing(chord > span))
-    g.wfactor = wfac                # Width of the border rectangular elements: ratio of w (element width) over h (height)
+    g.hfactor = hfactor                # Height of the border strip: 0.1 (high aspect ration wing (chord < span)), <= 0.05 (low aspect ration wing(chord > span))
+    g.wfactor = wfactor                # Width of the border rectangular elements: ratio of w (element width) over h (height)
     
     """
     Center elements:
