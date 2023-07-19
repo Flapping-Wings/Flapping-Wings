@@ -135,8 +135,6 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
         plot3Elem(fig3, ax3, Xc, nXc, Nc)
         fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.tif")
         plt.close()
-
-    # print(g.fid, f"W = {W}, lt_ = {lt_}, lr_ = {lr_}, l_ = {l_}, bang_ = {bang_}, c_ = {c_}, hfactor = {hfactor}, wfactor = {wfactor}")
         
     return Xb, nXb, Nb, Xc, nXc, Nc, lo_, co_
 
