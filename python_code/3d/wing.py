@@ -37,20 +37,20 @@ def wing():
     hfactor_f = 0.1
     wfactor_f = 3
 
-    Xb_f, nXb_f, Nb_f, Xc_f, nXc_f, Nc_f, l_f, c_f = symmetrix_5_sided_mesh(1, 2, 2, 30, hfactor_f, wfactor_f)
+    Xb_f, nXb_f, Nb_f, Xc_f, nXc_f, Nc_f, l_f, c_f = symmetric_5_sided_mesh(1, 2, 2, 30, hfactor_f, wfactor_f)
     h_f = c_f * hfactor_f
 
     # Rear Wing Dimensions
     hfactor_r = 0.1
     wfactor_r = 3
 
-    Xb_r, nXb_r, Nb_r, Xc_r, nXc_r, Nc_r, l_r, c_r = symmetrix_5_sided_mesh(2, 1, 1, 30, hfactor_r, wfactor_r)
+    Xb_r, nXb_r, Nb_r, Xc_r, nXc_r, Nc_r, l_r, c_r = symmetric_5_sided_mesh(2, 1, 1, 30, hfactor_r, wfactor_r)
     h_r = c_r * hfactor_r
 
     return Xb_f, nXb_f, Nb_f, Xc_f, nXc_f, Nc_f, l_f, c_f, h_f, Xb_r, nXb_r, Nb_r, Xc_r, nXc_r, Nc_r, l_r, c_r, h_r
 
 
-def symmetrix_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
+def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     """
     Create a symmetric, 5-sided wing mesh
 
