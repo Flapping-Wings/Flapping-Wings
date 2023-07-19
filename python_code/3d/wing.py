@@ -126,14 +126,14 @@ def tbs5Mesh(W, lt_, lr_, bang_, hfac, wfac):
         fig2, ax2 = plt.subplots()
         plot2Elem(fig2, ax2, Xb, nXb, 4, 'r', 2)
         plot2Elem(fig2, ax2, Xc, nXc, 4, 'b', 2)
-        fig2.savefig(f"{g.folder}mesh/2dmesh_{W}.tif")
+        fig2.savefig(f"{g.folder}mesh/2dmesh_{W}.png")
         plt.close()
 
         fig3 = plt.figure()
         ax3 = fig3.add_subplot(projection='3d')
         plot3Elem(fig3, ax3, Xb, nXb, Nb)
         plot3Elem(fig3, ax3, Xc, nXc, Nc)
-        fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.tif")
+        fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.png")
         plt.close()
         
     return Xb, nXb, Nb, Xc, nXc, Nc, lo_, co_
