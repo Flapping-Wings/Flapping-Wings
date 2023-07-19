@@ -124,6 +124,7 @@ def symmetrix_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
     lo_ = g.l_
     co_ = g.c_
+    h = co_ * hfactor
 
     # Plot Mesh
     if g.mplot:
@@ -140,7 +141,7 @@ def symmetrix_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
         fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.png")
         plt.close()
         
-    return Xb, nXb, Nb, Xc, nXc, Nc, lo_, co_
+    return Xb, nXb, Nb, Xc, nXc, Nc, lo_, co_, h
 
 #------------------------------------------------------------#
 
