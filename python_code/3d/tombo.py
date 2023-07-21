@@ -348,18 +348,18 @@ def tombo():
             print(np.allclose(VBTs_r, data['VBTs_r'], atol=1e-16))
 
         # Border element veocity due to the total wing elements: cross-influence
-        VBTs_12 = cross_vel_B_by_T(Xb_f[:, :, :, 0], g.nxb_f, Xt_f[:, :, :, 1], GAM_f[1, :], nxt_f)
-        VBTs_13 = cross_vel_B_by_T(Xb_f[:, :, :, 0], g.nxb_f, Xt_r[:, :, :, 0], GAM_r[0, :], nxt_r)
-        VBTs_14 = cross_vel_B_by_T(Xb_f[:, :, :, 0], g.nxb_f, Xt_r[:, :, :, 1], GAM_r[1, :], nxt_r)
-        VBTs_21 = cross_vel_B_by_T(Xb_f[:, :, :, 1], g.nxb_f, Xt_f[:, :, :, 0], GAM_f[0, :], nxt_f)
-        VBTs_23 = cross_vel_B_by_T(Xb_f[:, :, :, 1], g.nxb_f, Xt_r[:, :, :, 0], GAM_r[0, :], nxt_r)
-        VBTs_24 = cross_vel_B_by_T(Xb_f[:, :, :, 1], g.nxb_f, Xt_r[:, :, :, 1], GAM_r[1, :], nxt_r)
-        VBTs_31 = cross_vel_B_by_T(Xb_r[:, :, :, 0], g.nxb_r, Xt_f[:, :, :, 0], GAM_f[0, :], nxt_f)
-        VBTs_32 = cross_vel_B_by_T(Xb_r[:, :, :, 0], g.nxb_r, Xt_f[:, :, :, 1], GAM_f[1, :], nxt_f)
-        VBTs_34 = cross_vel_B_by_T(Xb_r[:, :, :, 0], g.nxb_r, Xt_r[:, :, :, 1], GAM_r[1, :], nxt_r)
-        VBTs_41 = cross_vel_B_by_T(Xb_r[:, :, :, 1], g.nxb_r, Xt_f[:, :, :, 0], GAM_f[0, :], nxt_f)
-        VBTs_42 = cross_vel_B_by_T(Xb_r[:, :, :, 1], g.nxb_r, Xt_f[:, :, :, 1], GAM_f[1, :], nxt_f)
-        VBTs_43 = cross_vel_B_by_T(Xb_r[:, :, :, 1], g.nxb_r, Xt_r[:, :, :, 0], GAM_r[0, :], nxt_r)
+        VBTs_12 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, g.LCUT)
+        VBTs_13 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, g.LCUT)
+        VBTs_14 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, g.LCUT)
+        VBTs_21 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, g.LCUT)
+        VBTs_23 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, g.LCUT)
+        VBTs_24 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, g.LCUT)
+        VBTs_31 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, g.LCUT)
+        VBTs_32 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, g.LCUT)
+        VBTs_34 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, g.LCUT)
+        VBTs_41 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, g.LCUT)
+        VBTs_42 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, g.LCUT)
+        VBTs_43 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, g.LCUT)
 
         # Assemble the total border element velocity due to two wings
         VBT_f, VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,

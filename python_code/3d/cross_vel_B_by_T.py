@@ -1,7 +1,7 @@
 import numpy as np
 from mVORTEX import mVORTEX
 
-def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt):
+def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt, RCUT, LCUT):
     """
     Calculate velocity at border element nodes of wing i due to total vortices
     on the wing j. The velocity is evaluated at the nodes; no offset 
@@ -37,7 +37,7 @@ def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt):
             u1, v1, w1 = mVORTEX(x, y, z, 
                                  Xt[0,0,:], Xt[1,0,:], Xt[2,0,:], 
                                  Xt[0,1,:], Xt[1,1,:], Xt[2,1,:], 
-                                 GAMt)
+                                 GAMt, RCUT, LCUT)
             u += u1
             v += v1
             w += w1
@@ -45,7 +45,7 @@ def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt):
             u2, v2, w2 = mVORTEX(x, y, z, 
                                  Xt[0,1,:], Xt[1,1,:], Xt[2,1,:], 
                                  Xt[0,2,:], Xt[1,2,:], Xt[2,2,:], 
-                                 GAMt)
+                                 GAMt, RCUT, LCUT)
             u += u2
             v += v2
             w += w2
@@ -53,7 +53,7 @@ def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt):
             u3, v3, w3 = mVORTEX(x, y, z, 
                                  Xt[0,2,:], Xt[1,2,:], Xt[2,2,:], 
                                  Xt[0,3,:], Xt[1,3,:], Xt[2,3,:], 
-                                 GAMt)  
+                                 GAMt, RCUT, LCUT)  
             u += u3
             v += v3
             w += w3
@@ -61,7 +61,7 @@ def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt):
             u4, v4, w4 = mVORTEX(x, y, z, 
                                  Xt[0,3,:], Xt[1,3,:], Xt[2,3,:], 
                                  Xt[0,0,:], Xt[1,0,:], Xt[2,0,:], 
-                                 GAMt)
+                                 GAMt, RCUT, LCUT)
             u += u4
             v += v4
             w += w4
