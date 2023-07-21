@@ -441,7 +441,7 @@ def Camber(x, y, l_, c_, icamber, amplitude):
     elif icamber == 1:
         z = amplitude * (np.pow(float(-(x / (0.5 * c_))), 2) + 1)
     elif icamber == 2:
-        z = amplitude * (np.pow(float(-(y / g.l_)), 2) + 1)
+        z = amplitude * (np.pow(float(-(y / l_)), 2) + 1)
     elif icamber == 3:
         z = amplitude * (np.pow(float(-(x / (0.6 * c_))), 2) + 1) * (np.pow(float(-(y / l_)), 2) + 1)
     else:
