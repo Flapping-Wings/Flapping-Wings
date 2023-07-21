@@ -113,22 +113,36 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 def WingBorder(lt, lr, bang):
     
     """
-    Mesh for Tapered/Nontapered Rectangular Wings
+    Create mesh for tapered/nontapered rectangular wings
     
-    INPUT:
-    - lt           : Length of the tapered Section
-    - lr           : Length of the Rectangular Section
-    - bang        : half taper angle (radian) 
+    Parameters
+    ----------
+    lt: float
+        Length of tapered section of the wing in cm
+    lr: float
+        Length of straight section of the wing in cm
+    bang: float
+        Base angle (angle between tapered edge and centerline) of the wing in radians
     
-    OUTPUT:
-    - Xb[j, n, i]  : entire shed rectangular edge elements
-    - nXb          : # of border rectangular shed elements
-    - Nb[j, i]     : Unit normal vector for the rectangular element
-    - Lt
-    - Lr
-    - C
-    - n[i]         : # of rectangles in the border strip
-    - wi_0
+    Returns
+    -------
+    Xb: ndarray[j, n, i]
+        Border element coordinates
+    nXb: int 
+        Number of border elements
+    Nb: ndarray[j, i]
+        Unit normals to the border elements
+    Lt: float
+        Length of tapered section of the wing
+    Lr: float
+        Length of straight section of the wing
+    C: float
+        Length of center region of the mesh
+        (wing chord length with border elements removed)
+    n: ndarray
+        Number of rectangles in each border strip
+    wi_0: float
+        TODO
     """
     
     N = 5                   # Number of border Strips
