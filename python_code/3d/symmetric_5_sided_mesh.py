@@ -166,7 +166,7 @@ def WingBorder(lt, lr, bang):
     sumn = np.sum(n)
     nXb = sumn # No Corner Elements
     Xb = np.zeros((3, 5, nXb))
-    Nb = np.array([[],[],[]])
+    Nb = np.zeros((3, nXb))
 
     inf = -1
 
@@ -186,7 +186,7 @@ def WingBorder(lt, lr, bang):
 
     # Unit normal to the element
     for i in range(nXb):
-        Nb = np.hstack((Nb, uNormal(Xb[0, :, i], Xb[1, :, i], Xb[2, :, i])))
+        Nb[:, i] = uNormal(Xb[0, :, i], Xb[1, :, i], Xb[2, :, i])
 
     # Centroid
     Xb[:, 4, :] = 0.25 * (Xb[:, 0, :] + Xb[:, 1, :] + Xb[:, 2, :] + Xb[:, 3, :])
@@ -473,15 +473,10 @@ def uNormal(x, y, z):
 
     """
     
-    node = np.zeros([4,3])
-
-    for i in range(4):
-        node[i, :] = np.array([x[i], y[i], z[i]]) # [:] = 0:3
-
-    N = np.cross(np.subtract(node[2, :], node[0, :]), np.subtract(node[1, :], node[3, :]))
+    node = np.hstack((x[:, np.newaxis], y[:, np.newaxis], z[:, np.newaxis]))
+    N = np.cross(node[2, :] - node[0, :], node[1, :] - node[3, :])
     magN = np.linalg.norm(N)
     uN = N / magN
-    uN = uN[..., np.newaxis] # Make into column vector
 
     return uN
 
@@ -583,7 +578,7 @@ def WingCenter(Lt, Lr, C, bang, n, wi_1):
         # Total Center Rectangular Elements
         nXc = nXctR + nXcrR
         Xc = np.zeros([2, 5, nXc])
-        Nc = np.array([[],[],[]])
+        Nc = np.zeros((3, nXc))
 
         Xc[:, 0:4, 0:nXctR] = XctR 
         Xc[:, 0:4, nXctR:nXc] = XcrR
@@ -595,7 +590,7 @@ def WingCenter(Lt, Lr, C, bang, n, wi_1):
         
         # Unit Normal to the element
         for i in range(nXc):
-            Nc = np.hstack((Nc, uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])))
+            Nc[:, i] = uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])
 
         # Centroid
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
