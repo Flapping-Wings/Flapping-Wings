@@ -422,18 +422,22 @@ def BRelemLoc(m, wi, w, wf, h):
     return xeE
 
 def BRelem(xeE, Xo, Ang):
-    
     """
-    Transform coordinates from local to global border rectangular elements
+    Transform coordinates of border rectangular elements from local to global
     
-    INPUT:
-    - xeE[j, n, i]  : local j coordinates of the n-th node of the i-th edge square elements
-    - Xo[j]         : global coordinates of the origin of the local system 
-    - Ang           : rotation of the local wrt of the global system
+    Parameters
+    ----------
+    xeE: ndarray[j, n, i]
+        Local j coordinates of the n-th node of the i-th edge square elements
+    Xo: ndarray[j]
+        Global coordinates of the origin of the local system 
+    Ang: float
+        Lotation of the local system wrt the global system
     
-    OUTPUT:
-    - xeE[j, n, i]  : global j coordinates of the n-th node of the i-th node square elements
-    
+    Returns
+    -------
+    xeE: ndarray[j, n, i]
+        Global j coordinates of the n-th node of the i-th node square elements
     """
     
     new_xeE = xeE
