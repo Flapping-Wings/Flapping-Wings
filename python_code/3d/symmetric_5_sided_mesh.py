@@ -127,7 +127,7 @@ def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
     wi_0: float
         TODO
     """
-    NUM_BORDER_STRIPS = 5               # Number of border strips
+    NUM_BORDER_STRIPS = 5
     h = hfactor * c_    # Dimensional border height
 
     # Global position of the origin of the border strip systems
@@ -176,25 +176,42 @@ def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
     return Xb, nXb, Nb, Lt, Lr, C, n, wi_0
 
 def BStrip(lt, lr, c, bang, h, wfactor):
-    
     """
-    Width of the rectangular elements in the border strips with # of rectangular elements on them
+    Width of the rectangular elements in the border strips with number
+    of rectangular elements on them
     
-    INPUT:
-    - lt     : Length of the tapered section
-    - lr     : Length of the Rectangular Section
-    - c      : Chord length of the rectangular section
-    - bang  : Half taper angle (radian)
-    - h      : height of the border strip
+    Parameters
+    ----------
+    lt: float
+        Length of tapered section of the wing in cm
+    lr: float
+        Length of straight section of the wing in cm
+    c_: float
+        Wing chord length
+    bang: float
+        Base angle (angle between tapered edge and centerline) of the wing in radians
+    h: float
+        Height of border element
+    wfactor: float
+        Ratio of border element width to border element height
     
-    OUTPUT:
-    - n[i]   : # of rectangles in the strip
-    - w[i]   : width of the multiple middle rectangular elements
-    - wi[i]  : width of the first rec element
-    - wf[i]  : width of the last rec element, where i = [0:5)
-    - Lt
-    - Lr
-    - C
+    Returns
+    -------
+    n: ndarray[int]
+        Number of rectangles in the strip
+    w: ndarray
+        Width of the multiple middle rectangular elements
+    wi: float
+        Width of the first rectangular element
+    wf: ndarray
+        Width of the last rectangular element
+    Lt: float
+        Length of tapered section of the wing
+    Lr: float
+        Length of straight section of the wing
+    C: float
+        Length of center region of the mesh
+        (wing chord length with border elements removed)
     """
     
     alpha = 0.5 * (np.pi - bang)
@@ -216,14 +233,14 @@ def BStrip(lt, lr, c, bang, h, wfactor):
 
     # Border Strip 1
     Lt += float_eps
-    n[0] = np.floor(Lt / wh).astype(int)  # # of rectangles in the strip
+    n[0] = np.floor(Lt / wh).astype(int)  # Number of rectangles in the strip
     r[0] = Lt % wh
     if n[0] != 0:
         w[0] = wh + r[0] / n[0]  # Width of the multiple middle rectangular elements
     else:
         n[0] = 1
         w[0] = Lt
-    wi[0] = h * (1 / np.tan(bang)) # Width of the first rec element
+    wi[0] = h * (1 / np.tan(bang))  # Width of the first rec element
     wf[0] = h * (1 / np.tan(alpha)) # Width of the last rec element
 
     # Border Strip 2
