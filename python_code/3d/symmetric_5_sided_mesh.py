@@ -47,8 +47,8 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     g.itaper = bang_ != 90
 
     bang = np.pi * bang_ / 180.00
-    c_ = 2.0 * lt_ * np.sin(bang)
     l_ = lt_ * np.cos(bang) + lr_
+    c_ = 2.0 * lt_ * np.sin(bang)
     h = c_ * hfactor
     
     """
@@ -70,7 +70,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
         - nCelmri = n[2] : # of square elements in y-direction
     """
 
-    Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang)
+    Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor)
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, n, wi_1)
 
     # Plot Mesh
@@ -92,7 +92,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
 #------------------------------------------------------------#
 
-def WingBorder(lt, lr, bang, c_, hfactor):
+def WingBorder(lt, lr, bang, l_, c_, hfactor):
     
     """
     Create mesh for tapered/nontapered rectangular wings
@@ -166,7 +166,7 @@ def WingBorder(lt, lr, bang, c_, hfactor):
         Xb[0:2, 1, inf] = xeE[:, 1, n[i]+1]
 
     # Introduce the camber
-    Xb[2, :, :] = Camber(Xb[0, :, :], Xb[1, :, :])
+    Xb[2, :, :] = Camber(Xb[0, ...], Xb[1, ...], l_, c_, g.icamber, g.acamber)
 
     # Unit normal to the element
     for i in range(nXb):
@@ -412,31 +412,40 @@ def BRelem(xeE, Xo, Ang):
 
     return new_xeE
 
-def Camber(x, y):
+def Camber(x, y, l_, c_, icamber, amplitude):
 
     """
-    Calculate z values of the wing, given (x,y)
+    Calculate z values of the wing, given (x, y)
 
-    INPUT: (all lengths dimensional)
-    - x[j], y[j] : (x,y) coordinates of node j
-    - g.l_, g.c_ : span, chord lengths
-    - g.icamber  : camber option
-    - g.acamber  : camber amplitude
+    Parameters
+    ----------
+    x, y: ndarrays
+        (x, y) coordinates of node j
+    l_: float
+        Wing span length
+    c_: float
+        Wing chord length
+    icamber: int
+        Camber direction
+    amplitude: float
+        Camber amplitude
 
-    OUTPUT:
-    - z[j]       : z coordinates of node j
+    Returns
+    -------
+    z: ndarray
+        z coordinates of node j
 
     """
-    
-    if g.icamber == 0:
+    if icamber == 0:
         z = np.zeros(x.shape)
-    elif g.icamber == 1:
-        z = g.acamber * (np.pow(float(-(x / (0.5 * g.c_))), 2) + 1)
-    elif g.icamber == 2:
-        z = g.acamber * (np.pow(float(-(y / g.l_)), 2) + 1)
-    elif g.icamber == 3:
-        z = g.acamber * (np.pow(float(-(x / (0.6 * g.c_))), 2) + 1) * (np.pow(float(-(y / g.l_)), 2) + 1)
-    # Not sure if we need the last default output where it outputs the necessity to use icamber = [0, 1, 2, 3]
+    elif icamber == 1:
+        z = amplitude * (np.pow(float(-(x / (0.5 * c_))), 2) + 1)
+    elif icamber == 2:
+        z = amplitude * (np.pow(float(-(y / g.l_)), 2) + 1)
+    elif icamber == 3:
+        z = amplitude * (np.pow(float(-(x / (0.6 * c_))), 2) + 1) * (np.pow(float(-(y / l_)), 2) + 1)
+    else:
+        raise ValueError("invalid value for icamber")
 
     return z
 
