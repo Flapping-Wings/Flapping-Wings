@@ -73,7 +73,8 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor, wfactor)
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1)
 
-    # Plot Mesh
+    # Plot mesh
+    # TODO: Refactor plotting
     if g.mplot:
         fig2, ax2 = plt.subplots()
         plot2Elem(fig2, ax2, Xb, nXb, 4, 'r', 2)
@@ -722,7 +723,6 @@ def CRnodes(Lt, Lr, C, bang, n):
 
 
 def plot2Elem(fig, axs, Xn, nXn, npoly, color, lw):
-    
     """
     Plot a group of polygonal elements in x-y plane
 
