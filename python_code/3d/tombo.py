@@ -38,7 +38,7 @@ def tombo():
     create_directories()
 
     g.xb_f, g.nxb_f, g.nb_f, g.xc_f, g.nxc_f, g.nc_f, g.l_f, g.c_f, g.h_f = \
-        symmetric_5_sided_mesh(1, g.lt_f, g.lr_r, g.bang_f, g.hfactor_f, g.wfactor_f)
+        symmetric_5_sided_mesh(1, g.lt_f, g.lr_f, g.bang_f, g.hfactor_f, g.wfactor_f)
     g.xb_r, g.nxb_r, g.nb_r, g.xc_r, g.nxc_r, g.nc_r, g.l_r, g.c_r, g.h_r = \
         symmetric_5_sided_mesh(2, g.lt_r, g.lr_r, g.bang_r, g.hfactor_r, g.wfactor_r)
 
