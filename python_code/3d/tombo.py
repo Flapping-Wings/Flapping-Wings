@@ -7,7 +7,7 @@ plt.ioff()
 from scipy.io import loadmat
 
 import globals as g
-from wing import wing
+from wing import symmetric_5_sided_mesh
 from nd_data import nd_data
 from wing_total import wing_total
 from lr_set_matrix import lr_set_matrix
@@ -37,9 +37,10 @@ def tombo():
     # -----
     create_directories()
 
-    g.xb_f, g.nxb_f, g.nb_f, g.xc_f, g.nxc_f, g.nc_f, g.l_f, g.c_f, g.h_f, \
-        g.xb_r, g.nxb_r, g.nb_r, g.xc_r, g.nxc_r, g.nc_r, g.l_r, g.c_r, g.h_r = \
-        wing()
+    g.xb_f, g.nxb_f, g.nb_f, g.xc_f, g.nxc_f, g.nc_f, g.l_f, g.c_f, g.h_f = \
+        symmetric_5_sided_mesh(1, g.lt_f, g.lr_r, g.bang_f, g.hfactor_f, g.wfactor_f)
+    g.xb_r, g.nxb_r, g.nb_r, g.xc_r, g.nxc_r, g.nc_r, g.l_r, g.c_r, g.h_r = \
+        symmetric_5_sided_mesh(2, g.lt_r, g.lr_r, g.bang_r, g.hfactor_r, g.wfactor_r)
 
     l, c, h, phiT, phiB, a, beta, delta, gMax, U, \
         xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d = \
