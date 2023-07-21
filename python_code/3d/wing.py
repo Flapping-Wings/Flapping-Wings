@@ -56,9 +56,6 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
     Equivalent to MATLAB function `tbs5mesh`
 
-    Input:
-    - W   : 1 (forward), 2(rear) wing
-
     Output:
     - lo_ : span
     - co_ : chord length
@@ -122,9 +119,9 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     """
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, n, wi_1)
 
-    lo_ = g.l_
-    co_ = g.c_
-    h = co_ * hfactor
+    l_ = g.l_
+    c_ = g.c_
+    h = c_ * hfactor
 
     # Plot Mesh
     if g.mplot:
@@ -141,7 +138,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
         fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.png")
         plt.close()
         
-    return Xb, nXb, Nb, Xc, nXc, Nc, lo_, co_, h
+    return Xb, nXb, Nb, Xc, nXc, Nc, l_, c_, h
 
 #------------------------------------------------------------#
 
