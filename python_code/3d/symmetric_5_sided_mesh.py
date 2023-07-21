@@ -459,18 +459,17 @@ def Camber(x, y):
 def uNormal(x, y, z):
 
     """
-    Calculate the unit normal to the rectangular element 
-    1    2
+    Calculate the unit normal to a rectangular element
 
-    0    3
-    x - horizontal, y vertical direction
+    Parameters
+    ----------
+    x, y, z: ndarrays
+        Coordinates of the nodes of the element
 
-    INPUT:
-    - x[n], y[n], z[n] : coordinates of the n nodes of the element
-
-    OUTPUT:
-    - uN               : unit normal to the rectangular plane
-
+    Returns
+    -------
+    uN: ndarray
+        Unit normal to the rectangular plane
     """
     
     node = np.hstack((x[:, np.newaxis], y[:, np.newaxis], z[:, np.newaxis]))
