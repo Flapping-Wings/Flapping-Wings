@@ -92,7 +92,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
 def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
     """
-    Create mesh for tapered/nontapered rectangular wings
+    Create mesh for border region of the wing
     
     Parameters
     ----------
@@ -453,7 +453,6 @@ def BRelem(xeE, Xo, Ang):
     return new_xeE
 
 def Camber(x, y, l_, c_, icamber, amplitude):
-
     """
     Calculate z values of the wing, given (x, y)
 
@@ -490,7 +489,6 @@ def Camber(x, y, l_, c_, icamber, amplitude):
     return z
 
 def uNormal(x, y, z):
-
     """
     Calculate the unit normal to a rectangular element
 
@@ -512,25 +510,34 @@ def uNormal(x, y, z):
 
     return uN
 
-#------------------------------------------------------#
-
 def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
-
     """
-    Meshing for the center region
+    Create mesh for center region of the wing
 
-    INPUT:
-    - Lt     : Length of the tapered edge for the center region
-    - Lr     : Length of the horizontal edge for the center region
-    - C      : Length of vertical tip edge of the center region
-    - bang  : Base opening angle / 2
-    - n[i]   : Number of border strip elements: i = 0:5 
-    - wi_1
+    Parameters
+    ----------
+    Lt: float
+        Length of tapered section of the wing
+    Lr: float
+        Length of straight section of the wing
+    C: float
+        Length of center region of the mesh
+        (wing chord length with border elements removed)
+    bang: float
+        Base angle (angle between tapered edge and centerline) of the wing in radians
+    n: ndarray
+        Number of rectangles in each border strip
+    wi_0: float
+        TODO
 
-    OUTPUT:
-    - Xc     : Total center rectangular elements
-    - nXc    : # of total center rectangular elements
-    - Nc     : Unit normal to the elements
+    Returns
+    -------
+    Xc: ndarray[j, n, i]
+        Center element coordinates
+    nXc: int
+        Number of center elements
+    Nc: ndarray[j, i]
+        Unit normals to the center elements
     """
 
     Xct, Xcr = CRnodes(Lt, Lr, C, bang, n) # Coordinates of the nodes for the center region
