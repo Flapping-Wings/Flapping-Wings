@@ -77,7 +77,7 @@ b_r: float = 1.5
 
 # General
 
-itaper: bool = True
+itaper: bool = None
 """Toggle wing taper"""
 # TODO: maybe add taper or bang_ global var
 c_: float = None

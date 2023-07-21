@@ -44,9 +44,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     h: float
         Height of border element
     """
-    # Wing is tapered by default
-    if bang_ == 90:
-        g.itaper = False
+    g.itaper = bang_ != 90
 
     bang = np.pi * bang_ / 180.00
 
