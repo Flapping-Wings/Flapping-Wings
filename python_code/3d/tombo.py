@@ -178,10 +178,10 @@ def tombo():
         for i in range(g.nwing):
             # Front wing
             Vncw_f[i, :] = n_vel_T_by_W(g.istep, nxt_f, XC_f[:, :, i], NC_f[:, :, i],
-                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
             # Rear wing  
             Vncw_r[i, :] = n_vel_T_by_W(g.istep, nxt_r, XC_r[:, :, i], NC_r[:, :, i],
-                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r)
+                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
 
         if g.idebg:
             print(f"Vncw {g.istep + 1}")
