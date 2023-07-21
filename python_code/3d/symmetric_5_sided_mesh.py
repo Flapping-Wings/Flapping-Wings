@@ -366,23 +366,32 @@ def BStripElongated(lt, lr, c, bang, h):
     return n, w, wi, wf, Lt, Lr, C
 
 def BRelemLoc(m, wi, w, wf, h):
-    
     """
-    Node Coordinates of local rectangular edge elements over a border strip
+    Node coordinates of local rectangular edge elements over a border strip
     For each element, the node starts at the left bottom and rotates clock-wise
     1     2
        4
     0     3
     x = horizontal, y = vertical directions
     
-    INPUT:
-    - m            : # of middle elements
-    - wi, w, wf    : size of initial, middle, and final elements (in y-direction)
-    - h            : height of all the elements (in x-direction)
+    Parameters
+    ----------
+    m: int 
+        Number of middle elements
+    wi: float
+        Width on initial elements
+    w: float
+        Width of middle elements
+    wf: 
+        Width of final elements
+    h: float
+        Border element height
     
-    OUTPUT:
-    - xeE[j, n, i] : j coordinates of the n-th node of the i-th edge square elements
-                    -> j = 0,1 ; n = 0-4 (4 - center point) ; i = 0-(m+1)  
+    Returns
+    -------
+    xeE: ndarray[j, n, i]
+        j coordinates of the n-th node of the i-th edge square elements
+        -> j = 0,1 ; n = 0-4 (4 - center point) ; i = 0-(m+1)  
     """
     
     # Element Width Array
