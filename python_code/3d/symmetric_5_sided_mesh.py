@@ -110,7 +110,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
 #------------------------------------------------------------#
 
-def WingBorder(lt, lr, bang):
+def WingBorder(lt, lr, bang, c_, hfactor):
     
     """
     Create mesh for tapered/nontapered rectangular wings
@@ -123,7 +123,11 @@ def WingBorder(lt, lr, bang):
         Length of straight section of the wing in cm
     bang: float
         Base angle (angle between tapered edge and centerline) of the wing in radians
-    
+    c_: float
+        Wing chord length
+    hfactor: float
+        Ratio of border element height to wing chord length
+
     Returns
     -------
     Xb: ndarray[j, n, i]
@@ -145,10 +149,8 @@ def WingBorder(lt, lr, bang):
         TODO
     """
     
-    N = 5                   # Number of border Strips
-    g.h_ = g.hfactor * g.c_ # Height of each border strip
-    c = g.c_                # Dimensional Chord Length
-    h = g.h_                # Dimensional Border Height
+    N = 5               # Number of border strips
+    h = hfactor * c_    # Dimensional border height
 
     # Global position of the origin of the border strip systems
     sdel = np.sin(bang)
@@ -159,9 +161,9 @@ def WingBorder(lt, lr, bang):
 
     # Width of the rectangular elements in the border strips and number of rectangular elements on them
     if not g.ielong:
-        n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c, bang, h)
+        n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c_, bang, h)
     else:
-        n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c, bang, h)
+        n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c_, bang, h)
 
     sumn = np.sum(n)
     nXb = sumn # No Corner Elements
