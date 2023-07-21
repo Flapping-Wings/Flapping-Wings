@@ -1,7 +1,7 @@
 import numpy as np
 from mVORTEX import mVORTEX
 
-def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nXw_r):
+def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nXw_r, RCUT, LCUT):
     """
     Calculate normal velocity contribution on the airfoil by wake vortices
 
@@ -45,19 +45,19 @@ def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nX
             z = XC[2, i]
             u, v, w = 0, 0, 0
         
-            u1, v1, w1 = mVORTEX(x, y, z, Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], GAMw)
+            u1, v1, w1 = mVORTEX(x, y, z, Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], GAMw, RCUT, LCUT)
             u = u + u1
             v = v + v1
             w = w + w1
-            u2, v2, w2 = mVORTEX(x, y, z, Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], GAMw)
+            u2, v2, w2 = mVORTEX(x, y, z, Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], GAMw, RCUT, LCUT)
             u = u + u2
             v = v + v2
             w = w + w2
-            u3, v3, w3 = mVORTEX(x, y, z, Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], GAMw)
+            u3, v3, w3 = mVORTEX(x, y, z, Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], GAMw, RCUT, LCUT)
             u = u + u3
             v = v + v3
             w = w + w3
-            u4, v4, w4 = mVORTEX(x, y, z, Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], GAMw)
+            u4, v4, w4 = mVORTEX(x, y, z, Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], GAMw, RCUT, LCUT)
             u = u + u4
             v = v + v4
             w = w + w4

@@ -1,7 +1,9 @@
 import numpy as np
 import globals as g
+from numba import njit
 
-def mVORTEX(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
+@njit(cache=True)
+def mVORTEX(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA, RCUT, LCUT):
     """
     Calculates the induced velocity [u, v, w] at a point [x, y, z]
     due to multiple line segements with the same side belonging to
@@ -55,7 +57,7 @@ def mVORTEX(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     W = np.zeros(zshape)
 
     # Find all line segments not located on the observation point
-    i = (R1 > g.RCUT) * (R2 > g.RCUT) * (np.sqrt(SQUARE) > g.LCUT)
+    i = (R1 > RCUT) * (R2 > RCUT) * (np.sqrt(SQUARE) > LCUT)
 
     # SQUARE = 0 when (X,Y,Z) lies in the middle of the line
     #    warning: = 0 also (X,Y,Z) lies on the extension of the line

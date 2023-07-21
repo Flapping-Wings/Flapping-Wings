@@ -3,6 +3,7 @@ from plot_GAM import plot_GAM
 from plot_WB import plot_WB
 import globals as g
 from multiprocessing.pool import Pool
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 plt.ioff()
@@ -28,7 +29,7 @@ def plot_iteration(iteration):
 def plot_graphs():
 
     if len(g.iterations) > 10:
-        pool = Pool(processes=4)
+        pool = Pool(processes=os.cpu_count())
 
         for _ in pool.imap_unordered(plot_iteration, g.iterations):
             pass
