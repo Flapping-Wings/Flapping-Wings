@@ -71,7 +71,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     """
 
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor, wfactor)
-    Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, n, wi_1)
+    Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1)
 
     # Plot Mesh
     if g.mplot:
@@ -474,7 +474,7 @@ def uNormal(x, y, z):
 
 #------------------------------------------------------#
 
-def WingCenter(Lt, Lr, C, bang, l_, c_, n, wi_1):
+def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
 
     """
     Meshing for the center region
@@ -609,7 +609,7 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, n, wi_1):
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
         
         # Add the eta-coordinate (vertical) of the corder
-        yshift = g.h_
+        yshift = h
         Xc[1, :, :] = Xc[1, :, :] + yshift
 
     return Xc, nXc, Nc
