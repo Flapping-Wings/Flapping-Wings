@@ -71,7 +71,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     """
 
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor)
-    Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, n, wi_1)
+    Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, n, wi_1)
 
     # Plot Mesh
     if g.mplot:
@@ -474,7 +474,7 @@ def uNormal(x, y, z):
 
 #------------------------------------------------------#
 
-def WingCenter(Lt, Lr, C, bang, n, wi_1):
+def WingCenter(Lt, Lr, C, bang, l_, c_, n, wi_1):
 
     """
     Meshing for the center region
@@ -577,7 +577,7 @@ def WingCenter(Lt, Lr, C, bang, n, wi_1):
 
         # Introduce the camber 
         temp = np.zeros((1, 5, nXc))
-        temp[:, 0:4, 0:] = Camber(Xc[0, 0:4, :], Xc[1, 0:4, :])
+        temp[:, 0:4, 0:] = Camber(Xc[0, 0:4, :], Xc[1, 0:4, :], l_, c_, g.icamber, g.acamber)
         Xc = np.vstack((Xc, temp))
         
         # Unit Normal to the element
@@ -599,7 +599,7 @@ def WingCenter(Lt, Lr, C, bang, n, wi_1):
         Xc[:, :, 0:nXc] = XcrR
         
         # Introduce the Camber
-        Xc[2, :, :] = Camber(Xc[0, :, :], Xc[1, :, :])
+        Xc[2, :, :] = Camber(Xc[0, :, :], Xc[1, :, :], l_, c_, g.icamber, g.acamber)
         
         # Unit normal to the element
         for i in range(nXc):
