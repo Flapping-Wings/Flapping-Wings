@@ -112,7 +112,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
 #------------------------------------------------------------#
 
-def WingBorder(lt, lr, delta):
+def WingBorder(lt, lr, bang):
     
     """
     Mesh for Tapered/Nontapered Rectangular Wings
@@ -120,7 +120,7 @@ def WingBorder(lt, lr, delta):
     INPUT:
     - lt           : Length of the tapered Section
     - lr           : Length of the Rectangular Section
-    - delta        : half taper angle (radian) 
+    - bang        : half taper angle (radian) 
     
     OUTPUT:
     - Xb[j, n, i]  : entire shed rectangular edge elements
@@ -139,17 +139,17 @@ def WingBorder(lt, lr, delta):
     h = g.h_                # Dimensional Border Height
 
     # Global position of the origin of the border strip systems
-    sdel = np.sin(delta)
-    cdel = np.cos(delta)
+    sdel = np.sin(bang)
+    cdel = np.cos(bang)
     xo = np.array([[0.0, -lt*sdel, -lt*sdel   , lt*sdel   , lt*sdel],
                    [0.0,  lt*cdel,  lt*cdel+lr, lt*cdel+lr, lt*cdel]])
-    ang = np.array([delta, 0.0, -0.5*np.pi, -(np.pi), -(np.pi+delta)])
+    ang = np.array([bang, 0.0, -0.5*np.pi, -(np.pi), -(np.pi+bang)])
 
     # Width of the rectangular elements in the border strips and number of rectangular elements on them
     if not g.ielong:
-        n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c, delta, h)
+        n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c, bang, h)
     else:
-        n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c, delta, h)
+        n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c, bang, h)
 
     sumn = np.sum(n)
     nXb = sumn # No Corner Elements
@@ -183,7 +183,7 @@ def WingBorder(lt, lr, delta):
 
     return Xb, nXb, Nb, Lt, Lr, C, n, wi_0
 
-def BStrip(lt, lr, c, delta, h):
+def BStrip(lt, lr, c, bang, h):
     
     """
     Width of the rectangular elements in the border strips with # of rectangular elements on them
@@ -192,7 +192,7 @@ def BStrip(lt, lr, c, delta, h):
     - lt     : Length of the tapered section
     - lr     : Length of the Rectangular Section
     - c      : Chord length of the rectangular section
-    - delta  : Half taper angle (radian)
+    - bang  : Half taper angle (radian)
     - h      : height of the border strip
     
     OUTPUT:
@@ -205,11 +205,11 @@ def BStrip(lt, lr, c, delta, h):
     - C
     """
     
-    alpha = 0.5 * (np.pi - delta)
+    alpha = 0.5 * (np.pi - bang)
     float_eps = np.finfo(float).eps
     
     # Reduced outline length for the center region
-    Lt = lt - h * ((1.0 / np.tan(delta)) + (1.0 / np.tan(alpha)))
+    Lt = lt - h * ((1.0 / np.tan(bang)) + (1.0 / np.tan(alpha)))
     Lr = lr - h * ((1.0 / np.tan(alpha)) + 1)
     C = c - 2.0 * h
 
@@ -231,7 +231,7 @@ def BStrip(lt, lr, c, delta, h):
     else:
         n[0] = 1
         w[0] = Lt
-    wi[0] = h * (1 / np.tan(delta)) # Width of the first rec element
+    wi[0] = h * (1 / np.tan(bang)) # Width of the first rec element
     wf[0] = h * (1 / np.tan(alpha)) # Width of the last rec element
 
     # Border Strip 2
@@ -273,7 +273,7 @@ def BStrip(lt, lr, c, delta, h):
     return n, w, wi, wf, Lt, Lr, C
 
 # TODO: Test this function
-def BStripElongated(lt, lr, c, delta, h):
+def BStripElongated(lt, lr, c, bang, h):
     
     """
     Width of the rectangular elements in the border strips
@@ -283,7 +283,7 @@ def BStripElongated(lt, lr, c, delta, h):
     - lt     : Length of the tapered section
     - lr     : Length of the Rectangular Section
     - c      : Chord length of the rectangular section
-    - delta  : Half taper angle (radian)
+    - bang  : Half taper angle (radian)
     - h      : height of the border strip
     
     OUTPUT:
@@ -297,8 +297,8 @@ def BStripElongated(lt, lr, c, delta, h):
     
     """
     
-    altha = 0.5 * (np.pi - delta)
-    Lt = lt - h * ((1 / np.tan(delta)) + (1 / np.tan(altha)))
+    altha = 0.5 * (np.pi - bang)
+    Lt = lt - h * ((1 / np.tan(bang)) + (1 / np.tan(altha)))
     Lr = lr - h * (1 / np.tan(altha) + 1)
     C = c - 2.0 * h
     float_eps = np.finfo(float).eps
@@ -313,7 +313,7 @@ def BStripElongated(lt, lr, c, delta, h):
     # Border Strip 1 
     n[0] = np.floor(tmp).astype(int)
     w[0] = Lt / n[0]                 # Width of the multiple middle rectangular elements
-    wi[0] = h * (1 / np.tan(delta))  # Width of the first rec element
+    wi[0] = h * (1 / np.tan(bang))  # Width of the first rec element
     wf[0] = h * (1 / np.tan(altha))  # Width of the last rec element
     
     # Border Strip 2
@@ -475,7 +475,7 @@ def uNormal(x, y, z):
 
 #------------------------------------------------------#
 
-def WingCenter(Lt, Lr, C, delta, n, wi_1):
+def WingCenter(Lt, Lr, C, bang, n, wi_1):
 
     """
     Meshing for the center region
@@ -484,7 +484,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
     - Lt     : Length of the tapered edge for the center region
     - Lr     : Length of the horizontal edge for the center region
     - C      : Length of vertical tip edge of the center region
-    - delta  : Base opening angle / 2
+    - bang  : Base opening angle / 2
     - n[i]   : Number of border strip elements: i = 0:5 
     - wi_1
 
@@ -494,7 +494,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
     - Nc     : Unit normal to the elements
     """
 
-    Xct, Xcr = CRnodes(Lt, Lr, C, delta, n) # Coordinates of the nodes for the center region
+    Xct, Xcr = CRnodes(Lt, Lr, C, bang, n) # Coordinates of the nodes for the center region
 
     """
     RECTANGULAR MESH POINTS BY ROWS (x-direction) & COLUMNS (y-direction)
@@ -589,7 +589,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
         Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
 
         # Add the eta-coordinate (vertical) of the corder
-        yshift = wi_1 / np.cos(delta)
+        yshift = wi_1 / np.cos(bang)
         Xc[1, :, :] = Xc[1, :, :] + yshift
     else:
         # Total center rectangular element
@@ -615,7 +615,7 @@ def WingCenter(Lt, Lr, C, delta, n, wi_1):
 
     return Xc, nXc, Nc
 
-def CRnodes(Lt, Lr, C, delta, n):
+def CRnodes(Lt, Lr, C, bang, n):
 
     """
     Coordinates of the nodes for the rectangular mesh in the center region
@@ -624,7 +624,7 @@ def CRnodes(Lt, Lr, C, delta, n):
     - Lt    : Length of the tapered edge for the center region
     - Lr    : Length of the horizontal edge for the center region
     - C     
-    - delta : Half-base opening angle
+    - bang : Half-base opening angle
     - n[i]  : Number of border strips elements: i = 0:5
 
     OUTPUT:
@@ -633,7 +633,7 @@ def CRnodes(Lt, Lr, C, delta, n):
     """
     
     # Angle and length of radial lines
-    e = Lt * np.cos(delta)
+    e = Lt * np.cos(bang)
     lt = np.zeros(n[2] + 1)
     ang = np.zeros(n[2] + 1)
     Xct = np.zeros([2, n[2] + 1, n[0] + 1])
@@ -654,7 +654,7 @@ def CRnodes(Lt, Lr, C, delta, n):
             Xct[1, ir, ic] = r * np.sin(theta)
 
     # Rectangular Region
-    y0 = Lt * np.cos(delta)
+    y0 = Lt * np.cos(bang)
     dy = Lr / n[1]
     for ir in range(n[2] + 1):
         x = lt[ir] * np.cos(ang[ir])
