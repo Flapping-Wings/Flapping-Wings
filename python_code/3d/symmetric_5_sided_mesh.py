@@ -47,11 +47,9 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     g.itaper = bang_ != 90
 
     bang = np.pi * bang_ / 180.00
-
-    g.c_ = 2.0 * lt_ * np.sin(bang) # Chord Length
-    g.l_ = lt_ * np.cos(bang) + lr_ # Span Length
-    g.hfactor = hfactor                # Height of the border strip: 0.1 (high aspect ration wing (chord < span)), <= 0.05 (low aspect ration wing(chord > span))
-    g.wfactor = wfactor                # Width of the border rectangular elements: ratio of w (element width) over h (height)
+    c_ = 2.0 * lt_ * np.sin(bang)
+    l_ = lt_ * np.cos(bang) + lr_
+    h = c_ * hfactor
     
     """
     Center elements:
@@ -71,25 +69,9 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
         - nCelmri = n[2] : # of square elements in x-direction
         - nCelmri = n[2] : # of square elements in y-direction
     """
-    """
-    Elements in the border strips:
-    - Xb[j, n, i] : Border elements
-    - nXb         : # of border elements
-    - Nb[j, i]    : Unit Normal
-    """
+
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang)
-
-    """
-    Elements in the center region:
-    - Xc[j, n, i] : Center elements
-    - nXc         : # of center elements
-    - Nc[j, i]    : Unit Normal
-    """
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, n, wi_1)
-
-    l_ = g.l_
-    c_ = g.c_
-    h = c_ * hfactor
 
     # Plot Mesh
     if g.mplot:
