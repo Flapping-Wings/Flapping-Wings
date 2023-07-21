@@ -7,7 +7,7 @@ plt.ioff()
 from scipy.io import loadmat
 
 import globals as g
-from wing import symmetric_5_sided_mesh
+from symmetric_5_sided_mesh import symmetric_5_sided_mesh
 from nd_data import nd_data
 from wing_total import wing_total
 from lr_set_matrix import lr_set_matrix
