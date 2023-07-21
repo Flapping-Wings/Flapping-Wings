@@ -40,7 +40,7 @@ gplot: bool = True
 """Toggle gamma plot"""
 wplot: bool = True
 """Toggle wake vortex plot"""
-idebg: bool = True
+idebg: bool = False
 """Toggle debug prints"""
 
 
@@ -91,11 +91,11 @@ acamber: float = 0.2
 
 hfactor_f: float = 0.1
 """Ratio of border element height to wing chord length (front)"""
-wfactor_f: float = 3
+wfactor_f: float = 1
 """Ratio of border element width to border element height (front)"""
 hfactor_r: float = 0.1
 """Ratio of border element height to wing chord length (rear)"""
-wfactor_r: float = 3
+wfactor_r: float = 1
 """Ratio of border element width to border element height (rear)"""
 
 lt_f: float = 2
