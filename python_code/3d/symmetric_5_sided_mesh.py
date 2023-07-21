@@ -70,7 +70,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
         - nCelmri = n[2] : # of square elements in y-direction
     """
 
-    Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor)
+    Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor, wfactor)
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, n, wi_1)
 
     # Plot Mesh
@@ -92,7 +92,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
 #------------------------------------------------------------#
 
-def WingBorder(lt, lr, bang, l_, c_, hfactor):
+def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
     
     """
     Create mesh for tapered/nontapered rectangular wings
@@ -143,7 +143,7 @@ def WingBorder(lt, lr, bang, l_, c_, hfactor):
 
     # Width of the rectangular elements in the border strips and number of rectangular elements on them
     if not g.ielong:
-        n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c_, bang, h)
+        n, w, wi, wf, Lt, Lr, C = BStrip(lt, lr, c_, bang, h, wfactor)
     else:
         n, w, wi, wf, Lt, Lr, C = BStripElongated(lt, lr, c_, bang, h)
 
@@ -179,7 +179,7 @@ def WingBorder(lt, lr, bang, l_, c_, hfactor):
 
     return Xb, nXb, Nb, Lt, Lr, C, n, wi_0
 
-def BStrip(lt, lr, c, bang, h):
+def BStrip(lt, lr, c, bang, h, wfactor):
     
     """
     Width of the rectangular elements in the border strips with # of rectangular elements on them
@@ -216,7 +216,7 @@ def BStrip(lt, lr, c, bang, h):
 
     r = np.zeros(3)
 
-    wh = g.wfactor * h
+    wh = wfactor * h
 
     # Border Strip 1
     Lt += float_eps
