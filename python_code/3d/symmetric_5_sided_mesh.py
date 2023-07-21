@@ -662,20 +662,29 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
     return Xc, nXc, Nc
 
 def CRnodes(Lt, Lr, C, bang, n):
-
     """
     Coordinates of the nodes for the rectangular mesh in the center region
 
-    INPUT:
-    - Lt    : Length of the tapered edge for the center region
-    - Lr    : Length of the horizontal edge for the center region
-    - C     
-    - bang : Half-base opening angle
-    - n[i]  : Number of border strips elements: i = 0:5
+    Parameters
+    ----------
+    Lt: float
+        Length of tapered section of the wing
+    Lr: float
+        Length of straight section of the wing
+    C: float
+        Length of center region of the mesh
+        (wing chord length with border elements removed)
+    bang: float
+        Base angle (angle between tapered edge and centerline) of the wing in radians
+    n: ndarray
+        Number of rectangles in each border strip
 
-    OUTPUT:
-    - Xct   : Nodes in the tapered region
-    - Xcr   : Nodes in the rectangular region
+    Returns
+    -------
+    Xct: ndarray[j, n, i]
+        Nodes in the tapered region
+    Xcr: ndarray[j, n, i]
+        Nodes in the rectangular region
     """
     
     # Angle and length of radial lines
@@ -711,7 +720,6 @@ def CRnodes(Lt, Lr, C, bang, n):
 
     return Xct, Xcr
 
-#------------------------------------------------------#
 
 def plot2Elem(fig, axs, Xn, nXn, npoly, color, lw):
     
