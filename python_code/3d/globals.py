@@ -40,7 +40,7 @@ gplot: bool = True
 """Toggle gamma plot"""
 wplot: bool = True
 """Toggle wake vortex plot"""
-idebg: bool = True
+idebg: bool = False
 """Toggle debug prints"""
 
 
@@ -77,13 +77,8 @@ b_r: float = 1.5
 
 # General
 
-itaper: bool = True
+itaper: bool = None
 """Toggle wing taper"""
-# TODO: maybe add taper or bang_ global var
-c_: float = None
-"""Wing chord length (used temporarily)"""
-l_: float = None
-"""Wing span length (used temporarily)"""
 icamber: int = 0
 """
 Camber direction: 
@@ -93,13 +88,33 @@ Camber direction:
 - `3`: both directions"""
 acamber: float = 0.2
 """Camber amplitude"""
-hfactor: float = None
-"""
-TODO
-Ratio of wing height to chord length:
-- `0.1`: high aspect ratio wing (`chord < span`)
-- `<= 0.05`: low aspect ratio wing (`chord > span`)
-"""
+
+hfactor_f: float = 0.1
+"""Ratio of border element height to wing chord length (front)"""
+wfactor_f: float = 1
+"""Ratio of border element width to border element height (front)"""
+hfactor_r: float = 0.1
+"""Ratio of border element height to wing chord length (rear)"""
+wfactor_r: float = 1
+"""Ratio of border element width to border element height (rear)"""
+
+lt_f: float = 2
+"""Length of tapered section of the wing in cm (front)"""
+lr_f: float = 2
+"""Length of straight section of the wing in cm (front)"""
+lt_r: float = 1
+"""Length of tapered section of the wing in cm (rear)"""
+lr_r: float = 1
+"""Length of straight section of the wing in cm (rear)"""
+
+bang_f: float = 30
+"""Base angle (angle between tapered edge and centerline) of the wing in degrees (front)"""
+bang_r: float = 30
+"""Base angle (angle between tapered edge and centerline) of the wing in degrees (rear)"""
+
+ielong: bool  = False
+"""Toggle fixed number of border elements"""
+
 
 # Front wing
 
@@ -237,17 +252,8 @@ limpw_r = None
 aimpw_r = None
 """Angular impulse from wake vortices (rear)"""
 
-
-# TODO: Finish below
-
-wfactor: float = None
-"""Ratio of element width to wing height"""
-ielong: bool  = False
-"""Toggle fixed number of border elements"""
-h_: float = None
-"""Height of each border strip"""
-
 rt = None
+"""TODO"""
 
 """Plot Variables Dictionary"""
 iterations = []
