@@ -374,24 +374,24 @@ def tombo():
         if g.istep > 0:
             # Velocity of the border elements due to wake vortices
             for i in range(g.nwing):
-                VBW_f[:3, :4, :g.nxb_f, i] = vel_by(g.istep, Xb_f[:, :, :, i], g.nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r,
-                                                    GAMw_r, nxw_r)
-                VBW_r[:3, :4, :g.nxb_r, i] = vel_by(g.istep, Xb_r[:, :, :, i], g.nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r,
-                                                    GAMw_r, nxw_r)
+                VBW_f[:3, :4, :g.nxb_f, i] = vel_by(g.istep, Xb_f[..., i], g.nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r,
+                                                    GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                VBW_r[:3, :4, :g.nxb_r, i] = vel_by(g.istep, Xb_r[..., i], g.nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r,
+                                                    GAMw_r, nxw_r, g.RCUT, g.LCUT)
 
             # Velocity of the wake elements due to total wing vortices
             for i in range(g.nwing):
-                VWT_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[:, :, :, i], nxw_f, Xt_f, GAM_f, nxt_f,
-                                                              Xt_r, GAM_r, nxt_r)
+                VWT_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[..., i], nxw_f, Xt_f, GAM_f, nxt_f,
+                                                              Xt_r, GAM_r, nxt_r, g.RCUT, g.LCUT)
                 VWT_r[:3, :4, :g.istep * g.nxb_r, i] = vel_by(g.istep, Xw_r[:, :, :, i], nxw_r, Xt_f, GAM_f, nxt_f,
-                                                              Xt_r, GAM_r, nxt_r)
+                                                              Xt_r, GAM_r, nxt_r, g.RCUT, g.LCUT)
 
             # Velocity of the wake elements due to wake elements
             for i in range(g.nwing):
-                VWW_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[:, :, :, i], nxw_f, Xw_f, GAMw_f, nxw_f,
-                                                              Xw_r, GAMw_r, nxw_r)
-                VWW_r[:3, :4, :g.istep * g.nxb_r, i] = vel_by(g.istep, Xw_r[:, :, :, i], nxw_r, Xw_f, GAMw_f, nxw_f,
-                                                              Xw_r, GAMw_r, nxw_r)
+                VWW_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[..., i], nxw_f, Xw_f, GAMw_f, nxw_f,
+                                                              Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                VWW_r[:3, :4, :g.istep * g.nxb_r, i] = vel_by(g.istep, Xw_r[..., i], nxw_r, Xw_f, GAMw_f, nxw_f,
+                                                              Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
 
         if g.idebg:
             print(f"VBW, VWT, VWW {g.istep + 1}:")
