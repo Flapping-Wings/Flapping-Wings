@@ -17,7 +17,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     lr_: float
         Length of straight section of the wing in cm
     bang_: float
-        Base angle (angle between the sides of the tapered section) of the wing in degrees
+        Base angle (angle between tapered edge and centerline) of the wing in degrees
     hfactor: float
         Ratio of border element height to wing chord length
     wfactor: float

@@ -253,9 +253,9 @@ lr_r: float = 1
 """Length of straight section of the wing in cm (rear)"""
 
 bang_f: float = 30
-"""Base angle (angle between the sides of the tapered section) of the wing in degrees (front)"""
+"""Base angle (angle between tapered edge and centerline) of the wing in degrees (front)"""
 bang_r: float = 30
-"""Base angle (angle between the sides of the tapered section) of the wing in degrees (rear)"""
+"""Base angle (angle between tapered edge and centerline) of the wing in degrees (rear)"""
 
 hfactor: float = None
 """
