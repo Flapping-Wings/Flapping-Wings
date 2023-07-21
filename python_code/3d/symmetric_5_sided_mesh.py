@@ -90,10 +90,7 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
         
     return Xb, nXb, Nb, Xc, nXc, Nc, l_, c_, h
 
-#------------------------------------------------------------#
-
 def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
-    
     """
     Create mesh for tapered/nontapered rectangular wings
     
@@ -130,8 +127,7 @@ def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
     wi_0: float
         TODO
     """
-    
-    N = 5               # Number of border strips
+    NUM_BORDER_STRIPS = 5               # Number of border strips
     h = hfactor * c_    # Dimensional border height
 
     # Global position of the origin of the border strip systems
@@ -154,7 +150,7 @@ def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
 
     inf = -1
 
-    for i in range(N):
+    for i in range(NUM_BORDER_STRIPS):
         xeE = BRelemLoc(n[i], wi[i], w[i], wf[i], h)
         xeE = BRelem(xeE, xo[:, i], ang[i])
         Xb[0:2, 0, (inf+1)] = xeE[:, 0, 0]
