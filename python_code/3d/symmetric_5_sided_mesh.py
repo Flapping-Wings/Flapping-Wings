@@ -560,44 +560,40 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
         # Tapered Region
         for ic in range(n[0]):
             for ir in range(n[2]):
-                for j in range(2):
-                    XctS[j, 0, ir, ic] = Xct[j, ir    , ic    ]
-                    XctS[j, 1, ir, ic] = Xct[j, ir    , ic + 1]
-                    XctS[j, 2, ir, ic] = Xct[j, ir + 1, ic + 1]
-                    XctS[j, 3, ir, ic] = Xct[j, ir + 1, ic    ]
+                XctS[:, 0, ir, ic] = Xct[:, ir    , ic    ]
+                XctS[:, 1, ir, ic] = Xct[:, ir    , ic + 1]
+                XctS[:, 2, ir, ic] = Xct[:, ir + 1, ic + 1]
+                XctS[:, 3, ir, ic] = Xct[:, ir + 1, ic    ]
     # Rectangular Region
     for ic in range(n[1]):
         for ir in range(n[2]):
-            for j in range(2):
-                XcrS[j, 0, ir, ic] = Xcr[j, ir    , ic    ]
-                XcrS[j, 1, ir, ic] = Xcr[j, ir    , ic + 1]
-                XcrS[j, 2, ir, ic] = Xcr[j, ir + 1, ic + 1]
-                XcrS[j, 3, ir, ic] = Xcr[j, ir + 1, ic    ]
+            XcrS[:, 0, ir, ic] = Xcr[:, ir    , ic    ]
+            XcrS[:, 1, ir, ic] = Xcr[:, ir    , ic + 1]
+            XcrS[:, 2, ir, ic] = Xcr[:, ir + 1, ic + 1]
+            XcrS[:, 3, ir, ic] = Xcr[:, ir + 1, ic    ]
 
     # Rectangular and Polygon Mesh
     if g.itaper:
         # Tapered Region - Triangular Apex Mesh w/ 4 Nodes
         i = 0
         ic = 0
-        XctR = np.empty([2, 4, n[0] + 1]) 
+        XctR = np.empty((2, 4, (n[0] - 1) * n[2] + 1)) 
 
-        for j in range(2):
-            XctR[j, 0, i] = XctS[j, 0, 0, ic]
-            XctR[j, 1, i] = XctS[j, 1, 0, ic]
-            XctR[j, 3, i] = XctS[j, 2, n[2] - 1, ic]
+        XctR[:, 0, i] = XctS[:, 0, 0, ic]
+        XctR[:, 1, i] = XctS[:, 1, 0, ic]
+        XctR[:, 3, i] = XctS[:, 2, n[2] - 1, ic]
 
         XctR[0, 2, i] = 0.0
         XctR[1, 2, i] = XctS[1, 1, 0, ic]
         i += 1
 
-
+        # Four-sided meshes
         for ic in range(1, n[0]):
             for ir in range(n[2]):
-                for j in range(2):
-                    XctR[j, 0, i] = XctS[j, 0, ir, ic]
-                    XctR[j, 1, i] = XctS[j, 1, ir, ic]
-                    XctR[j, 2, i] = XctS[j, 2, ir, ic]
-                    XctR[j, 3, i] = XctS[j, 3, ir, ic]
+                XctR[:, 0, i] = XctS[:, 0, ir, ic]
+                XctR[:, 1, i] = XctS[:, 1, ir, ic]
+                XctR[:, 2, i] = XctS[:, 2, ir, ic]
+                XctR[:, 3, i] = XctS[:, 3, ir, ic]
                 i += 1
         
         nXctR = i
@@ -606,47 +602,45 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
     i = 0
     for ic in range(n[1]):
         for ir in range(n[2]):
-            for j in range(2):
-                XcrR[j, 0, i] = XcrS[j, 0, ir, ic]
-                XcrR[j, 1, i] = XcrS[j, 1, ir, ic]
-                XcrR[j, 2, i] = XcrS[j, 2, ir, ic]
-                XcrR[j, 3, i] = XcrS[j, 3, ir, ic]
+            XcrR[:, 0, i] = XcrS[:, 0, ir, ic]
+            XcrR[:, 1, i] = XcrS[:, 1, ir, ic]
+            XcrR[:, 2, i] = XcrS[:, 2, ir, ic]
+            XcrR[:, 3, i] = XcrS[:, 3, ir, ic]
             i += 1
+    
     nXcrR = i
 
     if g.itaper:
         # Total Center Rectangular Elements
         nXc = nXctR + nXcrR
-        Xc = np.zeros([2, 5, nXc])
+        Xc = np.zeros((3, 5, nXc))
         Nc = np.zeros((3, nXc))
 
-        Xc[:, 0:4, 0:nXctR] = XctR 
-        Xc[:, 0:4, nXctR:nXc] = XcrR
+        Xc[:2, :4, :nXctR] = XctR 
+        Xc[:2, :4, nXctR:nXc] = XcrR
 
         # Introduce the camber 
-        temp = np.zeros((1, 5, nXc))
-        temp[:, 0:4, 0:] = Camber(Xc[0, 0:4, :], Xc[1, 0:4, :], l_, c_, g.icamber, g.acamber)
-        Xc = np.vstack((Xc, temp))
+        Xc[2, :, :] = Camber(Xc[0, :, :], Xc[1, :, :], l_, c_, g.icamber, g.acamber)
         
         # Unit Normal to the element
         for i in range(nXc):
             Nc[:, i] = uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])
 
         # Centroid
-        Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
+        Xc[:, 4, :] = 0.25 * Xc.sum(axis=1)
 
         # Add the eta-coordinate (vertical) of the corder
         yshift = wi_1 / np.cos(bang)
-        Xc[1, :, :] = Xc[1, :, :] + yshift
+        Xc[1, :, :] += yshift
     else:
         # Total center rectangular element
         nXc = nXcrR
-        Xc = np.zeros([2, 4, nXc])
-        Nc = np.zeros([3, nXc])
+        Xc = np.zeros((3, 5, nXc))
+        Nc = np.zeros((3, nXc))
 
-        Xc[:, :, 0:nXc] = XcrR
+        Xc[:2, :4, 0:nXc] = XcrR
         
-        # Introduce the Camber
+        # Introduce the camber
         Xc[2, :, :] = Camber(Xc[0, :, :], Xc[1, :, :], l_, c_, g.icamber, g.acamber)
         
         # Unit normal to the element
@@ -654,11 +648,11 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
             Nc[:, i] = uNormal(Xc[0, :, i], Xc[1, :, i], Xc[2, :, i])
         
         # Centroid 
-        Xc[:, 4, :] = 0.25 * (Xc[:, 0, :] + Xc[:, 1, :] + Xc[:, 2, :] + Xc[:, 3, :])
+        Xc[:, 4, :] = 0.25 * Xc.sum(axis=1)
         
         # Add the eta-coordinate (vertical) of the corder
         yshift = h
-        Xc[1, :, :] = Xc[1, :, :] + yshift
+        Xc[1, :, :] += yshift
 
     return Xc, nXc, Nc
 
