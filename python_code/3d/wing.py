@@ -56,24 +56,42 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
     Equivalent to MATLAB function `tbs5mesh`
 
-    Output:
-    - lo_ : span
-    - co_ : chord length
+    Parameters
+    ----------
+    W: int 
+        1 (forward wing), 2 (rear wing)
+    lt_: float
+        Length of tapered section of the wing in cm
+    lr_: float
+        Length of straight section of the wing in cm
+    bang_: float
+        Base angle (angle between the sides of the tapered section) of the wing in degrees
+    hfactor: float
+        Ratio of border element height to wing chord length
+    wfactor: float
+        Ratio of border element width to border element height
 
+    Returns
+    -------
+    Xb: ndarray[j, n, i]
+        Border element coordinates
+    nXb: int
+        Number of border elements
+    Nb: ndarray[j, i]
+        Unit normals to the border elements
+    Xc: ndarray[j, n, i]
+        Center element coordinates
+    nXc: int
+        Number of center elements
+    Nc: ndarray[j, i]
+        Unit normals to the center elements
+    l_: float
+        Wing span length
+    c_: float
+        Wing chord length
+    h: float
+        Height of border element
     """
-    """
-    Rectangular Elements Count:
-    - nXb   : # of shed edge elements
-    - nXc   : # of center elements
-
-    Wing Geometry:
-    - lt_   : tapered section wing span (cm)
-    - lr_   : square section wing span (cm)
-    - bang_ : base angle (deg)
-    - c_    : chord length of the rectangular section
-
-    """
-
     # Wing is tapered by default
     if bang_ == 90:
         g.itaper = False
