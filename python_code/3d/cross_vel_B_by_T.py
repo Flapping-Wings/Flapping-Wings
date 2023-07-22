@@ -1,6 +1,8 @@
 import numpy as np
+from numba import njit
 from mVORTEX import mVORTEX
 
+@njit(cache=True)
 def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt, RCUT, LCUT):
     """
     Calculate velocity at border element nodes of wing i due to total vortices
