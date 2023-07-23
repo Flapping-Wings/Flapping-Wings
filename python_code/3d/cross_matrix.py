@@ -1,6 +1,8 @@
 import numpy as np
+from numba import njit
 from VORTEXm import VORTEXm
 
+@njit(cache=True)
 def cross_matrix(XC, NC, nxT, Xt, nxS, RCUT):
     """
     Set up a sub-matrix for induced velocity on the target wing 
