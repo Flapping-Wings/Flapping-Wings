@@ -1,4 +1,5 @@
 import numpy as np
+from numba import njit
 from VORTEXm import VORTEXm
 
 def lr_set_matrix(Xt, nXt, XC, NC, RCUT):
@@ -36,6 +37,7 @@ def lr_set_matrix(Xt, nXt, XC, NC, RCUT):
 
     return VN
 
+@njit(cache=True)
 def one_side(Xt, nXt, XC, NC, RCUT):
     VN = np.zeros((nXt, nXt))
     s = XC.shape
