@@ -1,6 +1,8 @@
 import numpy as np
+from numba import njit
 from mVORTEX import mVORTEX
 
+@njit(cache=True)
 def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nXw_r, RCUT, LCUT):
     """
     Calculate normal velocity contribution on the airfoil by wake vortices
@@ -38,33 +40,6 @@ def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nX
         Normal velocity components at the collocation points due to
         wake vortices
     """
-    def helper(Vncw, Xw, GAMw):
-        for i in range(nXt):
-            x = XC[0, i]
-            y = XC[1, i]
-            z = XC[2, i]
-            u, v, w = 0, 0, 0
-        
-            u1, v1, w1 = mVORTEX(x, y, z, Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], GAMw, RCUT, LCUT)
-            u = u + u1
-            v = v + v1
-            w = w + w1
-            u2, v2, w2 = mVORTEX(x, y, z, Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], GAMw, RCUT, LCUT)
-            u = u + u2
-            v = v + v2
-            w = w + w2
-            u3, v3, w3 = mVORTEX(x, y, z, Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], GAMw, RCUT, LCUT)
-            u = u + u3
-            v = v + v3
-            w = w + w3
-            u4, v4, w4 = mVORTEX(x, y, z, Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], GAMw, RCUT, LCUT)
-            u = u + u4
-            v = v + v4
-            w = w + w4
-        
-            Vncw[i] += u * NC[0, i] + v * NC[1, i] + w * NC[2, i]
-
-
     Vncw = np.zeros(nXt)
 
     if istep <= 0:
@@ -74,22 +49,49 @@ def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nX
     GAMAw = GAMAw2_f[0, :]
     GAMw = np.reshape(GAMAw, nXw_f)
     Xw = Xw2_f[:, :, :nXw_f, 0]
-    helper(Vncw, Xw, GAMw)
+    helper(XC, nXt, Vncw, Xw, GAMw, NC, RCUT, LCUT)
     
     GAMAw = GAMAw2_f[1, :]
     GAMw = np.reshape(GAMAw, nXw_f)
     Xw = Xw2_f[:, :, :nXw_f, 1]
-    helper(Vncw, Xw, GAMw)
+    helper(XC, nXt, Vncw, Xw, GAMw, NC, RCUT, LCUT)
  
     # Contribution from rear wing wake
     GAMAw = GAMAw2_r[0, :]
     GAMw = np.reshape(GAMAw, nXw_r)
     Xw = Xw2_r[:, :, :nXw_r, 0]
-    helper(Vncw, Xw, GAMw)
+    helper(XC, nXt, Vncw, Xw, GAMw, NC, RCUT, LCUT)
     
     GAMAw = GAMAw2_r[1, :]
     GAMw = np.reshape(GAMAw, nXw_r)
     Xw = Xw2_r[:, :, :nXw_r, 1]
-    helper(Vncw, Xw, GAMw)
+    helper(XC, nXt, Vncw, Xw, GAMw, NC, RCUT, LCUT)
 
     return Vncw
+
+@njit(cache=True)
+def helper(XC, nXt, Vncw, Xw, GAMw, NC, RCUT, LCUT):
+    for i in range(nXt):
+        x = XC[0, i]
+        y = XC[1, i]
+        z = XC[2, i]
+        u, v, w = 0, 0, 0
+    
+        u1, v1, w1 = mVORTEX(x, y, z, Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], GAMw, RCUT, LCUT)
+        u = u + u1
+        v = v + v1
+        w = w + w1
+        u2, v2, w2 = mVORTEX(x, y, z, Xw[0,1,:], Xw[1,1,:], Xw[2,1,:], Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], GAMw, RCUT, LCUT)
+        u = u + u2
+        v = v + v2
+        w = w + w2
+        u3, v3, w3 = mVORTEX(x, y, z, Xw[0,2,:], Xw[1,2,:], Xw[2,2,:], Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], GAMw, RCUT, LCUT)
+        u = u + u3
+        v = v + v3
+        w = w + w3
+        u4, v4, w4 = mVORTEX(x, y, z, Xw[0,3,:], Xw[1,3,:], Xw[2,3,:], Xw[0,0,:], Xw[1,0,:], Xw[2,0,:], GAMw, RCUT, LCUT)
+        u = u + u4
+        v = v + v4
+        w = w + w4
+    
+        Vncw[i] += u * NC[0, i] + v * NC[1, i] + w * NC[2, i]

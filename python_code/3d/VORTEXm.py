@@ -1,7 +1,9 @@
 import numpy as np
+from numba import njit
 import globals as g
 
-def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
+@njit(cache=True)
+def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA, RCUT):
     """
     Calculate the induced velocity [U, V, W] at multiple points
     [x, y, z] due to one line segment with strength GAMA per unit
@@ -52,7 +54,7 @@ def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     W = np.zeros(zshape)
 
     # Find all observation points not located on the line or its extension
-    i = (R1 > g.RCUT) * (R2 > g.RCUT) * (SQUARE > g.RCUT)
+    i = (R1 > RCUT) * (R2 > RCUT) * (SQUARE > RCUT)
 
     # SQUARE = 0 when [X,Y,Z] lies in the middle of the line.
     #    warning: =0 also [X,Y,Z] lies on the extension of the line.
@@ -62,7 +64,10 @@ def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA):
     # Contributions from the line segments on the observation points are excluded 
     # and assigned 0 values for each of the following vector outputs.
     # This way, their contributions are effectively set to zero.
-    COEF[i] = GAMA / (4.0 * np.pi * SQUARE[i]) * (ROR1[i] / R1[i] - ROR2[i] / R2[i])
+    for j, ii in np.ndenumerate(i):
+        if ii:
+            COEF[j] = GAMA / (4.0 * np.pi * SQUARE[j]) * (ROR1[j] / R1[j] - ROR2[j] / R2[j])
+
     U = R1R2X * COEF
     V = R1R2Y * COEF
     W = R1R2Z * COEF
