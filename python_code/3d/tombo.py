@@ -120,8 +120,8 @@ def tombo():
 
     # TIME MARCH
     # ----------
-    MVNs_f = lr_set_matrix(xt_f, nxt_f, xC_f, nC_f)
-    MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r)
+    MVNs_f = lr_set_matrix(xt_f, nxt_f, xC_f, nC_f, g.RCUT)
+    MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r, g.RCUT)
 
     for g.istep in range(g.nstep):
 
@@ -190,29 +190,29 @@ def tombo():
 
         # Calculation of the time-dependent sub-matrices MVNs_ij (i~=j)
         # target wing=1, source wing=2
-        MVNs_12 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_f[:, :, :, 1], nxt_f)
+        MVNs_12 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
         # target wing=1, source wing=3
-        MVNs_13 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 0], nxt_r)
+        MVNs_13 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
         # target wing=1, source wing=4
-        MVNs_14 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 1], nxt_r)
+        MVNs_14 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
         # target wing=1, source wing=2
-        MVNs_21 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_f[:, :, :, 0], nxt_f)
+        MVNs_21 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
         # target wing=1, source wing=3
-        MVNs_23 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 0], nxt_r)
+        MVNs_23 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
         # target wing=1, source wing=4
-        MVNs_24 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 1], nxt_r)
+        MVNs_24 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
         # target wing=1, source wing=2
-        MVNs_31 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 0], nxt_f)
+        MVNs_31 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
         # target wing=1, source wing=3
-        MVNs_32 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 1], nxt_f)
+        MVNs_32 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
         # target wing=1, source wing=4
-        MVNs_34 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_r[:, :, :, 1], nxt_r)
+        MVNs_34 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
         # target wing=1, source wing=2
-        MVNs_41 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 0], nxt_f)
+        MVNs_41 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
         # target wing=1, source wing=3
-        MVNs_42 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 1], nxt_f)
+        MVNs_42 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
         # target wing=1, source wing=4
-        MVNs_43 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_r[:, :, :, 0], nxt_r)
+        MVNs_43 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
 
         # Assemble the total matrix using MVNs_f[:,:,1], MVNs_r[:,:,1], MVNs_ij[:,:]
         MVN = assemble_matrix(nxt_f, nxt_r, MVNs_f, MVNs_r,
@@ -329,8 +329,8 @@ def tombo():
         # Calculate velocity of border and wake vortices to be shed or convected
         # Influence coeff for the border elem vel due to the total wing elem
         # Self-influence coeff for each wing; calculated at each time step
-        cVBT_f = b_vel_B_by_T_matrix(g.nxb_f, nxt_f, Xb_f, Xt_f)
-        cVBT_r = b_vel_B_by_T_matrix(g.nxb_r, nxt_r, Xb_r, Xt_r)
+        cVBT_f = b_vel_B_by_T_matrix(g.nxb_f, nxt_f, Xb_f, Xt_f, g.RCUT)
+        cVBT_r = b_vel_B_by_T_matrix(g.nxb_r, nxt_r, Xb_r, Xt_r, g.RCUT)
 
         if g.idebg:
             print(f"cVBT {g.istep + 1}:")

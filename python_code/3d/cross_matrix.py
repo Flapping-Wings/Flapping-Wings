@@ -1,7 +1,7 @@
 import numpy as np
 from VORTEXm import VORTEXm
 
-def cross_matrix(XC, NC, nxT, Xt, nxS):
+def cross_matrix(XC, NC, nxT, Xt, nxS, RCUT):
     """
     Set up a sub-matrix for induced velocity on the target wing 
     due to bound vortices on the source wing. 
@@ -43,7 +43,7 @@ def cross_matrix(XC, NC, nxT, Xt, nxS):
             dU, dV, dW = VORTEXm(XC[0, :], XC[1, :], XC[2, :],
                                  Xt[0, j, i], Xt[1, j, i], Xt[2, j, i],
                                  Xt[0, k, i], Xt[1, k, i], Xt[2, k, i],
-                                 1.0)
+                                 1.0, RCUT)
             U += dU
             V += dV
             W += dW

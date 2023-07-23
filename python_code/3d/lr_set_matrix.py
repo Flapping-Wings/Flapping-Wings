@@ -1,7 +1,7 @@
 import numpy as np
 from VORTEXm import VORTEXm
 
-def lr_set_matrix(Xt, nXt, XC, NC):
+def lr_set_matrix(Xt, nXt, XC, NC, RCUT):
     """
     Set up a self-coefficient matrix for the nonpenetration condition on the 
     airfoil surface: coefficient matrix of normal vel by itself
@@ -31,12 +31,12 @@ def lr_set_matrix(Xt, nXt, XC, NC):
     NC__ = NC.copy()
 
     VN = np.zeros((nXt, nXt, 2)) # TODO: replace 2 with g.nwing
-    VN[:, :, 0] = one_side(Xt, nXt, XC, NC)
+    VN[:, :, 0] = one_side(Xt, nXt, XC, NC, RCUT)
     VN[:, :, 1] = -VN[:, :, 0]  # Left side is just a mirror of the right
 
     return VN
 
-def one_side(Xt, nXt, XC, NC):
+def one_side(Xt, nXt, XC, NC, RCUT):
     VN = np.zeros((nXt, nXt))
     s = XC.shape
 
@@ -50,7 +50,7 @@ def one_side(Xt, nXt, XC, NC):
             dU, dV, dW = VORTEXm(XC[0], XC[1], XC[2],
                                  Xt[0, n, i], Xt[1, n, i], Xt[2, n, i],
                                  Xt[0, k, i], Xt[1, k, i], Xt[2, k, i],
-                                 1.0)
+                                 1.0, RCUT)
             U += dU
             V += dV
             W += dW
