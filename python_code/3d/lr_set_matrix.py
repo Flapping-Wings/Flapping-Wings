@@ -31,7 +31,7 @@ def lr_set_matrix(Xt, nXt, XC, NC, RCUT):
     XC__ = XC.copy()
     NC__ = NC.copy()
 
-    VN = np.zeros((nXt, nXt, 2)) # TODO: replace 2 with g.nwing
+    VN = np.zeros((nXt, nXt, 2)) # 2 for right and left wing
     VN[:, :, 0] = one_side(Xt, nXt, XC, NC, RCUT)
     VN[:, :, 1] = -VN[:, :, 0]  # Left side is just a mirror of the right
 
