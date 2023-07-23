@@ -2,6 +2,7 @@ import numpy as np
 from numba import njit
 from mVORTEX import mVORTEX
 
+@njit(cache=True)
 def n_vel_T_by_W(istep, nXt, XC, NC, Xw2_f, GAMAw2_f, nXw_f, Xw2_r, GAMAw2_r, nXw_r, RCUT, LCUT):
     """
     Calculate normal velocity contribution on the airfoil by wake vortices

@@ -2,6 +2,7 @@ import numpy as np
 from numba import njit
 from VORTEXm import VORTEXm
 
+@njit(cache=True)
 def lr_set_matrix(Xt, nXt, XC, NC, RCUT):
     """
     Set up a self-coefficient matrix for the nonpenetration condition on the 
